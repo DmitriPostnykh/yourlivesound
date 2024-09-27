@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Localized Website</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Абсолютный путь для CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1 data-i18n="welcome_message">Welcome to our website!</h1>
-        <p data-i18n="description">This is a sample website.</p>
+<div class="container">
+    <h1 data-i18n="welcome_message">Welcome to our website!</h1>
+    <p data-i18n="description">This is a sample website.</p>
 
-        <button onclick="setLanguage('en')">English</button>
-        <button onclick="setLanguage('ru')">Русский</button>
-    </div>
-    <script src="../static/js/localization.js"></script>
+    <button onclick="setLanguage('en')">English</button>
+    <button onclick="setLanguage('ru')">Русский</button>
+</div>
+<!-- Абсолютный путь для JS -->
+<script src="/static/js/localization.js"></script>
 </body>
 </html>
