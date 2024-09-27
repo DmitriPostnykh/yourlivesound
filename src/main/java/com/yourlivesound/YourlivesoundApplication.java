@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class YourlivesoundApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(YourlivesoundApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(YourlivesoundApplication.class, args);
+	}
 
 }
