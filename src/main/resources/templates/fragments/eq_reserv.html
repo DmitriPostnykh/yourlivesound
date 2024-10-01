@@ -71,6 +71,7 @@
       color: white;
       display: flex; /* Для точного центрирования */
       justify-content: center; /* Горизонтальное центрирование */
+      margin-top: -20px;
     }
 
     /* Красим первые буквы в красный с использованием <span> */
@@ -95,7 +96,7 @@
       font-family: 'Arial', sans-serif;
       color: rgba(255, 255, 255, 0.58); /* Цвет текста */
       text-align: center;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.13); /* Легкая тень для эффекта */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.06); /* Легкая тень для эффекта */
       z-index: 3; /* Выше всех элементов */
       pointer-events: none; /* Не блокируем взаимодействие с основными элементами */
       width: 100%; /* Растягиваем на всю ширину */
@@ -105,6 +106,7 @@
       background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255,255,255,0)); /* Эффект затухания */
       display: flex; /* Для точного центрирования */
       justify-content: center; /* Горизонтальное центрирование */
+      margin-top: 30px;
     }
 
     /* Красим первые буквы в красный в отражении с использованием <span> */
@@ -117,106 +119,105 @@
     }
 
     .reflection-title span:first-letter {
-      color: rgba(255, 0, 0, 0.09);
+      color: rgba(255, 0, 0, 0.04);
     }
 
   </style>
   <title>Индикатор громкости с зеркальным отражением и текстом</title>
 </head>
-<body>
+<section>
 
-<div class="wrapper">
-  <div class="title"><span>Your</span> <span>Live</span> <span>Sound</span></div>
-  <div class="reflection-title"><span>Your</span> <span>Live</span> <span>Sound</span></div>
-  <div class="container" id="volumeBars">
-    <!-- Контейнеры для столбиков -->
+  <div class="wrapper">
+    <div class="title"><span>Your</span> <span>Live</span> <span>Sound</span></div>
+    <div class="reflection-title"><span>Your</span> <span>Live</span> <span>Sound</span></div>
+    <div class="container" id="volumeBars">
+      <!-- Контейнеры для столбиков -->
+    </div>
+    <div class="container reflection-container" id="reflectionBars">
+      <!-- Контейнеры для отражения -->
+    </div>
+
+    <!-- Оверлей для эффекта размытия -->
+    <div class="blur-overlay"></div>
   </div>
-  <div class="container reflection-container" id="reflectionBars">
-    <!-- Контейнеры для отражения -->
-  </div>
 
-  <!-- Оверлей для эффекта размытия -->
-  <div class="blur-overlay"></div>
-</div>
+  <script>
+    const container = document.getElementById('volumeBars');
+    const reflectionContainer = document.getElementById('reflectionBars');
+    const maxHeight = 200; // Максимальная высота столбика
+    const stepSize = 20; // Максимальная разница изменения высоты на шаг
+    const maxDirectionChanges = 5; // Максимальное количество смен направлений за цикл
 
-<script>
-  const container = document.getElementById('volumeBars');
-  const reflectionContainer = document.getElementById('reflectionBars');
-  const maxHeight = 200; // Максимальная высота столбика
-  const stepSize = 20; // Максимальная разница изменения высоты на шаг
-  const maxDirectionChanges = 5; // Максимальное количество смен направлений за цикл
+    // Создаем массив для отслеживания состояния каждого столбика
+    const barsData = [];
 
-  // Создаем массив для отслеживания состояния каждого столбика
-  const barsData = [];
+    // Создаем 14 контейнеров для столбиков и их отражений
+    for (let i = 0; i < 14; i++) {
+      const barContainer = document.createElement('div');
+      barContainer.classList.add('bar-container');
 
-  // Создаем 14 контейнеров для столбиков и их отражений
-  for (let i = 0; i < 14; i++) {
-    const barContainer = document.createElement('div');
-    barContainer.classList.add('bar-container');
+      const bar = document.createElement('div');
+      bar.classList.add('bar');
+      barContainer.appendChild(bar);
+      container.appendChild(barContainer);
 
-    const bar = document.createElement('div');
-    bar.classList.add('bar');
-    barContainer.appendChild(bar);
-    container.appendChild(barContainer);
+      // Создаем отражение для каждого столбика
+      const reflectionBarContainer = document.createElement('div');
+      reflectionBarContainer.classList.add('bar-container');
 
-    // Создаем отражение для каждого столбика
-    const reflectionBarContainer = document.createElement('div');
-    reflectionBarContainer.classList.add('bar-container');
+      const reflectionBar = document.createElement('div');
+      reflectionBar.classList.add('bar');
+      reflectionBarContainer.appendChild(reflectionBar);
+      reflectionContainer.appendChild(reflectionBarContainer);
 
-    const reflectionBar = document.createElement('div');
-    reflectionBar.classList.add('bar');
-    reflectionBarContainer.appendChild(reflectionBar);
-    reflectionContainer.appendChild(reflectionBarContainer);
+      // Инициализируем данные для каждого столбика и их отражений
+      barsData.push({
+        element: bar,
+        reflectionElement: reflectionBar,
+        currentHeight: Math.floor(Math.random() * maxHeight), // Случайная начальная высота
+        direction: 1, // 1 - подъем, -1 - спуск
+        directionChanges: 0 // Счетчик смен направлений
+      });
+    }
 
-    // Инициализируем данные для каждого столбика и их отражений
-    barsData.push({
-      element: bar,
-      reflectionElement: reflectionBar,
-      currentHeight: Math.floor(Math.random() * maxHeight), // Случайная начальная высота
-      direction: 1, // 1 - подъем, -1 - спуск
-      directionChanges: 0 // Счетчик смен направлений
-    });
-  }
+    function animateBars() {
+      barsData.forEach(barData => {
+        const { element, reflectionElement, currentHeight, direction, directionChanges } = barData;
 
-  function animateBars() {
-    barsData.forEach(barData => {
-      const { element, reflectionElement, currentHeight, direction, directionChanges } = barData;
+        // Если смен направлений достигло максимума, сменить направление
+        if (directionChanges >= maxDirectionChanges) {
+          barData.direction = -direction; // Сменить направление
+          barData.directionChanges = 0; // Сбросить счетчик
+        }
 
-      // Если смен направлений достигло максимума, сменить направление
-      if (directionChanges >= maxDirectionChanges) {
-        barData.direction = -direction; // Сменить направление
-        barData.directionChanges = 0; // Сбросить счетчик
-      }
+        // Рассчитываем новое изменение высоты
+        let newHeight = currentHeight + (Math.floor(Math.random() * stepSize) * direction);
 
-      // Рассчитываем новое изменение высоты
-      let newHeight = currentHeight + (Math.floor(Math.random() * stepSize) * direction);
+        // Ограничиваем высоту значениями от 0 до maxHeight
+        if (newHeight >= maxHeight) {
+          newHeight = maxHeight;
+          barData.direction = -1; // Если достигли максимума, начинаем спуск
+          barData.directionChanges++; // Увеличиваем счетчик смен направлений
+        } else if (newHeight <= 0) {
+          newHeight = 0;
+          barData.direction = 1; // Если достигли минимума, начинаем подъем
+          barData.directionChanges++; // Увеличиваем счетчик смен направлений
+        }
 
-      // Ограничиваем высоту значениями от 0 до maxHeight
-      if (newHeight >= maxHeight) {
-        newHeight = maxHeight;
-        barData.direction = -1; // Если достигли максимума, начинаем спуск
-        barData.directionChanges++; // Увеличиваем счетчик смен направлений
-      } else if (newHeight <= 0) {
-        newHeight = 0;
-        barData.direction = 1; // Если достигли минимума, начинаем подъем
-        barData.directionChanges++; // Увеличиваем счетчик смен направлений
-      }
+        // Применяем новую высоту к оригинальному столбику
+        barData.currentHeight = newHeight;
+        element.style.height = newHeight + 'px';
 
-      // Применяем новую высоту к оригинальному столбику
-      barData.currentHeight = newHeight;
-      element.style.height = newHeight + 'px';
+        // Применяем ту же высоту к зеркальному столбику
+        reflectionElement.style.height = newHeight + 'px';
+      });
 
-      // Применяем ту же высоту к зеркальному столбику
-      reflectionElement.style.height = newHeight + 'px';
-    });
+      // Запускаем новый цикл анимации
+      requestAnimationFrame(animateBars);
+    }
 
-    // Запускаем новый цикл анимации
+    // Запускаем анимацию
     requestAnimationFrame(animateBars);
-  }
+  </script>
 
-  // Запускаем анимацию
-  requestAnimationFrame(animateBars);
-</script>
-
-</body>
-</html>
+</section>
