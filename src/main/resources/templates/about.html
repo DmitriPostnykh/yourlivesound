@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{site.title}">Your Live Sound</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 520px; /* 12 столбиков по 40px + отступы между ними */
+            height: 300px;
+            background-color: #ddd;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar {
+            width: 40px;
+            background-color: #007fb7;
+            position: relative;
+            bottom: 0;
+            transition: height 0.2s ease;
+        }
+    </style>
+    <title>Индикатор громкости</title>
+</head>
+<body>
+<div th:replace="fragments/eq"></div>
+
+</body>
+</html>
+
+
+
+
+
+</body>
+</html>

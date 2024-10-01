@@ -2,19 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Localized Website</title>
-    <!-- Абсолютный путь для CSS -->
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Your Live Sound</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/localization.js" defer></script> <!-- Подключаем JavaScript -->
 </head>
 <body>
-<div class="container">
-    <h1 data-i18n="welcome_message">Welcome to our website!</h1>
-    <p data-i18n="description">This is a sample website.</p>
+<!-- Включение фрагмента header -->
 
-    <button onclick="setLanguage('en')">English</button>
-    <button onclick="setLanguage('ru')">Русский</button>
-</div>
-<!-- Абсолютный путь для JS -->
-<script src="/static/js/localization.js"></script>
+<div th:replace="fragments/eq"></div>
+
 </body>
 </html>
+
+

@@ -1,5 +1,17 @@
 {
-    "welcome_message": "Welcome to our website!",
-    "description": "Unfortunately, the site is just getting ready to open. Please check back later!"
+    "nav": {
+        "home": "Home",
+        "about": "About",
+        "testimonials": "Testimonials",
+        "contact": "Contact",
+        "login": "Login",
+        "register": "Register"
+    },
+    "site": {
+        "title": "Welcome to yourlivesound.com",
+        "description": "I am Dmitrii Postnykh – a professional sound engineer, musician, and arranger."
+    },
+    "form": {
+        "submit": "Learn more about my services"
+    }
 }
-
