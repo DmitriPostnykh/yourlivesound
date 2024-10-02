@@ -1,7 +1,13 @@
 <!-- fragments/enter.html -->
 <div th:fragment="enter">
-  <link rel="stylesheet" href="/css/enter.css"> <!-- Подключаем отдельные стили для кнопки -->
+  <link rel="stylesheet" href="/css/enter.css"> <!-- Подключаем стили для кнопки -->
+
   <div class="enter-container">
-    <button class="enter-button" onclick="window.location.href='/about'">Вход на сайт</button>
+    <button class="enter-button" onclick="window.location.href='/about'">Добро пожаловать на мой сайт</button>
   </div>
+
+  <!-- Подключаем JavaScript для появления кнопки через 5 секунд -->
+  <script src="/js/enter.js"></script>
+
+
 </div>

@@ -1,29 +1,31 @@
 .enter-container {
-    display: flex;
+    display: none; /* Изначально скрываем кнопку */
     justify-content: center;
     position: absolute;
     bottom: 30px; /* Позиционирование снизу страницы */
     left: 0;
     right: 0;
-    margin-top: 30px; /* Отступ сверху, если нужно */
-    z-index: 10; /* Более высокий z-index, чтобы быть выше всех слоёв */
+    margin-top: 30px; /* Отступ сверху */
+    z-index: 10;
+    opacity: 0; /* Прозрачность для анимации */
+    transition: opacity 3s ease; /* Плавная анимация появления */
 }
 
 .enter-button {
-    background-color: #007fb7; /* Цвет фона кнопки */
-    color: white; /* Цвет текста */
-    font-size: 1.5em; /* Размер текста */
-    padding: 10px 20px; /* Внутренние отступы */
-    border: none; /* Убираем рамку */
-    border-radius: 5px; /* Закругленные углы */
+    background-color: #007fb7;
+    color: white;
+    font-size: 1.5em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Анимация изменения цвета */
+    transition: background-color 0.3s ease;
 }
 
 .enter-button:hover {
-    background-color: #005f8a; /* Цвет кнопки при наведении */
+    background-color: #005f8a;
 }
 
 .enter-button:active {
-    background-color: #004070; /* Цвет кнопки при нажатии */
+    background-color: #004070;
 }
