@@ -4,33 +4,41 @@
     margin-top: 30px;
     z-index: 10;
     opacity: 0; /* Изначально скрыто */
-    transition: opacity 3s ease; /* Анимация плавного появления */
-}
-
-
-
-.menu-buttons {
-    display: flex;
-    justify-content: center; /* Центрируем кнопки по горизонтали */
-    flex-direction: row; /* Кнопки располагаются в одну строку */
+    transition: opacity 3s ease;
 }
 
 .menu-button {
-    background-color: #007fb7;
-    color: white;
-    font-size: 1.5em;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    margin: 0 10px; /* Отступы между кнопками */
+    background-color: #007fb7; /* Цвет фона кнопки */
+    color: white; /* Цвет текста */
+    font-size: 2vw; /* Размер текста зависит от ширины экрана */
+    padding: 1.5vw 3vw; /* Внутренние отступы адаптируются по ширине экрана */
+    border: none; /* Убираем рамку */
+    border-radius: 0.5vw; /* Закругленные углы адаптируются */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease; /* Анимация изменения цвета */
+    margin: 0 1.5vw; /* Отступы между кнопками теперь адаптивные */
 }
 
 .menu-button:hover {
-    background-color: #005f8a;
+    background-color: #005f8a; /* Цвет кнопки при наведении */
 }
 
 .menu-button:active {
-    background-color: #004070;
+    background-color: #004070; /* Цвет кнопки при нажатии */
+}
+
+@media (max-width: 768px) {
+    .menu-button {
+        font-size: 3vw; /* Увеличиваем текст на маленьких экранах */
+        padding: 2vw 4vw; /* Увеличиваем отступы на маленьких экранах */
+        margin: 0 1vw; /* Уменьшаем отступы между кнопками */
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-button {
+        font-size: 4vw; /* Ещё больше увеличиваем текст */
+        padding: 3vw 5vw; /* Ещё больше увеличиваем отступы */
+        margin: 0 0.5vw; /* Ещё больше уменьшаем отступы */
+    }
 }
