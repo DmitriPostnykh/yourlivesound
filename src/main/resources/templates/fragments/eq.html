@@ -1,158 +1,129 @@
-<!DOCTYPE html>
-<html lang="ru">
+<section th:fragment="eq">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     .wrapper {
-      padding: 10px;
+      padding: 10px; /* Отступы */
       display: flex;
-      justify-content: center;
+      justify-content: center; /* Центрирование контейнера */
       flex-direction: column;
       align-items: center;
-      background-color: white;
-      position: relative;
-      height: 100vh; /* Полная высота экрана */
+      background-color: white; /* Белый фон */
+      position: relative; /* Для размещения текста и размытия */
     }
 
     .container {
       display: flex;
-      justify-content: space-between;
-      width: 77vw;
-      height: 30vh; /* Изначальная высота эквалайзера */
-      max-width: 1600px;
-      position: relative;
-    }
-
-    .bar-container {
-      width: 6%; /* Ширина каждого столбика по 6% от контейнера */
-      height: 100%;
+      justify-content: space-between; /* Равномерное распределение столбиков */
+      width: calc(14 * 40px + 13 * 1px); /* 14 столбиков по 40px + 13 промежутков по 1px */
+      height: 150px; /* Максимальная высота столбиков */
       position: relative;
     }
 
     .bar {
-      width: 100%;
+      width: 40px; /* Фиксированная ширина каждого столбика */
       background-color: #007fb7;
       position: absolute;
       bottom: 0;
-      transition: height 0.3s linear;
+      transition: height 0.3s linear; /* Плавная анимация высоты */
+    }
+
+    .bar-container {
+      position: relative;
+      height: 100%;
     }
 
     .reflection-container {
-      transform: scaleY(-1);
-      opacity: 0.7;
+      transform: scaleY(-1); /* Отражение по вертикали */
+      opacity: 0.7; /* Немного уменьшаем прозрачность общего контейнера отражений */
     }
 
     .reflection-container .bar {
       background: linear-gradient(to top, rgba(0, 127, 183, 0.25) 0%, rgba(0, 127, 183, 0) 100%);
+      /* Основание 25%, вершина 0% */
     }
 
-    /* Размытие слоя */
+    /* Добавляем слой размытия (оверлей) */
     .blur-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      backdrop-filter: blur(7px);
-      -webkit-backdrop-filter: blur(7px);
-      z-index: 2;
-      pointer-events: none;
+      backdrop-filter: blur(7px); /* Эффект размытия */
+      z-index: 2; /* Поверх всей конструкции */
+      pointer-events: none; /* Чтоб не блокировать клики */
     }
 
-    /* Стиль текста */
+    /* Стиль для текста "Your Live Sound" */
     .title {
       position: absolute;
-      font-size: 10vw;
+      font-size: 80px; /* Крупный размер шрифта */
       font-family: 'Arial', sans-serif;
       text-align: center;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.44);
-      z-index: 3;
-      pointer-events: none;
-      width: 100%;
-      top: 50%;
-      transform: translateY(-100%);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.44); /* Легкая тень для эффекта */
+      z-index: 3; /* Выше всех элементов */
+      pointer-events: none; /* Не блокируем взаимодействие с основными элементами */
+      width: 100%; /* Растягиваем на всю ширину */
+      top: 25%; /* Поднимаем текст на 15px выше */
       color: white;
-      display: flex;
-      justify-content: center;
+      display: flex; /* Для точного центрирования */
+      justify-content: center; /* Горизонтальное центрирование */
+      margin-top: -20px;
     }
 
+    /* Красим первые буквы в красный с использованием <span> */
     .title span {
       color: white;
-      margin-right: 20px;
+      margin-right: 20px; /* Добавляем промежуток между словами */
     }
 
+    /* Убираем последний отступ у последнего слова */
     .title span:last-child {
-      margin-right: 0;
+      margin-right: -40px;
     }
 
     .title span:first-letter {
       color: red;
     }
 
-    /* Зеркальное отражение текста */
+    /* Добавляем зеркальное отражение для текста */
     .reflection-title {
       position: absolute;
-      font-size: 10vw;
+      font-size: 80px; /* Крупный размер шрифта */
       font-family: 'Arial', sans-serif;
-      color: rgba(255, 255, 255, 0.58);
+      color: rgba(255, 255, 255, 0.58); /* Цвет текста */
       text-align: center;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.06);
-      z-index: 3;
-      pointer-events: none;
-      width: 100%;
-      top: 50%;
-      transform: translateY(0) scaleY(-1);
-      opacity: 0.5;
-      background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255,255,255,0));
-      display: flex;
-      justify-content: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.13); /* Легкая тень для эффекта */
+      z-index: 3; /* Выше всех элементов */
+      pointer-events: none; /* Не блокируем взаимодействие с основными элементами */
+      width: 100%; /* Растягиваем на всю ширину */
+      top: 45%; /* Отражение под основным текстом, расстояние остается зафиксированным */
+      transform: scaleY(-1); /* Зеркальное отражение текста */
+      opacity: 0.5; /* Прозрачность для отражения */
+      background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255,255,255,0)); /* Эффект затухания */
+      display: flex; /* Для точного центрирования */
+      justify-content: center; /* Горизонтальное центрирование */
     }
 
+    /* Красим первые буквы в красный в отражении с использованием <span> */
     .reflection-title span {
-      margin-right: 20px;
+      margin-right: 20px; /* Добавляем промежуток между словами */
     }
 
     .reflection-title span:last-child {
-      margin-right: 0;
+      margin-right: -40px;
     }
 
     .reflection-title span:first-letter {
-      color: rgba(255, 0, 0, 0.04);
+      color: rgba(255, 0, 0, 0.09);
     }
 
-    /* Ограничение высоты эквалайзера для маленьких экранов */
-    @media (max-width: 768px) {
-      .container {
-        height: 20vh; /* Уменьшаем высоту эквалайзера только на маленьких экранах */
-      }
-
-      .title {
-        font-size: 8vw; /* Уменьшаем текст на маленьких экранах */
-      }
-
-      .reflection-title {
-        font-size: 8vw; /* Пропорционально уменьшаем отражение текста */
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        height: 15vh; /* Ещё больше уменьшаем высоту эквалайзера на маленьких экранах */
-      }
-
-      .title {
-        font-size: 6vw; /* Ещё больше уменьшаем текст */
-      }
-
-      .reflection-title {
-        font-size: 6vw; /* Пропорционально уменьшаем отражение текста */
-      }
-    }
   </style>
   <title>Индикатор громкости с зеркальным отражением и текстом</title>
 </head>
-<body>
+<section>
 
 <div class="wrapper">
   <div class="title"><span>Your</span> <span>Live</span> <span>Sound</span></div>
@@ -161,7 +132,7 @@
     <!-- Контейнеры для столбиков -->
   </div>
   <div class="container reflection-container" id="reflectionBars">
-    <!-- Контейнеры для отражений -->
+    <!-- Контейнеры для отражения -->
   </div>
 
   <!-- Оверлей для эффекта размытия -->
@@ -171,13 +142,14 @@
 <script>
   const container = document.getElementById('volumeBars');
   const reflectionContainer = document.getElementById('reflectionBars');
-  const maxHeight = 30 * window.innerHeight / 100; // Изначальная высота эквалайзера
-  const stepSize = 20;
-  const maxDirectionChanges = 5;
+  const maxHeight = 200; // Максимальная высота столбика
+  const stepSize = 20; // Максимальная разница изменения высоты на шаг
+  const maxDirectionChanges = 5; // Максимальное количество смен направлений за цикл
 
   // Создаем массив для отслеживания состояния каждого столбика
   const barsData = [];
 
+  // Создаем 14 контейнеров для столбиков и их отражений
   for (let i = 0; i < 14; i++) {
     const barContainer = document.createElement('div');
     barContainer.classList.add('bar-container');
@@ -200,9 +172,9 @@
     barsData.push({
       element: bar,
       reflectionElement: reflectionBar,
-      currentHeight: Math.floor(Math.random() * maxHeight),
-      direction: 1,
-      directionChanges: 0
+      currentHeight: Math.floor(Math.random() * maxHeight), // Случайная начальная высота
+      direction: 1, // 1 - подъем, -1 - спуск
+      directionChanges: 0 // Счетчик смен направлений
     });
   }
 
@@ -210,33 +182,41 @@
     barsData.forEach(barData => {
       const { element, reflectionElement, currentHeight, direction, directionChanges } = barData;
 
+      // Если смен направлений достигло максимума, сменить направление
       if (directionChanges >= maxDirectionChanges) {
-        barData.direction = -direction;
-        barData.directionChanges = 0;
+        barData.direction = -direction; // Сменить направление
+        barData.directionChanges = 0; // Сбросить счетчик
       }
 
+      // Рассчитываем новое изменение высоты
       let newHeight = currentHeight + (Math.floor(Math.random() * stepSize) * direction);
 
+      // Ограничиваем высоту значениями от 0 до maxHeight
       if (newHeight >= maxHeight) {
         newHeight = maxHeight;
-        barData.direction = -1;
-        barData.directionChanges++;
+        barData.direction = -1; // Если достигли максимума, начинаем спуск
+        barData.directionChanges++; // Увеличиваем счетчик смен направлений
       } else if (newHeight <= 0) {
         newHeight = 0;
-        barData.direction = 1;
-        barData.directionChanges++;
+        barData.direction = 1; // Если достигли минимума, начинаем подъем
+        barData.directionChanges++; // Увеличиваем счетчик смен направлений
       }
 
+      // Применяем новую высоту к оригинальному столбику
       barData.currentHeight = newHeight;
       element.style.height = newHeight + 'px';
+
+      // Применяем ту же высоту к зеркальному столбику
       reflectionElement.style.height = newHeight + 'px';
     });
 
+    // Запускаем новый цикл анимации
     requestAnimationFrame(animateBars);
   }
 
+  // Запускаем анимацию
   requestAnimationFrame(animateBars);
 </script>
 
-</body>
-</html>
+</section>
+</section>
