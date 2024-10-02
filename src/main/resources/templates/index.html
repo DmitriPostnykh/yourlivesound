@@ -4,13 +4,23 @@
     <meta charset="UTF-8">
     <title>Your Live Sound</title>
     <link rel="stylesheet" href="/css/styles.css"> <!-- Основные стили -->
-    <link rel="stylesheet" href="/css/enter.css"> <!-- Стили для кнопки входа -->
-    <link rel="stylesheet" href="/css/eq_main.css"><!-- Подключаем JavaScript -->
+    <link rel="stylesheet" href="/css/menu.css"> <!-- Стили для кнопок меню -->
+    <link rel="stylesheet" href="/css/eq_main.css"> <!-- Стили для эквалайзера -->
 </head>
 <body>
-<div th:replace="fragments/eq_main :: eq_main"></div> <!-- Эквалайзер -->
-<br>
-<div th:replace="fragments/enter :: enter"></div> <!-- Кнопка входа -->
+
+<!-- Эквалайзер -->
+<div class="eq-wrapper">
+    <div th:replace="fragments/eq_main :: eq_main"></div>
+</div>
+
+<!-- Меню -->
+<div class="menu-wrapper">
+    <div th:replace="fragments/menu :: menu"></div>
+</div>
+
+<!-- Подключение JavaScript -->
+<script src="/js/menu.js" defer></script>
+
 </body>
 </html>
-

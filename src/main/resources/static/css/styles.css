@@ -1,11 +1,13 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+.eq-wrapper {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Центрируем эквалайзер */
     align-items: center;
-    background-color: #ffffff;
-    color: #d35959; /* Оранжевый текст */
-    font-family: Arial, sans-serif;
+    flex-direction: column;
+    height: 70vh; /* Высота для эквалайзера */
+}
+
+.menu-wrapper {
+    display: flex;
+    justify-content: center; /* Центрируем меню */
+    margin-top: 20px;
 }
