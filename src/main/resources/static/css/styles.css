@@ -5,29 +5,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #333; /* Темно-серый фон */
-    color: orange; /* Оранжевый текст */
+    background-color: #ffffff;
+    color: #d35959; /* Оранжевый текст */
     font-family: Arial, sans-serif;
-}
-
-.container {
-    text-align: center; /* Центрирование текста */
-}
-
-h1, p {
-    margin: 20px;
-}
-
-button {
-    background-color: #00f; /* Голубые кнопки */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #0077ff; /* Более светлый голубой при наведении */
 }

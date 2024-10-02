@@ -1,0 +1,143 @@
+/* eq_main.css */
+.wrapper {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    position: relative;
+    height: 100vh; /* Полная высота экрана */
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    width: 77vw;
+    height: 30vh; /* Изначальная высота эквалайзера */
+    max-width: 1600px;
+    position: relative;
+}
+
+.bar-container {
+    width: 6%; /* Ширина каждого столбика по 6% от контейнера */
+    height: 100%;
+    position: relative;
+}
+
+.bar {
+    width: 100%;
+    background-color: #007fb7;
+    position: absolute;
+    bottom: 0;
+    transition: height 0.3s linear;
+}
+
+.reflection-container {
+    transform: scaleY(-1);
+    opacity: 0.7;
+}
+
+.reflection-container .bar {
+    background: linear-gradient(to top, rgba(0, 127, 183, 0.25) 0%, rgba(0, 127, 183, 0) 100%);
+}
+
+.blur-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.title {
+    position: absolute;
+    font-size: 10vw;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.44);
+    z-index: 3;
+    pointer-events: none;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-100%);
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+
+.title span {
+    color: white;
+    margin-right: 20px;
+}
+
+.title span:last-child {
+    margin-right: 0;
+}
+
+.title span:first-letter {
+    color: red;
+}
+
+.reflection-title {
+    position: absolute;
+    font-size: 10vw;
+    font-family: 'Arial', sans-serif;
+    color: rgba(255, 255, 255, 0.58);
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.06);
+    z-index: 3;
+    pointer-events: none;
+    width: 100%;
+    top: 50%;
+    transform: translateY(0) scaleY(-1);
+    opacity: 0.5;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255,255,255,0));
+    display: flex;
+    justify-content: center;
+}
+
+.reflection-title span {
+    margin-right: 20px;
+}
+
+.reflection-title span:last-child {
+    margin-right: 0;
+}
+
+.reflection-title span:first-letter {
+    color: rgba(255, 0, 0, 0.04);
+}
+
+/* Ограничение высоты эквалайзера для маленьких экранов */
+@media (max-width: 768px) {
+    .container {
+        height: 20vh; /* Уменьшаем высоту эквалайзера только на маленьких экранах */
+    }
+
+    .title {
+        font-size: 8vw; /* Уменьшаем текст на маленьких экранах */
+    }
+
+    .reflection-title {
+        font-size: 8vw; /* Пропорционально уменьшаем отражение текста */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        height: 15vh; /* Ещё больше уменьшаем высоту эквалайзера на маленьких экранах */
+    }
+
+    .title {
+        font-size: 6vw; /* Ещё больше уменьшаем текст */
+    }
+
+    .reflection-title {
+        font-size: 6vw; /* Пропорционально уменьшаем отражение текста */
+    }
+}

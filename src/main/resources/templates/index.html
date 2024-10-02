@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Your Live Sound</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <script src="/js/localization.js" defer></script> <!-- Подключаем JavaScript -->
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Основные стили -->
+    <link rel="stylesheet" href="/css/enter.css"> <!-- Стили для кнопки входа -->
+    <link rel="stylesheet" href="/css/eq_main.css"><!-- Подключаем JavaScript -->
 </head>
 <body>
-<!-- Включение фрагмента header -->
-
-<div th:replace="fragments/eq"></div>
-
+<div th:replace="fragments/eq_main :: eq_main"></div> <!-- Эквалайзер -->
+<br>
+<div th:replace="fragments/enter :: enter"></div> <!-- Кнопка входа -->
 </body>
 </html>
-
 

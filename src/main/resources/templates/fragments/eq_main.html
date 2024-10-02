@@ -1,0 +1,26 @@
+<!-- fragments/eq_main.html -->
+<!DOCTYPE html>
+<html lang="ru" th:fragment="eq_main">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="/css/eq_main.css"> <!-- Подключение CSS -->
+</head>
+<body>
+<div class="wrapper">
+  <div class="title"><span>Your</span> <span>Live</span> <span>Sound</span></div>
+  <div class="reflection-title"><span>Your</span> <span>Live</span> <span>Sound</span></div>
+  <div class="container" id="volumeBars">
+    <!-- Контейнеры для столбиков -->
+  </div>
+  <div class="container reflection-container" id="reflectionBars">
+    <!-- Контейнеры для отражений -->
+  </div>
+
+  <!-- Оверлей для эффекта размытия -->
+  <div class="blur-overlay"></div>
+</div>
+
+<script src="/js/eq_main.js" defer></script> <!-- Подключение JS -->
+</body>
+</html>
