@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+  <link rel="stylesheet" href="/css/form_1.css"> <!-- Styles for the form -->
+</head>
+<body>
+<div class="form-container">
+  <h2>The website is under development, but you can contact us!</h2>
+  <form id="contactForm" method="POST" action="/sendMail">
+    <div class="form-group">
+      <input type="text" id="name" name="name" placeholder="Name" required>
+    </div>
+    <div class="form-group">
+      <input type="email" id="email" name="email" placeholder="Email" required>
+    </div>
+    <div class="form-group">
+      <input type="tel" id="phone" name="phone" placeholder="Phone Number">
+    </div>
+    <div class="form-group">
+      <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+    </div>
+    <button type="submit" class="submit-button">Send</button>
+  </form>
+</div>
+
+<script src="/js/form_1.js"></script> <!-- Script for the form -->
+</body>
+</html>

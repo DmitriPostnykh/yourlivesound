@@ -26,5 +26,13 @@ public class HomeController {
     public String testimonials() {
         return "testimonials";
     }
+    @GetMapping("/contacts")
+    public String contacts() {
+        return "contacts";
+    }
+    @GetMapping("/form_1")
+    public String form_1() {
+        return "fragments/form_1";
+    }
 
 }
