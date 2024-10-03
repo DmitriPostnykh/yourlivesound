@@ -26,9 +26,9 @@ public class HomeController {
     public String testimonials() {
         return "testimonials";
     }
-    @GetMapping("/contacts")
-    public String contacts() {
-        return "contacts";
+    @GetMapping("/thank-you")
+    public String thank_you() {
+        return "thank-you";
     }
     @GetMapping("/form_1")
     public String form_1() {
