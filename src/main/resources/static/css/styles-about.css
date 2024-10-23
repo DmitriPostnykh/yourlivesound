@@ -78,17 +78,7 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
-/* Menu Section */
-.menu-section {
-    padding: 60px;
-    background-color: #ffffff;
-    transition: background-color 0.5s;
-}
 
-.menu-list {
-    display: flex;
-    justify-content: space-around;
-}
 
 /* Testimonials Section */
 .testimonials-section {
@@ -177,6 +167,7 @@ button:hover {
 .social-icons a:hover {
     text-decoration: underline;
 }
+
 /* Fade-in animation */
 .fade-in {
     opacity: 0;
@@ -188,6 +179,7 @@ button:hover {
     opacity: 1;
     transform: translateY(0);
 }
+
 /* Добавляем движения с боков */
 .service-left {
     opacity: 0;
@@ -205,4 +197,19 @@ button:hover {
 .service-left.show, .service-right.show {
     opacity: 1;
     transform: translateX(0) translateY(0); /* Возвращаем их в центр и вверх */
+}
+
+/* Menu Section */
+#menu {
+
+    .menu-section {
+        padding: 60px;
+        background-color: #ffffff;
+        transition: background-color 0.5s;
+    }
+
+    .menu-list {
+        display: flex;
+        justify-content: space-around;
+    }
 }

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" type="text/css" href="../static/css/styles-about.css"/>
     <meta charset="UTF-8">
-    <title th:text="#{site.title}">Your Live Sound</title>
+    <title th:text="#{site.name}">Your Live Sound</title>
     <link rel="stylesheet" th:href="@{/css/styles-about.css}">
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -54,26 +56,16 @@
 <!-- Contact Section -->
 <section class="contact-section fade-in" id="contact">
     <h2>Контакты</h2>
-    <form action="send_form.php" method="POST">
-        <label for="name">Имя:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="message">Сообщение:</label>
-        <textarea id="message" name="message" rows="4" required></textarea>
-
-        <button type="submit">Отправить</button>
-    </form>
-</section>
-
-<!-- Меню -->
-<section class="menu-section">
+    <!-- form_1 -->
     <div class="menu-wrapper">
-        <div th:insert="fragments/menu :: menu"></div>
+        <div th:replace="~{fragments/form_1 :: form_1}"></div>
+    </div>
+    <!-- menu -->
+    <div class="menu-wrapper">
+        <div th:replace="~{fragments/menu :: menu}"></div>
     </div>
 </section>
+<
 <footer class="footer">
     <p>&copy; 2024 Дмитрий Постных. Все права защищены.</p>
     <div class="social-icons">
@@ -82,7 +74,7 @@
         <a href="#">YouTube</a>
     </div>
 </footer>
-<!-- Footer -->
+
 <script src="/js/scripts.js"></script>
 </body>
 </html>
