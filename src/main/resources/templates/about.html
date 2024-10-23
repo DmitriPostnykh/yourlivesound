@@ -3,14 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="#{site.title}">Your Live Sound</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/styles-about.css}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Индикатор громкости</title>
 </head>
 <body>
-<p>тут уже весь контент про меня</p>
 
+<!-- Hero Section -->
+<header class="hero-section">
+    <div class="hero-content">
+        <img th:src="@{/images/title.jpg}" alt="Dmitrii Postnykh" class="hero-image">
+        <h1>Дмитрий Постных</h1>
+        <p class="slogan">"Не существует шума, есть только звук."<br>
+            Джон Кейдж</p>
+    </div>
+</header>
+
+<!-- About Me Section -->
+<section class="about-section fade-in" id="about">
+    <h2>Обо мне</h2>
+    <p>Меня зовут Дмитрий Постных, я профессиональный звукорежиссер, музыкант и сонграйтер...</p>
+</section>
+
+<!-- Services Section -->
+<section class="services-section fade-in" id="services">
+    <h2>Услуги</h2>
+    <div class="services-list">
+        <div class="service service-left">
+            <h3>Настройка аппаратуры</h3>
+            <p>Профессиональная настройка звуковой аппаратуры для церквей и концертных площадок.</p>
+        </div>
+        <div class="service service-right">
+            <h3>Консультации по оборудованию</h3>
+            <p>Консультации по выбору и покупке звукового оборудования, соответствующего вашим нуждам.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section fade-in" id="testimonials">
+    <h2>Отзывы</h2>
+    <blockquote>
+        <p>“Работа с Дмитрием была отличным опытом! Его профессионализм и внимание к деталям просто поражают.”</p>
+        <cite>— Клиент</cite>
+    </blockquote>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section fade-in" id="contact">
+    <h2>Контакты</h2>
+    <form action="send_form.php" method="POST">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Сообщение:</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+
+        <button type="submit">Отправить</button>
+    </form>
+</section>
+
+<!-- Меню -->
+<section class="menu-section">
+    <div class="menu-wrapper">
+        <div th:insert="fragments/menu :: menu"></div>
+    </div>
+</section>
+<footer class="footer">
+    <p>&copy; 2024 Дмитрий Постных. Все права защищены.</p>
+    <div class="social-icons">
+        <a href="#">Instagram</a> |
+        <a href="#">Facebook</a> |
+        <a href="#">YouTube</a>
+    </div>
+</footer>
+<!-- Footer -->
+<script src="/js/scripts.js"></script>
 </body>
 </html>

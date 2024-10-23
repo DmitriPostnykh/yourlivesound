@@ -1,6 +1,6 @@
 /* eq_main.css */
 .wrapper {
-    padding: 10px;
+    padding: 20px;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -134,10 +134,10 @@
     }
 
     .title {
-        font-size: 6vw; /* Ещё больше уменьшаем текст */
+        font-size: 9vw; /* Ещё больше уменьшаем текст */
     }
 
     .reflection-title {
-        font-size: 6vw; /* Пропорционально уменьшаем отражение текста */
+        font-size: 9vw; /* Пропорционально уменьшаем отражение текста */
     }
 }
