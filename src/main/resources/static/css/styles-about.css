@@ -36,8 +36,8 @@ p {
 }
 
 .hero-image {
-    width: 150px;
-    height: 150px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     margin-bottom: 20px;
 }
@@ -125,6 +125,13 @@ h1 {
 }
 
 /* Testimonials Section */
+.testimonial_of{
+    visibility: hidden;
+}
+.testimonial {
+    margin-bottom: 40px;
+}
+
 .testimonials-section {
     padding: 60px;
     background-color: white;
