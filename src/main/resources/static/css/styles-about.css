@@ -73,64 +73,55 @@ h1 {
 }
 
 .services-ul {
-    padding: 20px;
+    padding: 20px 20px 20px 40px; /* Added extra left padding */
 }
 
 .service {
-    flex: 0 1 100%; /* Default to full-width on small screens */
+    /* Default to full-width for screens less than 1200px */
+    flex: 0 1 100%;
     max-width: 100%;
-    padding: 20px;
+    width: 100%;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: left;
-    margin: 10px;
+    margin: 10px 0;
 }
 
 .service img.service-image {
     width: 100%;
+    max-width: 100%; /* Ensure it does not overflow */
     border-radius: 8px 8px 0 0;
-    margin-bottom: 20px;
+    margin-bottom: 0; /* Remove margin to occupy full block */
+}
+
+.service h3 {
+    margin: 0; /* Ensure no top margin */
+    padding: 20px; /* Adding padding to the title for spacing */
 }
 
 /* Adjustments for larger screens */
-@media (min-width: 576px) {
-    .service {
-        flex: 0 1 48%; /* Two columns on small screens */
-        max-width: 48%;
-    }
-}
-
-@media (min-width: 768px) {
-    .service {
-        flex: 0 1 32%; /* Three columns on medium screens and above */
-        max-width: 32%;
-    }
-}
-
 @media (min-width: 1200px) {
     .service {
-        flex: 0 1 30%; /* Slightly reduce the width for extra large screens */
+        flex: 0 1 30%; /* Three columns on larger screens */
         max-width: 30%;
+        width: auto; /* Reset the fixed width */
     }
 }
 
 /* Adjustments for smaller screens */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .services-list {
         flex-direction: column;
         align-items: center;
     }
 
     .service {
-        flex: 0 0 70%; /* Take 70% of the screen width */
-        max-width: 70%;
+        flex: 0 0 auto; /* Override default flex property */
+        max-width: 500px; /* Fixed width of 500px */
+        width: 100%; /* Ensure it takes the full width up to 500px */
         margin: 10px 0;
     }
-}
-
-.service h3 {
-    margin-top: 0;
 }
 
 /* Testimonials Section */
