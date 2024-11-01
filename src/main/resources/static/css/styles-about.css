@@ -48,7 +48,7 @@ h1 {
 }
 
 .slogan {
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-style: italic;
 }
 
@@ -67,18 +67,71 @@ h1 {
 
 .services-list {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
+    gap: 20px;
+}
+
+.services-ul {
+    padding: 20px;
 }
 
 .service {
-    width: 45%;
+    flex: 0 1 100%; /* Default to full-width on small screens */
+    max-width: 100%;
     padding: 20px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    text-align: left;
+    margin: 10px;
 }
 
+.service img.service-image {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 20px;
+}
+
+/* Adjustments for larger screens */
+@media (min-width: 576px) {
+    .service {
+        flex: 0 1 48%; /* Two columns on small screens */
+        max-width: 48%;
+    }
+}
+
+@media (min-width: 768px) {
+    .service {
+        flex: 0 1 32%; /* Three columns on medium screens and above */
+        max-width: 32%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .service {
+        flex: 0 1 30%; /* Slightly reduce the width for extra large screens */
+        max-width: 30%;
+    }
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    .services-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .service {
+        flex: 0 0 70%; /* Take 70% of the screen width */
+        max-width: 70%;
+        margin: 10px 0;
+    }
+}
+
+.service h3 {
+    margin-top: 0;
+}
 
 /* Testimonials Section */
 .testimonials-section {
@@ -98,13 +151,6 @@ cite {
     margin-top: 10px;
     font-size: 1em;
     font-weight: bold;
-}
-
-/* News Section */
-.news-section {
-    padding: 60px;
-    background-color: #f0f0f0;
-    text-align: center;
 }
 
 /* Contact Section */
@@ -197,19 +243,4 @@ button:hover {
 .service-left.show, .service-right.show {
     opacity: 1;
     transform: translateX(0) translateY(0); /* Возвращаем их в центр и вверх */
-}
-
-/* Menu Section */
-#menu {
-
-    .menu-section {
-        padding: 60px;
-        background-color: #ffffff;
-        transition: background-color 0.5s;
-    }
-
-    .menu-list {
-        display: flex;
-        justify-content: space-around;
-    }
 }

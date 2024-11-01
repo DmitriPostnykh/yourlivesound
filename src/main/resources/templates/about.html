@@ -1,32 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" type="text/css" href="../static/css/styles-about.css"/>
     <meta charset="UTF-8">
-    <title th:text="#{site.name}">Your Live Sound</title>
+    <title th:text="#{spring.application.name}">Your Live Sound</title>
     <link rel="stylesheet" th:href="@{/css/styles-about.css}">
     <link rel="stylesheet" th:href="@{/css/menu.css}">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Индикатор громкости</title>
 </head>
 <body>
-
 <!-- Hero Section -->
 <header class="hero-section">
     <div class="hero-content">
         <img th:src="@{/images/title.jpg}" alt="Dmitrii Postnykh" class="hero-image">
         <h1>Дмитрий Постных</h1>
-        <p class="slogan">"Не существует шума, есть только звук."<br>
-            Джон Кейдж</p>
+        <p class="slogan" th:text="${quote}">
     </div>
 </header>
-
 <!-- About Me Section -->
 <section class="about-section fade-in" id="about">
     <h2>Обо мне</h2>
-    <p>Меня зовут Дмитрий Постных, я профессиональный звукорежиссер, музыкант и сонграйтер...</p>
+    <p>Я профессиональный звукорежиссер с более чем 25-летним опытом работы на профессиональных площадках.
+        За годы карьеры я сотрудничал с известными музыкантами, артистами, продюсерскими центрами, театрами, студиями звукозаписи,
+        а также в кинопроизводстве работая над звуковым оформлением, шумовыми картинами для сериалов и телевизионных программ.</p>
 </section>
 
 <!-- Services Section -->
@@ -34,16 +30,36 @@
     <h2>Услуги</h2>
     <div class="services-list">
         <div class="service service-left">
-            <h3>Настройка аппаратуры</h3>
-            <p>Профессиональная настройка звуковой аппаратуры для церквей и концертных площадок.</p>
+            <img th:src="@{/images/title.jpg}" alt="Your Photo" class="service-image">
+            <h3>Концертная работа</h3>
+            <ul class="services-ul">
+                <li>Профессиональная настройка звукового оборудования для музыкальных выступлений.</li>
+                <li>Полная настройка звука во время концерта для создания идеального звучания.</li>
+                <li>Поддержка и оптимизация звука в режиме реального времени на мероприятиях и шоу.</li>
+                <li>Готовность к длительным поездкам, гастролям и турам для обеспечения стабильного качества звука на каждом этапе.</li>
+            </ul>
         </div>
         <div class="service service-right">
-            <h3>Консультации по оборудованию</h3>
-            <p>Консультации по выбору и покупке звукового оборудования, соответствующего вашим нуждам.</p>
+            <img th:src="@{/images/title.jpg}" alt="Your Photo" class="service-image">
+            <h3>Студийная работа</h3>
+            <ul class="services-ul">
+                <li>Сведение и мастеринг записанного материала для достижения профессионального звучания.</li>
+                <li>Создание шумовой картины и звукового оформления для фильмов, сериалов и телевизионных программ.</li>
+                <li>Редактирование дикторского голоса и обработка аудио для подкастов и аудиопроектов.</li>
+                <li>Написание авторской песни на заказ, включая полный цикл от создания музыки до финального продакшена.</li>
+            </ul>
+        </div>
+        <div class="service service-left">
+            <img th:src="@{/images/title.jpg}" alt="Your Photo" class="service-image">
+            <h3>Консультации и настройка оборудования</h3>
+            <ul class="services-ul">
+                <li>Подбор звукового оборудования, подходящего для различных пространств и нужд.</li>
+                <li>Консультирование по оптимизации работы оборудования для стабильного и качественного звука.</li>
+                <li>Техническая поддержка и рекомендации по настройке звуковой системы для вашего мероприятия.</li>
+            </ul>
         </div>
     </div>
 </section>
-
 <!-- Testimonials Section -->
 <section class="testimonials-section fade-in" id="testimonials">
     <h2>Отзывы</h2>
@@ -52,20 +68,20 @@
         <cite>— Клиент</cite>
     </blockquote>
 </section>
-
 <!-- Contact Section -->
 <section class="contact-section fade-in" id="contact">
     <h2>Контакты</h2>
     <!-- form_1 -->
     <div class="menu-wrapper">
         <div th:replace="~{fragments/form_1 :: form_1}"></div>
-    </div>
-    <!-- menu -->
-    <div class="menu-wrapper">
-        <div th:replace="~{fragments/menu :: menu}"></div>
-    </div>
+    </div></section>
+<!-- Меню -->
+<section class="services-section fade-in" id="menu">
+
+<div class="menu-wrapper">
+    <div th:replace="fragments/menu :: menu"></div>
+</div>
 </section>
-<
 <footer class="footer">
     <p>&copy; 2024 Дмитрий Постных. Все права защищены.</p>
     <div class="social-icons">
@@ -74,7 +90,8 @@
         <a href="#">YouTube</a>
     </div>
 </footer>
-
 <script src="/js/scripts.js"></script>
+<script src="/js/about.js"></script>
+<script src="/js/menu.js" defer></script>
 </body>
 </html>

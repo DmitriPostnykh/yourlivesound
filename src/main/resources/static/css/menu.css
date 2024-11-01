@@ -1,3 +1,20 @@
+/* Menu Section */
+#menu {
+
+    .menu-section {
+        padding: 60px;
+        background-color: #ffffff;
+        transition: background-color 0.5s;
+    }
+
+    .menu-list {
+        display: flex;
+        justify-content: space-around;
+    }
+}
+
+
+
 .menu-container {
     display: flex;
     justify-content: center;
@@ -9,7 +26,7 @@
 
 .menu-button {
     background-color: #007fb7; /* Цвет фона кнопки */
-    color: white; /* Цвет текста */
+    color: rgb(255, 255, 255); /* Цвет текста */
     font-size: 2vw; /* Размер текста зависит от ширины экрана */
     padding: 1.5vw 3vw; /* Внутренние отступы адаптируются по ширине экрана */
     border: none; /* Убираем рамку */
