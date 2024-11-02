@@ -8,15 +8,14 @@
     <link rel="stylesheet" href="/css/eq_main.css"> <!-- Стили для эквалайзера -->
 </head>
 <body>
-
 <!-- Эквалайзер -->
 <div class="eq-wrapper">
-    <div th:replace="fragments/eq_main :: eq_main"></div>
+    <div th:replace="~{fragments/eq_main :: eq_main}"></div>
 </div>
 
 <!-- Меню -->
 <div class="menu-wrapper">
-    <div th:replace="fragments/menu :: menu"></div>
+    <div th:replace="~{fragments/menu :: menu}"></div>
 </div>
 
 <!-- Подключение JavaScript -->

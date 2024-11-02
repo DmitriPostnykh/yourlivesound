@@ -3,13 +3,11 @@
   <link rel="stylesheet" href="/css/menu.css"> <!-- Подключаем стили для кнопок -->
   <div class="menu-container">
     <div class="menu-buttons">
-      <button class="menu-button" onclick="window.location.href='/about'">About</button>
-      <button class="menu-button" onclick="window.location.href='/form_1'">Contacts</button>
+      <button class="menu-button" th:if="${currentURI == '/'}" onclick="window.location.href='/about'">About</button>
+      <button class="menu-button" th:unless="${currentURI == '/'}" onclick="window.location.href='/'">Home</button>
+      <button class="menu-button" onclick="window.location.href='/contacts'">Contacts</button>
       <button class="menu-button" onclick="window.location.href='/form_1'">Price</button>
       <button class="menu-button" onclick="window.location.href='/form_1'">Registration</button>
     </div>
   </div>
 </div>
-
-
-
