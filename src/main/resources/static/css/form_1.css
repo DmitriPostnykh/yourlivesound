@@ -49,3 +49,18 @@ textarea {
 .submit-button:active {
     background-color: #004070;
 }
+/* Styles for the progress bar */
+.progress-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 20px;
+    background-color: #4caf50;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+}
