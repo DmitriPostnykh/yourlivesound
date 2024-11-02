@@ -31,23 +31,26 @@
     </form>
   </div>
   <div id="loadingMessage" style="display: none;">Отправляем, страница перезагрузится автоматически после отправки!<br>
-    Через <span id="countdown">7</span> секунд
+    Прошло времени: <span id="elapsedTime">0</span> секунд
   </div>
   <script>
     document.getElementById('contactForm').addEventListener('submit', async function(event) {
       event.preventDefault(); // Останавливаем стандартную отправку формы
       document.getElementById('loadingMessage').style.display = 'block'; // Показать индикатор загрузки
 
-      // Обратный отсчет на 5 секунд
-      let countdown = 7;
-      const countdownElement = document.getElementById('countdown');
-      const countdownInterval = setInterval(() => {
-        countdown -= 1;
-        countdownElement.textContent = countdown;
-        if (countdown <= 0) {
-          clearInterval(countdownInterval); // Останавливаем интервал после завершения отсчета
-        }
-      }, 1000); // каждую секунду уменьшаем значение на 1
+      // Начало отсчета времени
+      let startTime = Date.now();
+      let elapsedTime = 0;
+      const elapsedTimeElement = document.getElementById('elapsedTime');
+
+      // Функция обновления времени ожидания
+      const updateElapsedTime = () => {
+        elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        elapsedTimeElement.textContent = elapsedTime;
+      };
+
+      // Запускаем интервал для обновления времени ожидания каждую секунду
+      const elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
 
       try {
         const response = await fetch('https://formsubmit.co/ajax/javadeveloper7377@gmail.com', {
@@ -77,6 +80,7 @@
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
       } finally {
+        clearInterval(elapsedTimeInterval); // Останавливаем интервал
         document.getElementById('loadingMessage').style.display = 'none'; // Скрыть индикатор загрузки
       }
     });
