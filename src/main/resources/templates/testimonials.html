@@ -2,11 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="#{site.title}">Your Live Sound</title>
+    <title th:text="#{spring.application.name}">Your Live Sound</title>
     <link rel="stylesheet" th:href="@{/css/styles-wrap.css}">
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
 </head>
 <body>
-<!-- Включение фрагмента header -->
-
+<!-- Contact Section -->
+<section class="contact-section fade-in" id="contact">
+    <h2>Контакты</h2>
+    <!-- form_1 -->
+    <div class="menu-wrapper">
+        <div th:replace="~{fragments/form_1 :: form_1}"></div>
+    </div>
+</section>
+<!-- Меню -->
+<section class="services-section fade-in" id="menu">
+    <div class="menu-wrapper">
+        <div th:replace="~{fragments/menu :: menu}"></div>
+    </div>
+</section>
+<script src="/js/scripts.js"></script>
+<script src="/js/menu.js" defer></script>
 </body>
 </html>
