@@ -2,6 +2,24 @@
 <div th:fragment="form_1">
   <link rel="stylesheet" href="/css/form_1.css"> <!-- Styles for the form -->
 
+  <style>
+    /* Стили для полосы загрузки */
+    .progress-container {
+      width: 100%;
+      background-color: #f3f3f3;
+      margin-top: 10px;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 20px;
+      background-color: #4caf50;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+    }
+  </style>
+
   <div class="form-container">
     <h2>The website is under development, but you can contact us!</h2>
     <!-- Форма с использованием FormSubmit -->
@@ -30,8 +48,12 @@
       <button type="submit" class="submit-button">Send</button>
     </form>
   </div>
-  <div id="loadingMessage" style="display: none;">Отправляем, страница перезагрузится автоматически после отправки!<br>
+  <div id="loadingMessage" style="display: none;">
+    Отправляем, страница перезагрузится автоматически после отправки!<br>
     Прошло времени: <span id="elapsedTime">0</span> секунд
+    <div class="progress-container">
+      <div id="progressBar" class="progress-bar">0%</div>
+    </div>
   </div>
   <script>
     document.getElementById('contactForm').addEventListener('submit', async function(event) {
@@ -42,14 +64,21 @@
       let startTime = Date.now();
       let elapsedTime = 0;
       const elapsedTimeElement = document.getElementById('elapsedTime');
+      const progressBarElement = document.getElementById('progressBar');
+      let progress = 0;
 
       // Функция обновления времени ожидания
       const updateElapsedTime = () => {
         elapsedTime = Math.floor((Date.now() - startTime) / 1000);
         elapsedTimeElement.textContent = elapsedTime;
+
+        // Обновление полосы загрузки
+        progress = Math.min(100, (elapsedTime / 5) * 100);
+        progressBarElement.style.width = progress + '%';
+        progressBarElement.textContent = Math.floor(progress) + '%';
       };
 
-      // Запускаем интервал для обновления времени ожидания каждую секунду
+      // Запуск интервала для обновления времени ожидания каждую секунду
       const elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
 
       try {
@@ -70,9 +99,7 @@
         const data = await response.json();
 
         if (data.success) {
-          setTimeout(() => {
-            window.location.href = '/'; // Редирект после успешной отправки через 5 секунд
-          }, 5000); // Ждем 5 секунд перед редиректом
+          window.location.href = '/'; // Немедленный редирект после успешной отправки
         } else {
           alert('There was an issue submitting the form.');
         }
