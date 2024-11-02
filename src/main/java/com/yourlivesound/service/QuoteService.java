@@ -8,42 +8,43 @@ import java.util.Random;
 
 @Service
 public class QuoteService {
+
     private final List<Quote> quotes = new ArrayList<>();
     private final Random random = new Random();
 
     public QuoteService() {
-        // Добавьте ваши цитаты в список
-        quotes.add(new Quote("Дюк Эллингтон (музыкант, джазовый пианист и композитор):\n" +
-                "\"Если звучит хорошо, значит, это хорошо.\""));
-        quotes.add(new Quote("Леонард Коэн (музыкант, певец и поэт):\n" +
-                "\"Музыка — это эмоциональная математика.\""));
-        quotes.add(new Quote("Джоан Баэз (музыкант, фолк-певица):\n" +
-                "\"Музыка изменила мою жизнь — и она может изменить вашу.\""));
-        quotes.add(new Quote("Джон Леннон (музыкант, участник The Beatles):\n" +
-                "\"Музыка — это искусство для ушей, а не для глаз.\""));
-        quotes.add(new Quote("Эдит Пиаф (музыкант, певица):\n" +
-                "\"Пой так, словно это твоя последняя песня.\""));
-        quotes.add(new Quote("Боб Марли (музыкант, регги-певец):\n" +
-                "\"Одна хорошая вещь о музыке: когда она бьет, ты не чувствуешь боли.\""));
-        quotes.add(new Quote("Серж Генсбур (музыкант, певец, композитор):\n" +
-                "\"Музыка — это единственное искусство, которое входит прямо в сердце.\""));
-        quotes.add(new Quote("Майкл Джексон (музыкант, певец, танцор):\n" +
-                "\"Музыка и ритм находят свой путь к самым сокровенным местам души.\""));
-        quotes.add(new Quote("Кэти Перри (музыкант, певица):\n" +
-                "\"Музыка — это универсальный язык, который объединяет людей.\""));
-        quotes.add(new Quote("Людвиг ван Бетховен (композитор, пианист):\n" +
-                "\"Музыка — посредница между духовной и чувственной жизнью.\""));
-        quotes.add(new Quote("Эннио Морриконе (композитор, дирижёр):\n" +
-                "\"Музыка в фильме — это дополнительный персонаж.\""));
-        quotes.add(new Quote("Эми Уайнхаус (музыкант, певица):\n" +
-                "\"Я просто хочу писать музыку, которая заставляет людей чувствовать.\""));
-        quotes.add(new Quote("Джон Кейдж (композитор, музыкант-экспериментатор):\n" +
-                "\"Не существует шума, есть только звук.\""));
-        quotes.add(new Quote("Игорь Стравинский (композитор):\n" +
-                "\"Моя свобода будет там, где я создам свои собственные ограничения.\""));
-        quotes.add(new Quote("Фрэнк Заппа (музыкант, композитор):\n" +
-                "\"Без отклонений от нормы не было бы прогресса.\""));
-        // ... добавьте остальные цитаты
+        // Add your quotes to the list
+        quotes.add(new Quote("Duke Ellington (musician, jazz pianist, and composer):\n" +
+                "\"If it sounds good, it is good.\""));
+        quotes.add(new Quote("Leonard Cohen (musician, singer, and poet):\n" +
+                "\"Music is emotional mathematics.\""));
+        quotes.add(new Quote("Joan Baez (musician, folk singer):\n" +
+                "\"Music changed my life - and it can change yours.\""));
+        quotes.add(new Quote("John Lennon (musician, member of The Beatles):\n" +
+                "\"Music is art for the ears, not for the eyes.\""));
+        quotes.add(new Quote("Edith Piaf (musician, singer):\n" +
+                "\"Sing as if it were your last song.\""));
+        quotes.add(new Quote("Bob Marley (musician, reggae singer):\n" +
+                "\"One good thing about music: when it hits you, you feel no pain.\""));
+        quotes.add(new Quote("Serge Gainsbourg (musician, singer, composer):\n" +
+                "\"Music is the only art that goes directly to the heart.\""));
+        quotes.add(new Quote("Michael Jackson (musician, singer, dancer):\n" +
+                "\"Music and rhythm find their way into the secret places of the soul.\""));
+        quotes.add(new Quote("Katy Perry (musician, singer):\n" +
+                "\"Music is a universal language that unifies people.\""));
+        quotes.add(new Quote("Ludwig van Beethoven (composer, pianist):\n" +
+                "\"Music is a mediator between the spiritual and the sensual life.\""));
+        quotes.add(new Quote("Ennio Morricone (composer, conductor):\n" +
+                "\"Music in film is an additional character.\""));
+        quotes.add(new Quote("Amy Winehouse (musician, singer):\n" +
+                "\"I just want to write music that makes people feel.\""));
+        quotes.add(new Quote("John Cage (composer, experimental musician):\n" +
+                "\"There is no noise, only sound.\""));
+        quotes.add(new Quote("Igor Stravinsky (composer):\n" +
+                "\"My freedom will be where I create my own limitations.\""));
+        quotes.add(new Quote("Frank Zappa (musician, composer):\n" +
+                "\"Without deviations from the norm, progress would not be possible.\""));
+        // ... add the remaining quotes
     }
 
     public String getRandomQuote() {

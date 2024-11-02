@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Your Live Sound</title>
-    <link rel="stylesheet" href="/css/styles-wrap.css"> <!-- Основные стили -->
-    <link rel="stylesheet" href="/css/menu.css"> <!-- Стили для кнопок меню -->
-    <link rel="stylesheet" href="/css/eq_main.css"> <!-- Стили для эквалайзера -->
+    <link rel="stylesheet" href="/css/styles-wrap.css"> <!-- Main styles -->
+    <link rel="stylesheet" href="/css/menu.css"> <!-- Styles for menu buttons -->
+    <link rel="stylesheet" href="/css/eq_main.css"> <!-- Styles for equalizer -->
 </head>
 <body>
-<!-- Эквалайзер -->
+<!-- Equalizer -->
 <div class="eq-wrapper">
     <div th:replace="~{fragments/eq_main :: eq_main}"></div>
 </div>
 
-<!-- Меню -->
+<!-- Menu -->
 <div class="menu-wrapper">
     <div th:replace="~{fragments/menu :: menu}"></div>
 </div>
 
-<!-- Подключение JavaScript -->
+<!-- Include JavaScript -->
 <script src="/js/menu.js" defer></script>
 
 </body>

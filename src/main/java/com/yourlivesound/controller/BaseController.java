@@ -16,7 +16,6 @@ public abstract class BaseController {
 
     @Autowired
     private QuoteService quoteService;
-
     @ModelAttribute("buttons")
     public List<Map<String, String>> getMenuButtons(Model model) {
         String currentURI = (String) model.getAttribute("currentURI");

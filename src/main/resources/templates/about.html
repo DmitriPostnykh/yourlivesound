@@ -6,92 +6,91 @@
     <link rel="stylesheet" th:href="@{/css/styles-about.css}">
     <link rel="stylesheet" th:href="@{/css/menu.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Индикатор громкости</title>
 </head>
 <body>
 <!-- Hero Section -->
 <header class="hero-section">
     <div class="hero-content">
         <img th:src="@{/images/title.jpg}" alt="Dmitrii Postnykh" class="hero-image">
-        <h1>Дмитрий Постных</h1>
-        <p class="slogan" th:text="${quote}">
+        <h1>Dmitrii Postnykh</h1>
+        <p class="quote" th:text="${quote}"></p>
     </div>
 </header>
 <!-- About Me Section -->
 <section class="about-section fade-in" id="about">
-    <h2>Обо мне</h2>
-    <p>Более чем 25 лет назад я осознано выбрал направление звукорежиссуры. За годы карьеры сотрудничая с известными
-        музыкантами, артистами, продюсерскими центрами, театрами, студиями
-        звукозаписи я накопил достаточно много знаний и опыта. Я не могу выделить какое-то одно направление которое мне
-        было бы наиболее интересным. Все они по своему многогранны и интересны. Чтобы создать качественный звук, нужно
-        понимать и знать много важных дисциплин, таких как: физика, музыкальная теория, гармония и ритм, математика,
-        психоакустика, электроника и инжинерия, современные технологии. Не мало согласитесь, но это только верхушка айсберга.
-        Помимо всего этого необходимо иметь талант, слух, терпение, стрессоустойчивость, умение работать с людьми и
-        много много много эксперементировать, сравнивать и самое главное быть довольным от вложенных усилий!
+    <h2>About Me</h2>
+    <p>More than 25 years ago, I consciously chose the direction of sound engineering. Over the years of my career, working with famous musicians, artists, production centers, theaters, recording studios, I have accumulated a lot of knowledge and experience. I cannot highlight any one direction that interests me most. They are all multifaceted and interesting in their own way. To create high-quality sound, you need to understand and know many important disciplines, such as physics, music theory, harmony and rhythm, mathematics, psychoacoustics, electronics and engineering, modern technologies. Quite a lot, agree, but this is only the tip of the iceberg. In addition to all this, you need to have talent, hearing, patience, stress resistance, the ability to work with people, and a lot of experimenting, comparing, and most importantly, being pleased with the efforts invested!</p>
 
-    <p>Моя цель бонально проста - создать атмосферу, которая не оставит равнодушным ни одного слушетеля.</p>
-        </p>
+    <p>My goal is simply to create an atmosphere that will not leave any listener indifferent.</p>
 </section>
 
 <!-- Services Section -->
 <section class="services-section fade-in" id="services">
-    <h2>Услуги</h2>
+    <h2>Services</h2>
     <div class="services-list">
         <div class="service service-left">
             <img th:src="@{/images/title.jpg}" alt="Your Photo" class="service-image">
-            <h3>Концертная работа</h3>
+            <h3>Consultations and Equipment Setup</h3>
             <ul class="services-ul">
-                <li>Профессиональная настройка звукового оборудования для музыкальных выступлений.</li>
-                <li>Полная настройка звука во время концерта для создания идеального звучания.</li>
-                <li>Поддержка и оптимизация звука в режиме реального времени на мероприятиях и шоу.</li>
-                <li>Готовность к длительным поездкам, гастролям и турам для обеспечения стабильного качества звука на каждом этапе.</li>
+                <li>Selection of sound equipment suitable for various rooms and open-air venues.</li>
+                <li>Consultation on optimizing equipment performance for stable and high-quality sound.</li>
+                <li>Technical support and recommendations for setting up the sound system for your event.</li>
             </ul>
         </div>
         <div class="service service-right">
             <img th:src="@{/images/title.jpg}" alt="Your Photo" class="service-image">
-            <h3>Студийная работа</h3>
+            <h3>Concert Work</h3>
             <ul class="services-ul">
-                <li>Сведение и мастеринг записанного материала для достижения профессионального звучания.</li>
-                <li>Создание шумовой картины и звукового оформления для фильмов, сериалов и телевизионных программ.</li>
-                <li>Редактирование дикторского голоса и обработка аудио для подкастов и аудиопроектов.</li>
-                <li>Написание авторской песни на заказ, включая полный цикл от создания музыки до финального продакшена.</li>
+                <li>Professional setup of sound equipment for musical performances. FOH System, Monitors System, IEM System, PA System, RF System, Recording System.</li>
+                <li>Support and optimization of sound in real-time at events and shows.</li>
+                <li>Preparation for long trips, tours, and tours. Compiling Rider List, Input-Output List, Stage Plan, calculating sound pressure and loads, ensuring stable sound quality at every stage.</li>
             </ul>
         </div>
         <div class="service service-left">
             <img th:src="@{/images/title.jpg}" alt="Your Photo" class="service-image">
-            <h3>Консультации и настройка оборудования</h3>
+            <h3>Master Classes for Bands</h3>
             <ul class="services-ul">
-                <li>Подбор звукового оборудования, подходящего для различных пространств и нужд.</li>
-                <li>Консультирование по оптимизации работы оборудования для стабильного и качественного звука.</li>
-                <li>Техническая поддержка и рекомендации по настройке звуковой системы для вашего мероприятия.</li>
+                <li>Consultation on the overall sound of the team.</li>
+                <li>Solving various problems at live concerts.</li>
+                <li>Qualified correction at the rehearsal stage.</li>
+            </ul>
+        </div>
+        <div class="service service-right">
+            <img th:src="@{/images/title.jpg}" alt="Your Photo" class="service-image">
+            <h3>Studio Work</h3>
+            <ul class="services-ul">
+                <li>Mixing and mastering of recorded material.</li>
+                <li>Creating noise paintings and sound design for films, TV shows, and television programs.</li>
+                <li>Editing narrators' voices and processing audio for podcasts and audio projects.</li>
+                <li>Writing a custom song, including the entire cycle from creating the music to final production.</li>
             </ul>
         </div>
     </div>
 </section>
 <!-- Testimonials Section
 <section class="testimonials-section fade-in" id="testimonials_of">
-    <h2>Отзывы</h2>
+    <h2>Testimonials</h2>
     <blockquote>
-        <p>“Работа с Дмитрием была отличным опытом! Его профессионализм и внимание к деталям просто поражают.”</p>
-        <cite>— Клиент</cite>
+        <p>“Working with Dmitrii was an excellent experience! His professionalism and attention to detail are simply impressive.”</p>
+        <cite>— Client</cite>
     </blockquote>
 </section>-->
 <!-- Contact Section -->
 <section class="contact-section fade-in" id="contact">
-    <h2>Контакты</h2>
+    <h2>Contact</h2>
     <!-- form_1 -->
     <div class="menu-wrapper">
         <div th:replace="~{fragments/form_1 :: form_1}"></div>
-    </div></section>
-<!-- Меню -->
+    </div>
+</section>
+<!-- Menu -->
 <section class="services-section fade-in" id="menu">
-
-<div class="menu-wrapper">
-    <div th:replace="~{fragments/menu :: menu}"></div>
-</div>
+    <div class="menu-wrapper">
+        <div th:replace="~{fragments/menu :: menu}"></div>
+    </div>
 </section>
 <footer class="footer">
-    <p>&copy; 2024 Дмитрий Постных. Все права защищены.</p>
+    <p>&copy; 2024 Dmitrii Postnykh. All rights reserved.</p>
     <div class="social-icons">
         <a href="#">Instagram</a> |
         <a href="#">Facebook</a> |

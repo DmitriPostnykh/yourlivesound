@@ -47,7 +47,7 @@ h1 {
     margin-bottom: 10px;
 }
 
-.slogan {
+.guote {
     font-size: 1.2em;
     font-style: italic;
 }
@@ -103,8 +103,8 @@ h1 {
 /* Adjustments for larger screens */
 @media (min-width: 1200px) {
     .service {
-        flex: 0 1 30%; /* Three columns on larger screens */
-        max-width: 30%;
+        flex: 0 1 23%; /* 4 columns on larger screens */
+        max-width: 23%;
         width: auto; /* Reset the fixed width */
     }
 }
