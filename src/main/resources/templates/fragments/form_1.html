@@ -3,7 +3,7 @@
   <link rel="stylesheet" href="/css/form_1.css"> <!-- Styles for the form -->
 
   <style>
-    /* Стили для полосы загрузки */
+    /* Styles for the progress bar */
     .progress-container {
       width: 100%;
       background-color: #f3f3f3;
@@ -22,11 +22,11 @@
 
   <div class="form-container">
     <h2>The website is under development, but you can contact us!</h2>
-    <!-- Форма с использованием FormSubmit -->
+    <!-- Form using FormSubmit -->
     <form id="contactForm" method="POST" action="https://formsubmit.co/javadeveloper7377@gmail.com">
-      <!-- Необходимо добавить скрытое поле для защиты от спама -->
+      <!-- Hidden field to protect from spam -->
       <input type="hidden" name="_captcha" value="false">
-      <!-- Поле для URL страницы после отправки формы -->
+      <!-- Field for the URL of the page after form submission -->
       <input type="hidden" name="_next" value="/">
 
       <div class="form-group">
@@ -49,36 +49,36 @@
     </form>
   </div>
   <div id="loadingMessage" style="display: none;">
-    Отправляем, страница перезагрузится автоматически после отправки!<br>
-    Прошло времени: <span id="elapsedTime">0</span> секунд
+    Sending, the page will reload automatically after submission!<br>
+    Time elapsed: <span id="elapsedTime">0</span> seconds
     <div class="progress-container">
       <div id="progressBar" class="progress-bar">0%</div>
     </div>
   </div>
   <script>
     document.getElementById('contactForm').addEventListener('submit', async function(event) {
-      event.preventDefault(); // Останавливаем стандартную отправку формы
-      document.getElementById('loadingMessage').style.display = 'block'; // Показать индикатор загрузки
+      event.preventDefault(); // Stops the standard form submission
+      document.getElementById('loadingMessage').style.display = 'block'; // Show the loading indicator
 
-      // Начало отсчета времени
+      // Start time tracking
       let startTime = Date.now();
       let elapsedTime = 0;
       const elapsedTimeElement = document.getElementById('elapsedTime');
       const progressBarElement = document.getElementById('progressBar');
       let progress = 0;
 
-      // Функция обновления времени ожидания
+      // Function to update elapsed time
       const updateElapsedTime = () => {
         elapsedTime = Math.floor((Date.now() - startTime) / 1000);
         elapsedTimeElement.textContent = elapsedTime;
 
-        // Обновление полосы загрузки
+        // Update progress bar
         progress = Math.min(100, (elapsedTime / 5) * 100);
         progressBarElement.style.width = progress + '%';
         progressBarElement.textContent = Math.floor(progress) + '%';
       };
 
-      // Запуск интервала для обновления времени ожидания каждую секунду
+      // Start interval to update elapsed time every second
       const elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
 
       try {
@@ -99,7 +99,7 @@
         const data = await response.json();
 
         if (data.success) {
-          window.location.href = '/'; // Немедленный редирект после успешной отправки
+          window.location.href = '/'; // Immediate redirect after successful submission
         } else {
           alert('There was an issue submitting the form.');
         }
@@ -107,10 +107,9 @@
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
       } finally {
-        clearInterval(elapsedTimeInterval); // Останавливаем интервал
-        document.getElementById('loadingMessage').style.display = 'none'; // Скрыть индикатор загрузки
+        clearInterval(elapsedTimeInterval); // Stop the interval
+        document.getElementById('loadingMessage').style.display = 'none'; // Hide the loading indicator
       }
     });
   </script>
 </div>
-
