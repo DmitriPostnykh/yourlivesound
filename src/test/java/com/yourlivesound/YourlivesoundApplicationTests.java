@@ -81,7 +81,7 @@ class YourlivesoundApplicationTests {
     }
 
     @Test
-    void equalizerRendersTwelveBackgroundStageLights() throws Exception {
+    void equalizerRendersCompleteBackgroundStageRig() throws Exception {
         String html = mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -89,6 +89,8 @@ class YourlivesoundApplicationTests {
                 .getContentAsString();
 
         assertEquals(12, html.split("class=\"stage-light\"", -1).length - 1);
+        assertEquals(6, html.split("class=\"moving-head\"", -1).length - 1);
+        assertEquals(18, html.split("class=\"stage-strobe\"", -1).length - 1);
     }
 
     @Test

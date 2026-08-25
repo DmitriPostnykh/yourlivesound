@@ -15,7 +15,7 @@
     }
 
     const barCount = 22;
-    const minimumHeight = 26;
+    const minimumHeight = 14;
     const maximumHeight = 100;
     const neutralTopHeight = 50;
     const titleFloorGap = 5;
@@ -292,10 +292,13 @@
             const travelingWave = (Math.sin(time * 2.1 - index * 0.55) + 1) / 2;
             const pulseWave = (Math.sin(time * pulseSpeed + profile.pulsePhase) + 1) / 2;
             const pulse = Math.pow(pulseWave, 9);
-            const targetLevel = primary * 0.25
+            const mixedLevel = primary * 0.25
                 + detail * 0.15
                 + travelingWave * 0.15
                 + pulse * 0.45;
+            // Expand the musical envelope: quieter gaps sit lower while strong beats
+            // can reach the ceiling arc without keeping every bar pinned there.
+            const targetLevel = Math.min(1, Math.max(0, (mixedLevel - 0.16) * 1.85));
 
             // A fast attack makes each beat jump upward; a slower release lets it fall naturally.
             const response = targetLevel > profile.level ? attackResponse : releaseResponse;
