@@ -1,12 +1,15 @@
+# syntax=docker/dockerfile:1.7
 FROM eclipse-temurin:17-jdk-jammy@sha256:400014962ad7224461f945bb1cc3d7d5a1927ce15b8245b72d9cedcda554cd2a AS build
 
 WORKDIR /workspace
 COPY .mvn .mvn
 COPY mvnw pom.xml ./
-RUN ./mvnw --batch-mode --no-transfer-progress -DskipTests dependency:go-offline
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw --batch-mode --no-transfer-progress -DskipTests dependency:resolve
 
 COPY src src
-RUN ./mvnw --batch-mode --no-transfer-progress -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw --batch-mode --no-transfer-progress -DskipTests package
 
 FROM eclipse-temurin:17-jre-jammy@sha256:e17d77fb030dd4b642dc078d048a5fb9efcb3676ee20305d905949105a6ccd5a
 
