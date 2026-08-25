@@ -13,7 +13,11 @@
     const maximumHeight = 94;
     const minimumDepthScale = 0.5;
     const depthCurve = 1.35;
-    const maximumDepthLift = 26;
+    const maximumDepthLift = 34;
+    // Show the central segment of a larger circle so the projected arc stays rounded without sharp ends.
+    const arcRadiusFactor = 1.35;
+    const arcEdgeOffset = Math.sqrt(Math.pow(arcRadiusFactor, 2) - 1);
+    const arcCenterOffset = arcRadiusFactor - arcEdgeOffset;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const bars = [];
     const reflections = [];
@@ -30,9 +34,10 @@
         return depthScaleForDistance(distanceFromCenter);
     };
 
-    const arcRecessionForDistance = (distanceFromCenter) => Math.sqrt(
-        Math.max(0, 1 - Math.pow(distanceFromCenter, 2))
-    );
+    const arcRecessionForDistance = (distanceFromCenter) => (
+        Math.sqrt(Math.max(0, Math.pow(arcRadiusFactor, 2) - Math.pow(distanceFromCenter, 2)))
+        - arcEdgeOffset
+    ) / arcCenterOffset;
 
     const buildPerspectiveHorizon = () => {
         if (!perspectiveHorizonPath) {
@@ -90,8 +95,11 @@
         const startX = ((arcStart - horizonRect.left) / horizonRect.width) * 1000;
         const endX = ((arcEnd - horizonRect.left) / horizonRect.width) * 1000;
         const baselineY = ((baseline - horizonRect.top) / horizonRect.height) * 100;
-        const radiusX = (endX - startX) / 2;
-        const radiusY = (arcDepth / horizonRect.height) * 100;
+        const radiusX = ((endX - startX) / 2) * arcRadiusFactor;
+        const radiusY = (arcDepth / horizonRect.height)
+            * 100
+            * arcRadiusFactor
+            / arcCenterOffset;
         perspectiveHorizonPath.setAttribute(
             "d",
             `M ${startX.toFixed(2)} ${baselineY.toFixed(2)}`

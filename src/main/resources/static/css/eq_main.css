@@ -1,5 +1,5 @@
 .equalizer {
-    --perspective-arc-height: clamp(1.56rem, 4.68svh, 2.86rem);
+    --perspective-arc-height: clamp(2.04rem, 6svh, 3.68rem);
     width: 100%;
     height: clamp(23rem, 66svh, 38rem);
     padding: 1rem clamp(0.75rem, 4vw, 2.5rem);
@@ -208,7 +208,7 @@
 
 @media (max-width: 560px) {
     .equalizer {
-        --perspective-arc-height: clamp(1.25rem, 3.64svh, 1.92rem);
+        --perspective-arc-height: clamp(1.6rem, 4.7svh, 2.5rem);
         height: clamp(20rem, 55svh, 28rem);
         padding-inline: 0.5rem;
     }
