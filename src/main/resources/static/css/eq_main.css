@@ -1,7 +1,7 @@
 .equalizer {
     width: 100%;
-    height: clamp(18rem, 55vh, 34rem);
-    padding: 1rem clamp(0.5rem, 4vw, 2rem);
+    height: clamp(23rem, 66svh, 38rem);
+    padding: 1rem clamp(0.75rem, 4vw, 2.5rem);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,19 +9,48 @@
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    background: #ffffff;
+    background: transparent;
+}
+
+.equalizer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+        ellipse at 50% 48%,
+        rgba(25, 173, 220, 0.19) 0%,
+        rgba(11, 109, 143, 0.08) 34%,
+        transparent 72%
+    );
+    pointer-events: none;
+}
+
+.equalizer::after {
+    content: "";
+    width: min(92vw, 1180px);
+    height: 1px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    background: linear-gradient(90deg, transparent, rgba(125, 224, 255, 0.34), transparent);
+    box-shadow: 0 0 1.5rem rgba(71, 200, 239, 0.16);
+    transform: translateX(-50%);
+    pointer-events: none;
 }
 
 .container {
-    width: min(77vw, 1000px);
-    height: clamp(5rem, 16vh, 10rem);
+    width: min(82vw, 1080px);
+    height: clamp(6rem, 18svh, 11rem);
     display: flex;
     justify-content: space-between;
     position: relative;
+    z-index: 0;
 }
 
 .bar-container {
-    width: 5.6%;
+    width: 5.15%;
     height: 100%;
     position: relative;
 }
@@ -31,26 +60,42 @@
     min-height: 2%;
     position: absolute;
     bottom: 0;
-    background: #007fb7;
+    background: linear-gradient(180deg, #68ddff 0%, #16a7d5 42%, #05749f 100%);
+    border-radius: 0.18rem 0.18rem 0 0;
+    box-shadow:
+        0 0 0.8rem rgba(54, 204, 247, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.26);
+    opacity: 0.92;
     transition: height 220ms linear;
 }
 
 .reflection-container {
-    opacity: 0.62;
+    opacity: 0.34;
+    filter: blur(0.7px);
     transform: scaleY(-1);
+    -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.45) 38%, transparent 92%);
+    mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.45) 38%, transparent 92%);
 }
 
 .reflection-container .bar {
-    background: linear-gradient(to top, rgba(0, 127, 183, 0.25), rgba(0, 127, 183, 0));
+    background: linear-gradient(180deg, rgba(78, 211, 250, 0.48), rgba(4, 91, 125, 0));
+    box-shadow: none;
+    opacity: 0.7;
 }
 
 .blur-overlay {
     position: absolute;
     inset: 0;
     z-index: 2;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 48%,
+        rgba(2, 12, 20, 0.08) 54%,
+        rgba(2, 10, 17, 0.2) 76%,
+        transparent 100%
+    );
     pointer-events: none;
-    -webkit-backdrop-filter: blur(7px);
-    backdrop-filter: blur(7px);
 }
 
 .title,
@@ -59,45 +104,62 @@
     margin: 0;
     display: flex;
     justify-content: center;
-    gap: 0.25em;
+    gap: 0.18em;
     position: absolute;
     right: 0;
     left: 0;
     z-index: 3;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    font-size: clamp(2.2rem, 10vw, 8rem);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.06em;
+    color: #f4fbff;
+    font-family: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(2.65rem, 7.8vw, 6.7rem);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
     text-align: center;
-    text-shadow: 0.04em 0.04em 0.08em rgba(0, 0, 0, 0.35);
+    text-shadow:
+        0 0.1rem 0.2rem rgba(0, 0, 0, 0.42),
+        0 0 1.8rem rgba(80, 211, 251, 0.1);
     pointer-events: none;
 }
 
 .title {
     top: 50%;
-    transform: translateY(-100%);
+    transform: translateY(-108%);
 }
 
 .reflection-title {
     top: 50%;
-    opacity: 0.38;
-    transform: scaleY(-1);
+    color: rgba(202, 237, 248, 0.5);
+    opacity: 0.13;
+    filter: blur(0.8px);
+    text-shadow: none;
+    transform: translateY(8%) scaleY(-1);
 }
 
 .title span::first-letter {
-    color: #f04444;
+    color: #ff5365;
 }
 
 @media (max-width: 560px) {
     .equalizer {
-        height: clamp(16rem, 48vh, 24rem);
+        height: clamp(20rem, 55svh, 28rem);
+        padding-inline: 0.5rem;
     }
 
     .container {
-        width: 90vw;
-        height: clamp(4rem, 13vh, 7rem);
+        width: 92vw;
+        height: clamp(4.8rem, 14svh, 7.4rem);
+    }
+
+    .title,
+    .reflection-title {
+        gap: 0.14em;
+        font-size: clamp(2.3rem, 9.8vw, 3rem);
+        letter-spacing: -0.045em;
+    }
+
+    .equalizer::after {
+        width: 96vw;
     }
 }
 
