@@ -1,6 +1,7 @@
 .equalizer {
     --perspective-arc-height: clamp(2.04rem, 6svh, 3.68rem);
     --equalizer-bar-height: clamp(6rem, 18svh, 11rem);
+    --mirror-floor-y: 50%;
     width: 100%;
     height: clamp(23rem, 66svh, 38rem);
     padding: 1rem clamp(0.75rem, 4vw, 2.5rem);
@@ -178,7 +179,7 @@
     margin: 0;
     display: flex;
     justify-content: center;
-    gap: 0.18em;
+    gap: 0.07em;
     position: absolute;
     right: 0;
     left: 0;
@@ -188,7 +189,7 @@
     font-size: clamp(2.65rem, 7.8vw, 6.7rem);
     font-weight: 600;
     line-height: 0.95;
-    letter-spacing: -0.045em;
+    letter-spacing: -0.06em;
     text-align: center;
     text-shadow:
         0 0.1rem 0.2rem rgba(0, 0, 0, 0.42),
@@ -197,17 +198,17 @@
 }
 
 .title {
-    top: 50%;
-    transform: translateY(-108%);
+    bottom: var(--mirror-floor-y);
 }
 
 .reflection-title {
-    top: 50%;
+    bottom: var(--mirror-floor-y);
     color: rgba(202, 237, 248, 0.5);
     opacity: 0.13;
     filter: blur(0.8px);
     text-shadow: none;
-    transform: translateY(8%) scaleY(-1);
+    transform: scaleY(-1);
+    transform-origin: 50% 100%;
 }
 
 .title span::first-letter {
@@ -228,9 +229,9 @@
 
     .title,
     .reflection-title {
-        gap: 0.14em;
+        gap: 0.05em;
         font-size: clamp(2.3rem, 9.8vw, 3rem);
-        letter-spacing: -0.045em;
+        letter-spacing: -0.06em;
     }
 
     .perspective-arc {
