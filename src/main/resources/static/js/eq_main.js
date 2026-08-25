@@ -71,19 +71,20 @@
             const rect = holder.getBoundingClientRect();
             const leftY = yAt(rect.left);
             const rightY = yAt(rect.right);
-            const centerY = (leftY + rightY) / 2;
-            const depthLift = ((baseline - centerY) / volumeRect.height) * 100;
-            const angle = Math.atan2(rightY - leftY, rect.width);
-            const horizontalScale = 1 / Math.cos(angle);
-            const angleValue = `${(angle * 180 / Math.PI).toFixed(3)}deg`;
-            const scaleValue = horizontalScale.toFixed(5);
+            const lowerY = Math.max(leftY, rightY);
+            const upperY = Math.min(leftY, rightY);
+            const depthLift = ((baseline - lowerY) / volumeRect.height) * 100;
+            const depthRise = ((upperY - baseline) / volumeRect.height) * 100;
+            const mainBar = holder.querySelector(".bar");
+            const reflectionBar = reflectionHolders[index].querySelector(".bar");
 
-            [holder, reflectionHolders[index]].forEach((target) => {
-                target.style.setProperty("--depth-lift", `${depthLift.toFixed(3)}%`);
-                target.style.setProperty("--depth-rise", `${(-depthLift).toFixed(3)}%`);
-                target.style.setProperty("--bar-angle", angleValue);
-                target.style.setProperty("--bar-scale-x", scaleValue);
-            });
+            holder.style.setProperty("--depth-lift", `${depthLift.toFixed(3)}%`);
+            reflectionHolders[index].style.setProperty("--depth-rise", `${depthRise.toFixed(3)}%`);
+
+            mainBar.style.setProperty("--bar-left-inset", `${(lowerY - leftY).toFixed(3)}px`);
+            mainBar.style.setProperty("--bar-right-inset", `${(lowerY - rightY).toFixed(3)}px`);
+            reflectionBar.style.setProperty("--reflection-left-inset", `${(leftY - upperY).toFixed(3)}px`);
+            reflectionBar.style.setProperty("--reflection-right-inset", `${(rightY - upperY).toFixed(3)}px`);
         });
 
         const startX = ((arcStart - horizonRect.left) / horizonRect.width) * 1000;
