@@ -70,10 +70,10 @@
     top: 0;
     left: 50%;
     border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(189, 242, 255, 0.9), rgba(53, 178, 217, 0.34) 58%, transparent 76%);
+    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.96), rgba(236, 244, 247, 0.42) 58%, transparent 76%);
     box-shadow:
-        0 0 0.5rem rgba(112, 220, 250, 0.34),
-        0 0 1.2rem rgba(24, 151, 193, 0.18);
+        0 0 0.5rem rgba(255, 255, 255, 0.38),
+        0 0 1.2rem rgba(222, 235, 240, 0.2);
     transform: translateX(-50%);
 }
 
@@ -86,9 +86,9 @@
     left: 50%;
     background: radial-gradient(
         ellipse at 50% 2%,
-        rgba(126, 226, 251, 0.48) 0%,
-        rgba(31, 164, 205, 0.2) 32%,
-        rgba(7, 93, 128, 0.08) 58%,
+        rgba(255, 255, 255, 0.56) 0%,
+        rgba(239, 245, 247, 0.24) 32%,
+        rgba(215, 228, 233, 0.09) 58%,
         transparent 82%
     );
     -webkit-clip-path: polygon(47% 0, 53% 0, 98% 100%, 2% 100%);
@@ -400,24 +400,42 @@
     will-change: opacity, transform;
 }
 
-.stage-strobe:nth-child(19) { --strobe-x: 5%; --strobe-y: 21%; --strobe-size: 2px; --strobe-duration: 7.9s; animation-delay: -2.3s; }
-.stage-strobe:nth-child(20) { --strobe-x: 11%; --strobe-y: 48%; --strobe-size: 3px; --strobe-duration: 10.3s; animation-delay: -7.1s; }
-.stage-strobe:nth-child(21) { --strobe-x: 17%; --strobe-y: 32%; --strobe-size: 2px; --strobe-duration: 6.7s; animation-delay: -4.6s; }
-.stage-strobe:nth-child(22) { --strobe-x: 23%; --strobe-y: 62%; --strobe-size: 3px; --strobe-duration: 11.1s; animation-delay: -1.8s; }
-.stage-strobe:nth-child(23) { --strobe-x: 29%; --strobe-y: 16%; --strobe-size: 2px; --strobe-duration: 8.6s; animation-delay: -6.2s; }
-.stage-strobe:nth-child(24) { --strobe-x: 35%; --strobe-y: 43%; --strobe-size: 4px; --strobe-duration: 9.7s; animation-delay: -3.4s; }
-.stage-strobe:nth-child(25) { --strobe-x: 41%; --strobe-y: 26%; --strobe-size: 2px; --strobe-duration: 7.2s; animation-delay: -5.5s; }
-.stage-strobe:nth-child(26) { --strobe-x: 46%; --strobe-y: 57%; --strobe-size: 3px; --strobe-duration: 10.8s; animation-delay: -8.7s; }
-.stage-strobe:nth-child(27) { --strobe-x: 51%; --strobe-y: 12%; --strobe-size: 2px; --strobe-duration: 8.1s; animation-delay: -0.9s; }
-.stage-strobe:nth-child(28) { --strobe-x: 57%; --strobe-y: 38%; --strobe-size: 4px; --strobe-duration: 11.3s; animation-delay: -6.8s; }
-.stage-strobe:nth-child(29) { --strobe-x: 63%; --strobe-y: 67%; --strobe-size: 2px; --strobe-duration: 7.6s; animation-delay: -3.7s; }
-.stage-strobe:nth-child(30) { --strobe-x: 69%; --strobe-y: 23%; --strobe-size: 3px; --strobe-duration: 9.1s; animation-delay: -7.9s; }
-.stage-strobe:nth-child(31) { --strobe-x: 74%; --strobe-y: 51%; --strobe-size: 2px; --strobe-duration: 6.9s; animation-delay: -2.6s; }
-.stage-strobe:nth-child(32) { --strobe-x: 80%; --strobe-y: 34%; --strobe-size: 4px; --strobe-duration: 10.1s; animation-delay: -4.9s; }
-.stage-strobe:nth-child(33) { --strobe-x: 85%; --strobe-y: 14%; --strobe-size: 2px; --strobe-duration: 8.8s; animation-delay: -1.4s; }
-.stage-strobe:nth-child(34) { --strobe-x: 90%; --strobe-y: 59%; --strobe-size: 3px; --strobe-duration: 11.7s; animation-delay: -9.6s; }
-.stage-strobe:nth-child(35) { --strobe-x: 95%; --strobe-y: 29%; --strobe-size: 2px; --strobe-duration: 7.4s; animation-delay: -5.1s; }
-.stage-strobe:nth-child(36) { --strobe-x: 98%; --strobe-y: 46%; --strobe-size: 3px; --strobe-duration: 9.4s; animation-delay: -3.2s; }
+.stage-strobe:nth-child(19) { --strobe-x: 2.5%; --strobe-y: 8%; --strobe-size: 2px; --strobe-duration: 7.9s; animation-delay: -2.3s; }
+.stage-strobe:nth-child(20) { --strobe-x: 5.3%; --strobe-y: 14%; --strobe-size: 3px; --strobe-duration: 10.3s; animation-delay: -7.1s; }
+.stage-strobe:nth-child(21) { --strobe-x: 8.1%; --strobe-y: 5%; --strobe-size: 2px; --strobe-duration: 6.7s; animation-delay: -4.6s; }
+.stage-strobe:nth-child(22) { --strobe-x: 10.9%; --strobe-y: 11%; --strobe-size: 3px; --strobe-duration: 11.1s; animation-delay: -1.8s; }
+.stage-strobe:nth-child(23) { --strobe-x: 13.7%; --strobe-y: 16%; --strobe-size: 2px; --strobe-duration: 8.6s; animation-delay: -6.2s; }
+.stage-strobe:nth-child(24) { --strobe-x: 16.5%; --strobe-y: 7%; --strobe-size: 4px; --strobe-duration: 9.7s; animation-delay: -3.4s; }
+.stage-strobe:nth-child(25) { --strobe-x: 19.3%; --strobe-y: 13%; --strobe-size: 2px; --strobe-duration: 7.2s; animation-delay: -5.5s; }
+.stage-strobe:nth-child(26) { --strobe-x: 22.1%; --strobe-y: 4%; --strobe-size: 3px; --strobe-duration: 10.8s; animation-delay: -8.7s; }
+.stage-strobe:nth-child(27) { --strobe-x: 24.9%; --strobe-y: 10%; --strobe-size: 2px; --strobe-duration: 8.1s; animation-delay: -0.9s; }
+.stage-strobe:nth-child(28) { --strobe-x: 27.7%; --strobe-y: 15%; --strobe-size: 4px; --strobe-duration: 11.3s; animation-delay: -6.8s; }
+.stage-strobe:nth-child(29) { --strobe-x: 30.5%; --strobe-y: 6%; --strobe-size: 2px; --strobe-duration: 7.6s; animation-delay: -3.7s; }
+.stage-strobe:nth-child(30) { --strobe-x: 33.3%; --strobe-y: 12%; --strobe-size: 3px; --strobe-duration: 9.1s; animation-delay: -7.9s; }
+.stage-strobe:nth-child(31) { --strobe-x: 36.1%; --strobe-y: 9%; --strobe-size: 2px; --strobe-duration: 6.9s; animation-delay: -2.6s; }
+.stage-strobe:nth-child(32) { --strobe-x: 38.9%; --strobe-y: 16%; --strobe-size: 4px; --strobe-duration: 10.1s; animation-delay: -4.9s; }
+.stage-strobe:nth-child(33) { --strobe-x: 41.7%; --strobe-y: 5%; --strobe-size: 2px; --strobe-duration: 8.8s; animation-delay: -1.4s; }
+.stage-strobe:nth-child(34) { --strobe-x: 44.5%; --strobe-y: 13%; --strobe-size: 3px; --strobe-duration: 11.7s; animation-delay: -9.6s; }
+.stage-strobe:nth-child(35) { --strobe-x: 47.3%; --strobe-y: 7%; --strobe-size: 2px; --strobe-duration: 7.4s; animation-delay: -5.1s; }
+.stage-strobe:nth-child(36) { --strobe-x: 50.1%; --strobe-y: 15%; --strobe-size: 3px; --strobe-duration: 9.4s; animation-delay: -3.2s; }
+.stage-strobe:nth-child(37) { --strobe-x: 52.9%; --strobe-y: 4%; --strobe-size: 2px; --strobe-duration: 12.1s; animation-delay: -8.3s; }
+.stage-strobe:nth-child(38) { --strobe-x: 55.7%; --strobe-y: 11%; --strobe-size: 4px; --strobe-duration: 8.3s; animation-delay: -6.7s; }
+.stage-strobe:nth-child(39) { --strobe-x: 58.5%; --strobe-y: 16%; --strobe-size: 2px; --strobe-duration: 10.6s; animation-delay: -2.1s; }
+.stage-strobe:nth-child(40) { --strobe-x: 61.3%; --strobe-y: 8%; --strobe-size: 3px; --strobe-duration: 7.1s; animation-delay: -4.4s; }
+.stage-strobe:nth-child(41) { --strobe-x: 64.1%; --strobe-y: 14%; --strobe-size: 2px; --strobe-duration: 9.9s; animation-delay: -8.8s; }
+.stage-strobe:nth-child(42) { --strobe-x: 66.9%; --strobe-y: 5%; --strobe-size: 3px; --strobe-duration: 11.5s; animation-delay: -5.7s; }
+.stage-strobe:nth-child(43) { --strobe-x: 69.7%; --strobe-y: 12%; --strobe-size: 2px; --strobe-duration: 7.8s; animation-delay: -1.6s; }
+.stage-strobe:nth-child(44) { --strobe-x: 72.5%; --strobe-y: 9%; --strobe-size: 4px; --strobe-duration: 10.4s; animation-delay: -7.3s; }
+.stage-strobe:nth-child(45) { --strobe-x: 75.3%; --strobe-y: 16%; --strobe-size: 2px; --strobe-duration: 8.5s; animation-delay: -3.9s; }
+.stage-strobe:nth-child(46) { --strobe-x: 78.1%; --strobe-y: 6%; --strobe-size: 3px; --strobe-duration: 12.3s; animation-delay: -10.1s; }
+.stage-strobe:nth-child(47) { --strobe-x: 80.9%; --strobe-y: 13%; --strobe-size: 2px; --strobe-duration: 7.3s; animation-delay: -2.8s; }
+.stage-strobe:nth-child(48) { --strobe-x: 83.7%; --strobe-y: 4%; --strobe-size: 4px; --strobe-duration: 9.6s; animation-delay: -6.4s; }
+.stage-strobe:nth-child(49) { --strobe-x: 86.5%; --strobe-y: 11%; --strobe-size: 2px; --strobe-duration: 11.9s; animation-delay: -4.7s; }
+.stage-strobe:nth-child(50) { --strobe-x: 89.3%; --strobe-y: 15%; --strobe-size: 3px; --strobe-duration: 8s; animation-delay: -7.6s; }
+.stage-strobe:nth-child(51) { --strobe-x: 92.1%; --strobe-y: 7%; --strobe-size: 2px; --strobe-duration: 10.9s; animation-delay: -3.5s; }
+.stage-strobe:nth-child(52) { --strobe-x: 94.5%; --strobe-y: 14%; --strobe-size: 3px; --strobe-duration: 7s; animation-delay: -5.9s; }
+.stage-strobe:nth-child(53) { --strobe-x: 96.5%; --strobe-y: 5%; --strobe-size: 2px; --strobe-duration: 9.3s; animation-delay: -1.2s; }
+.stage-strobe:nth-child(54) { --strobe-x: 98.3%; --strobe-y: 10%; --strobe-size: 3px; --strobe-duration: 11.2s; animation-delay: -8.1s; }
 
 @keyframes stage-strobe-flash {
     0%, 56%, 58%, 100% {
