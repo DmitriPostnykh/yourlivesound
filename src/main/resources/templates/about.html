@@ -6,9 +6,9 @@
     <meta name="description" content="Learn about Dmitrii Postnykh and Your Live Sound services for concerts, studios, equipment setup and artist development.">
     <link rel="canonical" href="https://yourlivesound.com/about">
     <title>About | Your Live Sound</title>
-    <link rel="stylesheet" th:href="@{/css/styles-about.css}">
-    <link rel="stylesheet" th:href="@{/css/menu.css}">
-    <link rel="stylesheet" th:href="@{/css/form_1.css}">
+    <link rel="stylesheet" th:href="@{/css/styles-about.css(v=${assetVersion})}">
+    <link rel="stylesheet" th:href="@{/css/menu.css(v=${assetVersion})}">
+    <link rel="stylesheet" th:href="@{/css/form_1.css(v=${assetVersion})}">
 </head>
 <body>
 <header class="hero-section">
@@ -103,6 +103,6 @@
 <footer class="site-footer">
     <p>&copy; <span th:text="${currentYear}">2026</span> Dmitrii Postnykh. All rights reserved.</p>
 </footer>
-<script th:src="@{/js/reveal.js}" defer></script>
+<script th:src="@{/js/reveal.js(v=${assetVersion})}" defer></script>
 </body>
 </html>

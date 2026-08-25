@@ -12,6 +12,7 @@ services:
       - "127.0.0.1:8082:8082"
     environment:
       APP_CONTACT_FORM_ACTION: ${YLS_FORM_ACTION_URL:?YLS_FORM_ACTION_URL must be set in .env}
+      APP_ASSET_VERSION: ${YLS_IMAGE_TAG:-local}
     mem_limit: 384m
     cpus: 1.0
     pids_limit: 128

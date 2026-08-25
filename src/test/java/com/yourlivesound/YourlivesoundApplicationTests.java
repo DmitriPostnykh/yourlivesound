@@ -15,7 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
-        "app.contact.form-action=https://formsubmit.co/test-recipient"
+        "app.contact.form-action=https://formsubmit.co/test-recipient",
+        "app.asset-version=test-build"
 })
 @AutoConfigureMockMvc
 class YourlivesoundApplicationTests {
@@ -68,6 +69,14 @@ class YourlivesoundApplicationTests {
                 .andExpect(content().string(containsString("action=\"https://formsubmit.co/test-recipient\"")))
                 .andExpect(content().string(containsString("name=\"_honey\"")))
                 .andExpect(content().string(not(containsString("name=\"_captcha\""))));
+    }
+
+    @Test
+    void staticAssetsUseDeploymentVersion() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/css/styles-wrap.css?v=test-build")))
+                .andExpect(content().string(containsString("/js/eq_main.js?v=test-build")));
     }
 
     @Test

@@ -55,12 +55,14 @@
 
 .title,
 .reflection-title {
-    width: 100%;
+    width: auto;
     margin: 0;
     display: flex;
     justify-content: center;
     gap: 0.25em;
     position: absolute;
+    right: 0;
+    left: 0;
     z-index: 3;
     color: #ffffff;
     font-family: Arial, sans-serif;

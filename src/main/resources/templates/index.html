@@ -6,9 +6,9 @@
     <meta name="description" content="Professional live sound, system setup, concert support, studio work and audio consulting by Dmitrii Postnykh.">
     <link rel="canonical" href="https://yourlivesound.com/">
     <title>Your Live Sound</title>
-    <link rel="stylesheet" th:href="@{/css/styles-wrap.css}">
-    <link rel="stylesheet" th:href="@{/css/menu.css}">
-    <link rel="stylesheet" th:href="@{/css/eq_main.css}">
+    <link rel="stylesheet" th:href="@{/css/styles-wrap.css(v=${assetVersion})}">
+    <link rel="stylesheet" th:href="@{/css/menu.css(v=${assetVersion})}">
+    <link rel="stylesheet" th:href="@{/css/eq_main.css(v=${assetVersion})}">
 </head>
 <body class="home-page">
 <main class="home-main">
@@ -18,6 +18,6 @@
 <footer class="site-footer compact-footer">
     <p>&copy; <span th:text="${currentYear}">2026</span> Dmitrii Postnykh. All rights reserved.</p>
 </footer>
-<script th:src="@{/js/eq_main.js}" defer></script>
+<script th:src="@{/js/eq_main.js(v=${assetVersion})}" defer></script>
 </body>
 </html>

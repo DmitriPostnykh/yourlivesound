@@ -16,7 +16,7 @@ APP_CONTACT_FORM_ACTION=https://formsubmit.co/test-recipient ./mvnw spring-boot:
 
 ## Container
 
-The image is built reproducibly from pinned Java 17.0.20 builder and runtime images. The runtime is non-root and includes a Docker healthcheck. `compose.yaml` binds the app only to `127.0.0.1:8082`, limits it to 384 MB RAM and one CPU, uses a read-only root filesystem, and rotates JSON logs at 10 MB with three files.
+The image is built reproducibly from pinned Java 17.0.20 builder and runtime images. The runtime is non-root and includes a Docker healthcheck. `compose.yaml` binds the app only to `127.0.0.1:8082`, limits it to 384 MB RAM and one CPU, uses a read-only root filesystem, rotates JSON logs at 10 MB with three files, and versions CSS/JavaScript URLs with the image tag.
 
 Create a private `.env` from `.env.example`, then:
 

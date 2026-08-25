@@ -22,9 +22,14 @@ public class SiteModelAdvice {
     );
 
     private final String contactFormAction;
+    private final String assetVersion;
 
-    public SiteModelAdvice(@Value("${app.contact.form-action:}") String contactFormAction) {
+    public SiteModelAdvice(
+            @Value("${app.contact.form-action:}") String contactFormAction,
+            @Value("${app.asset-version:dev}") String assetVersion
+    ) {
         this.contactFormAction = validateContactFormAction(contactFormAction);
+        this.assetVersion = validateAssetVersion(assetVersion);
     }
 
     @ModelAttribute("buttons")
@@ -50,6 +55,11 @@ public class SiteModelAdvice {
         return !contactFormAction.isBlank();
     }
 
+    @ModelAttribute("assetVersion")
+    public String assetVersion() {
+        return assetVersion;
+    }
+
     private static String validateContactFormAction(String value) {
         if (value == null || value.isBlank()) {
             return "";
@@ -65,5 +75,14 @@ public class SiteModelAdvice {
             );
         }
         return uri.toASCIIString();
+    }
+
+    private static String validateAssetVersion(String value) {
+        if (value == null || !value.matches("[A-Za-z0-9._-]{1,64}")) {
+            throw new IllegalArgumentException(
+                    "app.asset-version must contain only letters, digits, dots, underscores, or dashes"
+            );
+        }
+        return value;
     }
 }
