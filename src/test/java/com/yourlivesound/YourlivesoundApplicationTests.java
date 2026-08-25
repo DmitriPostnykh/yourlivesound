@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -77,6 +78,17 @@ class YourlivesoundApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("/css/styles-wrap.css?v=test-build")))
                 .andExpect(content().string(containsString("/js/eq_main.js?v=test-build")));
+    }
+
+    @Test
+    void equalizerRendersTwelveBackgroundStageLights() throws Exception {
+        String html = mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertEquals(12, html.split("class=\"stage-light\"", -1).length - 1);
     }
 
     @Test

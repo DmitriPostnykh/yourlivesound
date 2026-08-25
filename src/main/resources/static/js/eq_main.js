@@ -19,6 +19,9 @@
     const maximumHeight = 100;
     const neutralTopHeight = 50;
     const titleFloorGap = 5;
+    const pulseSpeed = 6.2;
+    const attackResponse = 20;
+    const releaseResponse = 3.2;
     const minimumDepthScale = 0.5;
     const depthCurve = 1.35;
     const maximumDepthLift = 34;
@@ -41,6 +44,7 @@
     const currentHeights = Array(barCount).fill(minimumHeight);
     let animationFrameId = null;
     let envelopeFrameId = null;
+    let previousFrameTimestamp = null;
 
     const depthScaleForDistance = (distanceFromCenter) => minimumDepthScale
         + (1 - minimumDepthScale) * Math.pow(distanceFromCenter, depthCurve);
@@ -232,12 +236,16 @@
     };
 
     for (let index = 0; index < barCount; index += 1) {
+        const center = (barCount - 1) / 2;
+        const distanceFromCenter = Math.abs(index - center) / center;
         bars.push(createBar(volumeContainer, index));
         reflections.push(createBar(reflectionContainer, index));
         motionProfiles.push({
             phase: Math.random() * Math.PI * 2,
             detailPhase: Math.random() * Math.PI * 2,
-            speed: 2 + Math.random() * 1.15
+            speed: 3.2 + Math.random() * 1.6,
+            pulsePhase: -distanceFromCenter * 0.7,
+            level: 0.5
         });
     }
 
@@ -254,6 +262,7 @@
     const setStaticHeights = () => {
         bars.forEach((_, index) => {
             const wave = 32 + Math.abs(Math.sin(index * 0.72)) * 38;
+            motionProfiles[index].level = (wave - minimumHeight) / (maximumHeight - minimumHeight);
             setHeight(index, wave);
         });
     };
@@ -267,16 +276,33 @@
             window.cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
         }
+        previousFrameTimestamp = null;
     };
 
     const renderFrame = (timestamp) => {
         const time = timestamp / 1000;
+        const deltaSeconds = previousFrameTimestamp === null
+            ? 1 / 60
+            : Math.min(0.05, Math.max(0, (timestamp - previousFrameTimestamp) / 1000));
+        previousFrameTimestamp = timestamp;
+
         motionProfiles.forEach((profile, index) => {
             const primary = (Math.sin(time * profile.speed + profile.phase) + 1) / 2;
-            const detail = (Math.sin(time * profile.speed * 1.73 + profile.detailPhase) + 1) / 2;
-            const travelingWave = (Math.sin(time * 1.38 - index * 0.58) + 1) / 2;
-            const level = primary * 0.54 + detail * 0.27 + travelingWave * 0.19;
-            const height = minimumHeight + level * (maximumHeight - minimumHeight);
+            const detail = (Math.sin(time * profile.speed * 1.83 + profile.detailPhase) + 1) / 2;
+            const travelingWave = (Math.sin(time * 2.1 - index * 0.55) + 1) / 2;
+            const pulseWave = (Math.sin(time * pulseSpeed + profile.pulsePhase) + 1) / 2;
+            const pulse = Math.pow(pulseWave, 9);
+            const targetLevel = primary * 0.25
+                + detail * 0.15
+                + travelingWave * 0.15
+                + pulse * 0.45;
+
+            // A fast attack makes each beat jump upward; a slower release lets it fall naturally.
+            const response = targetLevel > profile.level ? attackResponse : releaseResponse;
+            const blend = 1 - Math.exp(-response * deltaSeconds);
+            profile.level += (targetLevel - profile.level) * blend;
+
+            const height = minimumHeight + profile.level * (maximumHeight - minimumHeight);
             setHeight(index, height);
         });
 

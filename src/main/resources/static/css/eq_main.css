@@ -30,6 +30,183 @@
     pointer-events: none;
 }
 
+.stage-lights {
+    width: min(88vw, 1160px);
+    height: clamp(9rem, 28svh, 17rem);
+    position: absolute;
+    top: calc(50% - var(--equalizer-bar-height) - clamp(3rem, 8svh, 5rem));
+    left: 50%;
+    z-index: 0;
+    overflow: visible;
+    filter: saturate(0.82);
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.stage-light {
+    --light-x: 50%;
+    --light-tilt: 0deg;
+    --light-opacity: 0.065;
+    --light-peak-opacity: 0.09;
+    --light-duration: 8s;
+    width: clamp(2.4rem, 8vw, 7rem);
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: var(--light-x);
+    opacity: var(--light-opacity);
+    transform: translateX(-50%) rotate(var(--light-tilt));
+    transform-origin: 50% 0;
+    animation: stage-light-breathe var(--light-duration) ease-in-out infinite alternate;
+    will-change: opacity;
+}
+
+.stage-light::before {
+    content: "";
+    width: clamp(0.5rem, 1vw, 0.95rem);
+    height: clamp(0.22rem, 0.42vw, 0.38rem);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(189, 242, 255, 0.9), rgba(53, 178, 217, 0.34) 58%, transparent 76%);
+    box-shadow:
+        0 0 0.5rem rgba(112, 220, 250, 0.34),
+        0 0 1.2rem rgba(24, 151, 193, 0.18);
+    transform: translateX(-50%);
+}
+
+.stage-light::after {
+    content: "";
+    width: 100%;
+    height: calc(100% - 0.18rem);
+    position: absolute;
+    top: 0.18rem;
+    left: 50%;
+    background: radial-gradient(
+        ellipse at 50% 2%,
+        rgba(126, 226, 251, 0.48) 0%,
+        rgba(31, 164, 205, 0.2) 32%,
+        rgba(7, 93, 128, 0.08) 58%,
+        transparent 82%
+    );
+    -webkit-clip-path: polygon(47% 0, 53% 0, 98% 100%, 2% 100%);
+    clip-path: polygon(47% 0, 53% 0, 98% 100%, 2% 100%);
+    filter: blur(clamp(3px, 0.5vw, 7px));
+    mix-blend-mode: screen;
+    transform: translateX(-50%);
+}
+
+.stage-light:nth-child(1) {
+    --light-x: 4%;
+    --light-tilt: -11deg;
+    --light-opacity: 0.05;
+    --light-peak-opacity: 0.07;
+    --light-duration: 8.8s;
+    animation-delay: -4.1s;
+}
+
+.stage-light:nth-child(2) {
+    --light-x: 12.5%;
+    --light-tilt: -9deg;
+    --light-duration: 7.6s;
+    animation-delay: -1.7s;
+}
+
+.stage-light:nth-child(3) {
+    --light-x: 21%;
+    --light-tilt: -7deg;
+    --light-opacity: 0.07;
+    --light-peak-opacity: 0.095;
+    --light-duration: 8.2s;
+    animation-delay: -5.3s;
+}
+
+.stage-light:nth-child(4) {
+    --light-x: 29.5%;
+    --light-tilt: -5deg;
+    --light-duration: 7.1s;
+    animation-delay: -2.8s;
+}
+
+.stage-light:nth-child(5) {
+    --light-x: 38%;
+    --light-tilt: -3deg;
+    --light-opacity: 0.075;
+    --light-peak-opacity: 0.1;
+    --light-duration: 8.5s;
+    animation-delay: -6.2s;
+}
+
+.stage-light:nth-child(6) {
+    --light-x: 46.5%;
+    --light-tilt: -1deg;
+    --light-opacity: 0.08;
+    --light-peak-opacity: 0.105;
+    --light-duration: 7.8s;
+    animation-delay: -3.6s;
+}
+
+.stage-light:nth-child(7) {
+    --light-x: 53.5%;
+    --light-tilt: 1deg;
+    --light-opacity: 0.08;
+    --light-peak-opacity: 0.105;
+    --light-duration: 8.1s;
+    animation-delay: -5.8s;
+}
+
+.stage-light:nth-child(8) {
+    --light-x: 62%;
+    --light-tilt: 3deg;
+    --light-opacity: 0.075;
+    --light-peak-opacity: 0.1;
+    --light-duration: 7.4s;
+    animation-delay: -2.2s;
+}
+
+.stage-light:nth-child(9) {
+    --light-x: 70.5%;
+    --light-tilt: 5deg;
+    --light-duration: 8.6s;
+    animation-delay: -4.7s;
+}
+
+.stage-light:nth-child(10) {
+    --light-x: 79%;
+    --light-tilt: 7deg;
+    --light-opacity: 0.07;
+    --light-peak-opacity: 0.095;
+    --light-duration: 7.2s;
+    animation-delay: -1.1s;
+}
+
+.stage-light:nth-child(11) {
+    --light-x: 87.5%;
+    --light-tilt: 9deg;
+    --light-duration: 8.3s;
+    animation-delay: -6.5s;
+}
+
+.stage-light:nth-child(12) {
+    --light-x: 96%;
+    --light-tilt: 11deg;
+    --light-opacity: 0.05;
+    --light-peak-opacity: 0.07;
+    --light-duration: 7.7s;
+    animation-delay: -3.2s;
+}
+
+@keyframes stage-light-breathe {
+    from {
+        opacity: var(--light-opacity);
+    }
+
+    to {
+        opacity: var(--light-peak-opacity);
+    }
+}
+
 .perspective-arc {
     width: min(84vw, 1100px);
     height: var(--perspective-arc-height);
@@ -238,5 +415,12 @@
 
     .perspective-arc {
         width: 94vw;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stage-light {
+        opacity: var(--light-opacity);
+        animation: none;
     }
 }
