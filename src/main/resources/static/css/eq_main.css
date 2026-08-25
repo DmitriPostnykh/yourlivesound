@@ -1,4 +1,5 @@
 .equalizer {
+    --perspective-arc-height: clamp(1.56rem, 4.68svh, 2.86rem);
     width: 100%;
     height: clamp(23rem, 66svh, 38rem);
     padding: 1rem clamp(0.75rem, 4vw, 2.5rem);
@@ -26,18 +27,23 @@
     pointer-events: none;
 }
 
-.equalizer::after {
-    content: "";
-    width: min(92vw, 1180px);
-    height: 1px;
+.perspective-horizon {
+    width: min(84vw, 1100px);
+    height: var(--perspective-arc-height);
     position: absolute;
-    top: 50%;
+    top: calc(50% - var(--perspective-arc-height));
     left: 50%;
     z-index: 1;
-    background: linear-gradient(90deg, transparent, rgba(125, 224, 255, 0.34), transparent);
-    box-shadow: 0 0 1.5rem rgba(71, 200, 239, 0.16);
+    overflow: visible;
+    filter: drop-shadow(0 0 0.75rem rgba(71, 200, 239, 0.22));
     transform: translateX(-50%);
     pointer-events: none;
+}
+
+.perspective-horizon path {
+    fill: none;
+    stroke-width: 1.2;
+    vector-effect: non-scaling-stroke;
 }
 
 .container {
@@ -55,6 +61,7 @@
     margin-inline: var(--depth-margin, 0.5%);
     flex: 0 0 var(--depth-width, 5.15%);
     position: relative;
+    bottom: var(--depth-lift, 0%);
     opacity: var(--depth-opacity, 1);
     filter:
         brightness(var(--depth-brightness, 1))
@@ -93,17 +100,25 @@
 }
 
 .reflection-container {
+    align-items: flex-start;
     opacity: 0.34;
-    filter: blur(0.7px);
-    transform: scaleY(-1);
-    -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.45) 38%, transparent 92%);
-    mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.45) 38%, transparent 92%);
+    overflow: visible;
+}
+
+.reflection-container .bar-container {
+    top: var(--depth-rise, 0%);
+    bottom: auto;
 }
 
 .reflection-container .bar {
+    top: 0;
+    bottom: auto;
     background: linear-gradient(180deg, rgba(78, 211, 250, 0.48), rgba(4, 91, 125, 0));
     box-shadow: none;
+    filter: blur(0.7px);
     opacity: 0.7;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.45) 38%, transparent 92%);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.45) 38%, transparent 92%);
 }
 
 .reflection-container .bar::before {
@@ -169,6 +184,7 @@
 
 @media (max-width: 560px) {
     .equalizer {
+        --perspective-arc-height: clamp(1.25rem, 3.64svh, 1.92rem);
         height: clamp(20rem, 55svh, 28rem);
         padding-inline: 0.5rem;
     }
@@ -185,7 +201,7 @@
         letter-spacing: -0.045em;
     }
 
-    .equalizer::after {
-        width: 96vw;
+    .perspective-horizon {
+        width: 94vw;
     }
 }

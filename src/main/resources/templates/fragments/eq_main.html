@@ -6,6 +6,18 @@
         <span>Your</span><span>Live</span><span>Sound</span>
     </h1>
     <div class="container" id="volumeBars" aria-hidden="true"></div>
+    <svg class="perspective-horizon" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <defs>
+            <linearGradient id="perspective-horizon-gradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#7de0ff" stop-opacity="0"/>
+                <stop offset="0.12" stop-color="#7de0ff" stop-opacity="0.42"/>
+                <stop offset="0.5" stop-color="#a2ebff" stop-opacity="0.58"/>
+                <stop offset="0.88" stop-color="#7de0ff" stop-opacity="0.42"/>
+                <stop offset="1" stop-color="#7de0ff" stop-opacity="0"/>
+            </linearGradient>
+        </defs>
+        <path id="perspectiveHorizonPath" d="M 0 99 Q 500 -97 1000 99" stroke="url(#perspective-horizon-gradient)"/>
+    </svg>
     <div class="reflection-title" aria-hidden="true">
         <span>Your</span><span>Live</span><span>Sound</span>
     </div>
