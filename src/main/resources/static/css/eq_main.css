@@ -2,6 +2,7 @@
     --perspective-arc-height: clamp(2.04rem, 6svh, 3.68rem);
     --equalizer-bar-height: clamp(6rem, 18svh, 11rem);
     --mirror-floor-y: 50%;
+    --title-floor-correction: max(0px, calc(0.14em - 5px));
     width: 100%;
     height: clamp(23rem, 66svh, 38rem);
     padding: 1rem clamp(0.75rem, 4vw, 2.5rem);
@@ -199,6 +200,7 @@
 
 .title {
     bottom: var(--mirror-floor-y);
+    transform: translateY(var(--title-floor-correction));
 }
 
 .reflection-title {
@@ -207,7 +209,7 @@
     opacity: 0.13;
     filter: blur(0.8px);
     text-shadow: none;
-    transform: scaleY(-1);
+    transform: translateY(calc(0px - var(--title-floor-correction))) scaleY(-1);
     transform-origin: 50% 100%;
 }
 

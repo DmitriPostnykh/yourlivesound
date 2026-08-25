@@ -17,6 +17,8 @@
     const barCount = 22;
     const minimumHeight = 26;
     const maximumHeight = 100;
+    const neutralTopHeight = 50;
+    const titleFloorGap = 5;
     const minimumDepthScale = 0.5;
     const depthCurve = 1.35;
     const maximumDepthLift = 34;
@@ -25,11 +27,18 @@
     const arcEdgeOffset = Math.sqrt(Math.pow(arcRadiusFactor, 2) - 1);
     const arcCenterOffset = arcRadiusFactor - arcEdgeOffset;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const maximumEnvelopeMode = new URLSearchParams(window.location.search)
-        .get("equalizer") === "max";
+    const equalizerMode = new URLSearchParams(window.location.search).get("equalizer");
+    const requestedFixedHeight = Number.parseFloat(equalizerMode);
+    const fixedEnvelopeHeight = equalizerMode === "max"
+        ? maximumHeight
+        : Number.isFinite(requestedFixedHeight)
+            ? Math.min(maximumHeight, Math.max(minimumHeight, requestedFixedHeight))
+            : null;
     const bars = [];
     const reflections = [];
     const motionProfiles = [];
+    const maximumTopSlopes = [];
+    const currentHeights = Array(barCount).fill(minimumHeight);
     let animationFrameId = null;
     let envelopeFrameId = null;
 
@@ -46,6 +55,53 @@
         Math.sqrt(Math.max(0, Math.pow(arcRadiusFactor, 2) - Math.pow(distanceFromCenter, 2)))
         - arcEdgeOffset
     ) / arcCenterOffset;
+
+    const applyDynamicTopSlope = (index, height) => {
+        const maximumSlope = maximumTopSlopes[index];
+        const bar = bars[index];
+        if (!bar || !Number.isFinite(maximumSlope)) {
+            return;
+        }
+
+        // Cross-sections are flat halfway between the two arcs. Above that line the
+        // top follows the ceiling arc; below it the same slope reverses toward the floor arc.
+        const slopeProgress = (height - neutralTopHeight) / (maximumHeight - neutralTopHeight);
+        const currentSlope = maximumSlope * slopeProgress;
+        bar.style.setProperty("--bar-top-left-inset", `${Math.max(0, -currentSlope).toFixed(3)}px`);
+        bar.style.setProperty("--bar-top-right-inset", `${Math.max(0, currentSlope).toFixed(3)}px`);
+    };
+
+    const syncTitleFloorGap = () => {
+        const equalizer = volumeContainer.closest(".equalizer");
+        const title = equalizer?.querySelector(".title");
+        if (!equalizer || !title) {
+            return;
+        }
+
+        const style = window.getComputedStyle(title);
+        const lineHeight = Number.parseFloat(style.lineHeight);
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        if (!context || !Number.isFinite(lineHeight)) {
+            return;
+        }
+
+        context.font = style.font || `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        const text = title.textContent.replace(/\s+/g, " ").trim();
+        const metrics = context.measureText(text);
+        const fontAscent = metrics.fontBoundingBoxAscent;
+        const fontDescent = metrics.fontBoundingBoxDescent;
+        const inkDescent = metrics.actualBoundingBoxDescent;
+        if (![fontAscent, fontDescent, inkDescent].every(Number.isFinite)) {
+            return;
+        }
+
+        const baselineFromBottom = fontDescent
+            + (lineHeight - fontAscent - fontDescent) / 2;
+        const visibleInkGap = baselineFromBottom - inkDescent;
+        const correction = Math.max(0, visibleInkGap - titleFloorGap);
+        equalizer.style.setProperty("--title-floor-correction", `${correction.toFixed(3)}px`);
+    };
 
     const buildPerspectiveEnvelope = () => {
         const horizon = perspectiveHorizonPath.closest("svg");
@@ -108,8 +164,8 @@
             holder.style.setProperty("--depth-lift", `${depthLift.toFixed(3)}%`);
             reflectionHolders[index].style.setProperty("--depth-rise", `${depthRise.toFixed(3)}%`);
 
-            mainBar.style.setProperty("--bar-top-left-inset", `${(topLeftY - boundingTop).toFixed(3)}px`);
-            mainBar.style.setProperty("--bar-top-right-inset", `${(topRightY - boundingTop).toFixed(3)}px`);
+            maximumTopSlopes[index] = topRightY - topLeftY;
+            applyDynamicTopSlope(index, currentHeights[index]);
             mainBar.style.setProperty("--bar-left-inset", `${(boundingBottom - bottomLeftY).toFixed(3)}px`);
             mainBar.style.setProperty("--bar-right-inset", `${(boundingBottom - bottomRightY).toFixed(3)}px`);
             reflectionBar.style.setProperty("--reflection-left-inset", `${(bottomLeftY - reflectionTop).toFixed(3)}px`);
@@ -148,6 +204,7 @@
         }
         envelopeFrameId = window.requestAnimationFrame(() => {
             envelopeFrameId = null;
+            syncTitleFloorGap();
             buildPerspectiveEnvelope();
         });
     };
@@ -188,8 +245,10 @@
 
     const setHeight = (index, height) => {
         const value = `${height.toFixed(2)}%`;
+        currentHeights[index] = height;
         bars[index].style.height = value;
         reflections[index].style.height = value;
+        applyDynamicTopSlope(index, height);
     };
 
     const setStaticHeights = () => {
@@ -199,8 +258,8 @@
         });
     };
 
-    const setMaximumHeights = () => {
-        bars.forEach((_, index) => setHeight(index, maximumHeight));
+    const setFixedHeights = () => {
+        bars.forEach((_, index) => setHeight(index, fixedEnvelopeHeight));
     };
 
     const stop = () => {
@@ -226,8 +285,8 @@
 
     const syncMotion = () => {
         stop();
-        if (maximumEnvelopeMode) {
-            setMaximumHeights();
+        if (fixedEnvelopeHeight !== null) {
+            setFixedHeights();
             return;
         }
 
@@ -245,5 +304,6 @@
     document.addEventListener("visibilitychange", syncMotion);
     reducedMotion.addEventListener?.("change", syncMotion);
     window.addEventListener("resize", schedulePerspectiveEnvelope, {passive: true});
+    document.fonts?.ready.then(schedulePerspectiveEnvelope);
     syncMotion();
 })();
