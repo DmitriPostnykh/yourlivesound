@@ -30,7 +30,9 @@
         return depthScaleForDistance(distanceFromCenter);
     };
 
-    const recessionFor = (depthScale) => (1 - depthScale) / (1 - minimumDepthScale);
+    const arcRecessionForDistance = (distanceFromCenter) => Math.sqrt(
+        Math.max(0, 1 - Math.pow(distanceFromCenter, 2))
+    );
 
     const buildPerspectiveHorizon = () => {
         if (!perspectiveHorizonPath) {
@@ -39,46 +41,62 @@
 
         const horizon = perspectiveHorizonPath.closest("svg");
         const holders = [...volumeContainer.querySelectorAll(".bar-container")];
-        if (!horizon || holders.length === 0) {
+        const reflectionHolders = [...reflectionContainer.querySelectorAll(".bar-container")];
+        if (!horizon || holders.length === 0 || reflectionHolders.length !== holders.length) {
             return;
         }
 
         const horizonRect = horizon.getBoundingClientRect();
-        if (horizonRect.width === 0 || horizonRect.height === 0) {
+        const volumeRect = volumeContainer.getBoundingClientRect();
+        if (horizonRect.width === 0 || horizonRect.height === 0 || volumeRect.height === 0) {
             return;
         }
 
-        const points = [{x: 0, y: 100}];
-        holders.forEach((holder) => {
+        const firstRect = holders[0].getBoundingClientRect();
+        const lastRect = holders[holders.length - 1].getBoundingClientRect();
+        const arcStart = firstRect.left - firstRect.width / 2;
+        const arcEnd = lastRect.right + lastRect.width / 2;
+        const arcWidth = arcEnd - arcStart;
+        const arcCenter = (arcStart + arcEnd) / 2;
+        const arcRadius = arcWidth / 2;
+        const baseline = volumeRect.bottom;
+        const arcDepth = horizonRect.height;
+
+        const yAt = (x) => {
+            const distance = Math.min(1, Math.abs(x - arcCenter) / arcRadius);
+            return baseline - arcRecessionForDistance(distance) * arcDepth;
+        };
+
+        holders.forEach((holder, index) => {
             const rect = holder.getBoundingClientRect();
-            points.push({
-                x: ((rect.left + rect.width / 2 - horizonRect.left) / horizonRect.width) * 1000,
-                y: ((rect.bottom - horizonRect.top) / horizonRect.height) * 100
+            const leftY = yAt(rect.left);
+            const rightY = yAt(rect.right);
+            const centerY = (leftY + rightY) / 2;
+            const depthLift = ((baseline - centerY) / volumeRect.height) * 100;
+            const angle = Math.atan2(rightY - leftY, rect.width);
+            const horizontalScale = 1 / Math.cos(angle);
+            const angleValue = `${(angle * 180 / Math.PI).toFixed(3)}deg`;
+            const scaleValue = horizontalScale.toFixed(5);
+
+            [holder, reflectionHolders[index]].forEach((target) => {
+                target.style.setProperty("--depth-lift", `${depthLift.toFixed(3)}%`);
+                target.style.setProperty("--depth-rise", `${(-depthLift).toFixed(3)}%`);
+                target.style.setProperty("--bar-angle", angleValue);
+                target.style.setProperty("--bar-scale-x", scaleValue);
             });
         });
-        points.push({x: 1000, y: 100});
 
-        const path = [`M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`];
-        for (let index = 0; index < points.length - 1; index += 1) {
-            const previous = points[index - 1] ?? points[index];
-            const current = points[index];
-            const next = points[index + 1];
-            const following = points[index + 2] ?? next;
-            const controlOne = {
-                x: current.x + (next.x - previous.x) / 8,
-                y: current.y + (next.y - previous.y) / 8
-            };
-            const controlTwo = {
-                x: next.x - (following.x - current.x) / 8,
-                y: next.y - (following.y - current.y) / 8
-            };
-            path.push(
-                `C ${controlOne.x.toFixed(2)} ${controlOne.y.toFixed(2)}`
-                + ` ${controlTwo.x.toFixed(2)} ${controlTwo.y.toFixed(2)}`
-                + ` ${next.x.toFixed(2)} ${next.y.toFixed(2)}`
-            );
-        }
-        perspectiveHorizonPath.setAttribute("d", path.join(" "));
+        const startX = ((arcStart - horizonRect.left) / horizonRect.width) * 1000;
+        const endX = ((arcEnd - horizonRect.left) / horizonRect.width) * 1000;
+        const baselineY = ((baseline - horizonRect.top) / horizonRect.height) * 100;
+        const radiusX = (endX - startX) / 2;
+        const radiusY = (arcDepth / horizonRect.height) * 100;
+        perspectiveHorizonPath.setAttribute(
+            "d",
+            `M ${startX.toFixed(2)} ${baselineY.toFixed(2)}`
+            + ` A ${radiusX.toFixed(2)} ${radiusY.toFixed(2)} 0 0 1`
+            + ` ${endX.toFixed(2)} ${baselineY.toFixed(2)}`
+        );
     };
 
     const schedulePerspectiveHorizon = () => {
@@ -95,7 +113,9 @@
         const holder = document.createElement("div");
         const bar = document.createElement("div");
         const depthScale = depthScaleFor(index);
-        const depthLift = recessionFor(depthScale) * maximumDepthLift;
+        const center = (barCount - 1) / 2;
+        const distanceFromCenter = Math.abs(index - center) / center;
+        const depthLift = arcRecessionForDistance(distanceFromCenter) * maximumDepthLift;
         holder.className = "bar-container";
         holder.style.setProperty("--depth-height", `${(depthScale * 100).toFixed(2)}%`);
         holder.style.setProperty("--depth-width", `${(depthScale * 5.15).toFixed(4)}%`);
