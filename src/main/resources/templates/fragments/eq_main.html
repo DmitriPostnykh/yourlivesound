@@ -5,8 +5,20 @@
     <h1 id="site-title" class="title">
         <span>Your</span><span>Live</span><span>Sound</span>
     </h1>
+    <svg class="perspective-arc perspective-ceiling" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <defs>
+            <linearGradient id="perspective-ceiling-gradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#7de0ff" stop-opacity="0"/>
+                <stop offset="0.12" stop-color="#7de0ff" stop-opacity="0.18"/>
+                <stop offset="0.5" stop-color="#a2ebff" stop-opacity="0.28"/>
+                <stop offset="0.88" stop-color="#7de0ff" stop-opacity="0.18"/>
+                <stop offset="1" stop-color="#7de0ff" stop-opacity="0"/>
+            </linearGradient>
+        </defs>
+        <path id="perspectiveCeilingPath" d="M 0 1 Q 500 197 1000 1" stroke="url(#perspective-ceiling-gradient)"/>
+    </svg>
     <div class="container" id="volumeBars" aria-hidden="true"></div>
-    <svg class="perspective-horizon" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <svg class="perspective-arc perspective-horizon" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
         <defs>
             <linearGradient id="perspective-horizon-gradient" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0" stop-color="#7de0ff" stop-opacity="0"/>

@@ -4,13 +4,19 @@
     const volumeContainer = document.getElementById("volumeBars");
     const reflectionContainer = document.getElementById("reflectionBars");
     const perspectiveHorizonPath = document.getElementById("perspectiveHorizonPath");
-    if (!volumeContainer || !reflectionContainer) {
+    const perspectiveCeilingPath = document.getElementById("perspectiveCeilingPath");
+    if (
+        !volumeContainer
+        || !reflectionContainer
+        || !perspectiveHorizonPath
+        || !perspectiveCeilingPath
+    ) {
         return;
     }
 
     const barCount = 22;
-    const minimumHeight = 10;
-    const maximumHeight = 94;
+    const minimumHeight = 26;
+    const maximumHeight = 100;
     const minimumDepthScale = 0.5;
     const depthCurve = 1.35;
     const maximumDepthLift = 34;
@@ -19,11 +25,13 @@
     const arcEdgeOffset = Math.sqrt(Math.pow(arcRadiusFactor, 2) - 1);
     const arcCenterOffset = arcRadiusFactor - arcEdgeOffset;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const maximumEnvelopeMode = new URLSearchParams(window.location.search)
+        .get("equalizer") === "max";
     const bars = [];
     const reflections = [];
     const motionProfiles = [];
     let animationFrameId = null;
-    let horizonFrameId = null;
+    let envelopeFrameId = null;
 
     const depthScaleForDistance = (distanceFromCenter) => minimumDepthScale
         + (1 - minimumDepthScale) * Math.pow(distanceFromCenter, depthCurve);
@@ -39,20 +47,25 @@
         - arcEdgeOffset
     ) / arcCenterOffset;
 
-    const buildPerspectiveHorizon = () => {
-        if (!perspectiveHorizonPath) {
-            return;
-        }
-
+    const buildPerspectiveEnvelope = () => {
         const horizon = perspectiveHorizonPath.closest("svg");
+        const ceiling = perspectiveCeilingPath.closest("svg");
+        const equalizer = volumeContainer.closest(".equalizer");
         const holders = [...volumeContainer.querySelectorAll(".bar-container")];
         const reflectionHolders = [...reflectionContainer.querySelectorAll(".bar-container")];
-        if (!horizon || holders.length === 0 || reflectionHolders.length !== holders.length) {
+        if (
+            !horizon
+            || !ceiling
+            || !equalizer
+            || holders.length === 0
+            || reflectionHolders.length !== holders.length
+        ) {
             return;
         }
 
         const horizonRect = horizon.getBoundingClientRect();
         const volumeRect = volumeContainer.getBoundingClientRect();
+        const equalizerRect = equalizer.getBoundingClientRect();
         if (horizonRect.width === 0 || horizonRect.height === 0 || volumeRect.height === 0) {
             return;
         }
@@ -65,31 +78,42 @@
         const arcCenter = (arcStart + arcEnd) / 2;
         const arcRadius = arcWidth / 2;
         const baseline = volumeRect.bottom;
+        const upperBaseline = baseline - volumeRect.height;
         const arcDepth = horizonRect.height;
+        ceiling.style.top = `${(upperBaseline - equalizerRect.top).toFixed(3)}px`;
+        const ceilingRect = ceiling.getBoundingClientRect();
 
-        const yAt = (x) => {
+        const recessionAt = (x) => {
             const distance = Math.min(1, Math.abs(x - arcCenter) / arcRadius);
-            return baseline - arcRecessionForDistance(distance) * arcDepth;
+            return arcRecessionForDistance(distance) * arcDepth;
         };
 
         holders.forEach((holder, index) => {
             const rect = holder.getBoundingClientRect();
-            const leftY = yAt(rect.left);
-            const rightY = yAt(rect.right);
-            const lowerY = Math.max(leftY, rightY);
-            const upperY = Math.min(leftY, rightY);
-            const depthLift = ((baseline - lowerY) / volumeRect.height) * 100;
-            const depthRise = ((upperY - baseline) / volumeRect.height) * 100;
+            const bottomLeftY = baseline - recessionAt(rect.left);
+            const bottomRightY = baseline - recessionAt(rect.right);
+            const topLeftY = upperBaseline + recessionAt(rect.left);
+            const topRightY = upperBaseline + recessionAt(rect.right);
+            const boundingBottom = Math.max(bottomLeftY, bottomRightY);
+            const boundingTop = Math.min(topLeftY, topRightY);
+            const reflectionTop = Math.min(bottomLeftY, bottomRightY);
+            const holderHeight = boundingBottom - boundingTop;
+            const depthLift = ((baseline - boundingBottom) / volumeRect.height) * 100;
+            const depthRise = ((reflectionTop - baseline) / volumeRect.height) * 100;
             const mainBar = holder.querySelector(".bar");
             const reflectionBar = reflectionHolders[index].querySelector(".bar");
 
+            holder.style.setProperty("--depth-height", `${holderHeight.toFixed(3)}px`);
+            reflectionHolders[index].style.setProperty("--depth-height", `${holderHeight.toFixed(3)}px`);
             holder.style.setProperty("--depth-lift", `${depthLift.toFixed(3)}%`);
             reflectionHolders[index].style.setProperty("--depth-rise", `${depthRise.toFixed(3)}%`);
 
-            mainBar.style.setProperty("--bar-left-inset", `${(lowerY - leftY).toFixed(3)}px`);
-            mainBar.style.setProperty("--bar-right-inset", `${(lowerY - rightY).toFixed(3)}px`);
-            reflectionBar.style.setProperty("--reflection-left-inset", `${(leftY - upperY).toFixed(3)}px`);
-            reflectionBar.style.setProperty("--reflection-right-inset", `${(rightY - upperY).toFixed(3)}px`);
+            mainBar.style.setProperty("--bar-top-left-inset", `${(topLeftY - boundingTop).toFixed(3)}px`);
+            mainBar.style.setProperty("--bar-top-right-inset", `${(topRightY - boundingTop).toFixed(3)}px`);
+            mainBar.style.setProperty("--bar-left-inset", `${(boundingBottom - bottomLeftY).toFixed(3)}px`);
+            mainBar.style.setProperty("--bar-right-inset", `${(boundingBottom - bottomRightY).toFixed(3)}px`);
+            reflectionBar.style.setProperty("--reflection-left-inset", `${(bottomLeftY - reflectionTop).toFixed(3)}px`);
+            reflectionBar.style.setProperty("--reflection-right-inset", `${(bottomRightY - reflectionTop).toFixed(3)}px`);
         });
 
         const startX = ((arcStart - horizonRect.left) / horizonRect.width) * 1000;
@@ -106,15 +130,25 @@
             + ` A ${radiusX.toFixed(2)} ${radiusY.toFixed(2)} 0 0 1`
             + ` ${endX.toFixed(2)} ${baselineY.toFixed(2)}`
         );
+
+        const ceilingStartX = ((arcStart - ceilingRect.left) / ceilingRect.width) * 1000;
+        const ceilingEndX = ((arcEnd - ceilingRect.left) / ceilingRect.width) * 1000;
+        const ceilingRadiusX = ((ceilingEndX - ceilingStartX) / 2) * arcRadiusFactor;
+        perspectiveCeilingPath.setAttribute(
+            "d",
+            `M ${ceilingStartX.toFixed(2)} 0`
+            + ` A ${ceilingRadiusX.toFixed(2)} ${radiusY.toFixed(2)} 0 0 0`
+            + ` ${ceilingEndX.toFixed(2)} 0`
+        );
     };
 
-    const schedulePerspectiveHorizon = () => {
-        if (horizonFrameId !== null) {
-            window.cancelAnimationFrame(horizonFrameId);
+    const schedulePerspectiveEnvelope = () => {
+        if (envelopeFrameId !== null) {
+            window.cancelAnimationFrame(envelopeFrameId);
         }
-        horizonFrameId = window.requestAnimationFrame(() => {
-            horizonFrameId = null;
-            buildPerspectiveHorizon();
+        envelopeFrameId = window.requestAnimationFrame(() => {
+            envelopeFrameId = null;
+            buildPerspectiveEnvelope();
         });
     };
 
@@ -150,7 +184,7 @@
         });
     }
 
-    schedulePerspectiveHorizon();
+    schedulePerspectiveEnvelope();
 
     const setHeight = (index, height) => {
         const value = `${height.toFixed(2)}%`;
@@ -163,6 +197,10 @@
             const wave = 32 + Math.abs(Math.sin(index * 0.72)) * 38;
             setHeight(index, wave);
         });
+    };
+
+    const setMaximumHeights = () => {
+        bars.forEach((_, index) => setHeight(index, maximumHeight));
     };
 
     const stop = () => {
@@ -188,6 +226,11 @@
 
     const syncMotion = () => {
         stop();
+        if (maximumEnvelopeMode) {
+            setMaximumHeights();
+            return;
+        }
+
         if (reducedMotion.matches) {
             setStaticHeights();
             return;
@@ -201,6 +244,6 @@
     setStaticHeights();
     document.addEventListener("visibilitychange", syncMotion);
     reducedMotion.addEventListener?.("change", syncMotion);
-    window.addEventListener("resize", schedulePerspectiveHorizon, {passive: true});
+    window.addEventListener("resize", schedulePerspectiveEnvelope, {passive: true});
     syncMotion();
 })();
