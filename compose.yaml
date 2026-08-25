@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        VCS_REF: ${YLS_IMAGE_TAG:-local}
+    image: yourlivesound:${YLS_IMAGE_TAG:-local}
+    container_name: yourlivesound-app
+    restart: unless-stopped
+    init: true
+    ports:
+      - "127.0.0.1:8082:8082"
+    environment:
+      APP_CONTACT_FORM_ACTION: ${YLS_FORM_ACTION_URL:?YLS_FORM_ACTION_URL must be set in .env}
+    mem_limit: 384m
+    cpus: 1.0
+    pids_limit: 128
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    stop_grace_period: 15s

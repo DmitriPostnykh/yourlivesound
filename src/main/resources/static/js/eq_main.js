@@ -1,69 +1,65 @@
-// eq_main.js
+(() => {
+    "use strict";
 
-const container = document.getElementById('volumeBars');
-const reflectionContainer = document.getElementById('reflectionBars');
-const maxHeight = 30 * window.innerHeight / 100; // Изначальная высота эквалайзера
-const stepSize = 20;
-const maxDirectionChanges = 5;
+    const volumeContainer = document.getElementById("volumeBars");
+    const reflectionContainer = document.getElementById("reflectionBars");
+    if (!volumeContainer || !reflectionContainer) {
+        return;
+    }
 
-// Создаем массив для отслеживания состояния каждого столбика
-const barsData = [];
+    const barCount = 16;
+    const minimumHeight = 8;
+    const maximumHeight = 94;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const bars = [];
+    const reflections = [];
+    let timerId = null;
 
-for (let i = 0; i < 14; i++) {
-    const barContainer = document.createElement('div');
-    barContainer.classList.add('bar-container');
+    const createBar = (container) => {
+        const holder = document.createElement("div");
+        const bar = document.createElement("div");
+        holder.className = "bar-container";
+        bar.className = "bar";
+        holder.appendChild(bar);
+        container.appendChild(holder);
+        return bar;
+    };
 
-    const bar = document.createElement('div');
-    bar.classList.add('bar');
-    barContainer.appendChild(bar);
-    container.appendChild(barContainer);
+    for (let index = 0; index < barCount; index += 1) {
+        bars.push(createBar(volumeContainer));
+        reflections.push(createBar(reflectionContainer));
+    }
 
-    // Создаем отражение для каждого столбика
-    const reflectionBarContainer = document.createElement('div');
-    reflectionBarContainer.classList.add('bar-container');
+    const setHeights = (animated) => {
+        bars.forEach((bar, index) => {
+            const wave = 32 + Math.abs(Math.sin(index * 0.72)) * 38;
+            const height = animated
+                ? minimumHeight + Math.random() * (maximumHeight - minimumHeight)
+                : wave;
+            const value = `${height.toFixed(1)}%`;
+            bar.style.height = value;
+            reflections[index].style.height = value;
+        });
+    };
 
-    const reflectionBar = document.createElement('div');
-    reflectionBar.classList.add('bar');
-    reflectionBarContainer.appendChild(reflectionBar);
-    reflectionContainer.appendChild(reflectionBarContainer);
-
-    // Инициализируем данные для каждого столбика и их отражений
-    barsData.push({
-        element: bar,
-        reflectionElement: reflectionBar,
-        currentHeight: Math.floor(Math.random() * maxHeight),
-        direction: 1,
-        directionChanges: 0
-    });
-}
-
-function animateBars() {
-    barsData.forEach(barData => {
-        const { element, reflectionElement, currentHeight, direction, directionChanges } = barData;
-
-        if (directionChanges >= maxDirectionChanges) {
-            barData.direction = -direction;
-            barData.directionChanges = 0;
+    const stop = () => {
+        if (timerId !== null) {
+            window.clearInterval(timerId);
+            timerId = null;
         }
+    };
 
-        let newHeight = currentHeight + (Math.floor(Math.random() * stepSize) * direction);
-
-        if (newHeight >= maxHeight) {
-            newHeight = maxHeight;
-            barData.direction = -1;
-            barData.directionChanges++;
-        } else if (newHeight <= 0) {
-            newHeight = 0;
-            barData.direction = 1;
-            barData.directionChanges++;
+    const start = () => {
+        stop();
+        if (document.hidden || reducedMotion.matches) {
+            setHeights(false);
+            return;
         }
+        setHeights(true);
+        timerId = window.setInterval(() => setHeights(true), 90);
+    };
 
-        barData.currentHeight = newHeight;
-        element.style.height = newHeight + 'px';
-        reflectionElement.style.height = newHeight + 'px';
-    });
-
-    requestAnimationFrame(animateBars);
-}
-
-requestAnimationFrame(animateBars);
+    document.addEventListener("visibilitychange", start);
+    reducedMotion.addEventListener?.("change", start);
+    start();
+})();

@@ -34,3 +34,7 @@ build/
 
 # Ignore .DS_Store
 .DS_Store
+
+# Local runtime configuration and logs
+.env
+*.log

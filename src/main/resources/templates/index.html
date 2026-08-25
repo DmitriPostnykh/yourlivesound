@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Professional live sound, system setup, concert support, studio work and audio consulting by Dmitrii Postnykh.">
+    <link rel="canonical" href="https://yourlivesound.com/">
     <title>Your Live Sound</title>
-    <link rel="stylesheet" href="/css/styles-wrap.css"> <!-- Main styles -->
-    <link rel="stylesheet" href="/css/menu.css"> <!-- Styles for menu buttons -->
-    <link rel="stylesheet" href="/css/eq_main.css"> <!-- Styles for equalizer -->
+    <link rel="stylesheet" th:href="@{/css/styles-wrap.css}">
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
+    <link rel="stylesheet" th:href="@{/css/eq_main.css}">
 </head>
-<body>
-<!-- Equalizer -->
-<div class="eq-wrapper">
+<body class="home-page">
+<main class="home-main">
     <div th:replace="~{fragments/eq_main :: eq_main}"></div>
-</div>
-
-<!-- Menu -->
-<div class="menu-wrapper">
     <div th:replace="~{fragments/menu :: menu}"></div>
-</div>
-
-<!-- Include JavaScript -->
-<script src="/js/menu.js" defer></script>
-
+</main>
+<footer class="site-footer compact-footer">
+    <p>&copy; <span th:text="${currentYear}">2026</span> Dmitrii Postnykh. All rights reserved.</p>
+</footer>
+<script th:src="@{/js/eq_main.js}" defer></script>
 </body>
 </html>

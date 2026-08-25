@@ -1,97 +1,57 @@
-<!-- fragments/form_1.html -->
-<div th:fragment="form_1" lang="en_US">
-  <link rel="stylesheet" href="/css/form_1.css"> <!-- Styles for the form -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<div th:fragment="form_1" class="contact-form-wrapper">
+    <p th:if="${param.sent != null}" class="form-success" role="status">
+        Thank you. Your request has been sent.
+    </p>
 
-  <div class="form-container">
-    <h2>The website is under development, but you can contact us!</h2>
-    <!-- Form using FormSubmit -->
-    <form id="contactForm" method="POST" action="https://formsubmit.co/javadeveloper7377@gmail.com">
-      <!-- Hidden field to protect from spam -->
-      <input type="hidden" name="_captcha" value="false">
-      <!-- Field for the URL of the page after form submission -->
-      <input type="hidden" name="_next" value="/">
+    <form th:if="${contactFormConfigured}"
+          class="contact-form"
+          th:action="${contactFormAction}"
+          method="post">
+        <input type="hidden" name="_subject" value="New project request from Your Live Sound">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next"
+               value="https://yourlivesound.com/contacts?sent=true#contact">
 
-      <div class="form-group">
-        <input type="text" id="name" name="name" placeholder="Name" required>
-      </div>
+        <div class="honeypot" aria-hidden="true">
+            <label for="company-website">Leave this field empty</label>
+            <input id="company-website" type="text" name="_honey" tabindex="-1" autocomplete="off">
+        </div>
 
-      <div class="form-group">
-        <input type="email" id="email" name="email" placeholder="Email" required>
-      </div>
+        <div class="form-field">
+            <label for="name">Name</label>
+            <input id="name" type="text" name="name" autocomplete="name" required maxlength="120">
+        </div>
 
-      <div class="form-group">
-        <input type="tel" id="phone" name="phone" placeholder="Phone Number">
-      </div>
+        <div class="form-field">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" autocomplete="email" required maxlength="254">
+        </div>
 
-      <div class="form-group">
-        <textarea id="message" name="message" placeholder="Your Message" required></textarea>
-      </div>
+        <div class="form-field">
+            <label for="phone">Phone <span class="optional">(optional)</span></label>
+            <input id="phone" type="tel" name="phone" autocomplete="tel" maxlength="40">
+        </div>
 
-      <button type="submit" class="submit-button">Send</button>
+        <div class="form-field">
+            <label for="message">Project details</label>
+            <textarea id="message" name="message" rows="7" required maxlength="5000"
+                      placeholder="Tell me about the venue, date, audience and sound requirements."></textarea>
+        </div>
+
+        <button class="submit-button" type="submit">Send request</button>
+        <p class="form-privacy">
+            This form is processed by
+            <a href="https://formsubmit.co/" rel="noopener noreferrer">FormSubmit</a>.
+            Submission data may be retained by that service for up to 30 days.
+        </p>
     </form>
-  </div>
-  <div id="loadingMessage" style="display: none;">
-    Sending, the page will reload automatically after submission!<br>
-    Time elapsed: <span id="elapsedTime">0</span> seconds
-    <div class="progress-container">
-      <div id="progressBar" class="progress-bar">0%</div>
-    </div>
-  </div>
-  <script>
-    document.getElementById('contactForm').addEventListener('submit', async function(event) {
-      event.preventDefault(); // Stops the standard form submission
-      document.getElementById('loadingMessage').style.display = 'block'; // Show the loading indicator
 
-      // Start time tracking
-      let startTime = Date.now();
-      let elapsedTime = 0;
-      const elapsedTimeElement = document.getElementById('elapsedTime');
-      const progressBarElement = document.getElementById('progressBar');
-      let progress = 0;
-
-      // Function to update elapsed time
-      const updateElapsedTime = () => {
-        elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-        elapsedTimeElement.textContent = elapsedTime;
-
-        // Update progress bar
-        progress = Math.min(100, (elapsedTime / 5) * 100);
-        progressBarElement.style.width = progress + '%';
-        progressBarElement.textContent = Math.floor(progress) + '%';
-      };
-
-      // Start interval to update elapsed time every second
-      const elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
-
-      try {
-        const response = await fetch('https://formsubmit.co/ajax/javadeveloper7377@gmail.com', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            message: document.getElementById('message').value
-          })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          window.location.href = '/'; // Immediate redirect after successful submission
-        } else {
-          alert('There was an issue submitting the form.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
-      } finally {
-        clearInterval(elapsedTimeInterval); // Stop the interval
-        document.getElementById('loadingMessage').style.display = 'none'; // Hide the loading indicator
-      }
-    });
-  </script>
+    <p th:unless="${contactFormConfigured}" class="form-unavailable" role="status">
+        The contact form is temporarily unavailable. Please try again later.
+    </p>
 </div>
+</body>
+</html>

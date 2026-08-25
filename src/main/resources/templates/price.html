@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="#{spring.application.name}">Your Live Sound</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Request pricing for live sound, system setup, studio production and audio consulting from Your Live Sound.">
+    <link rel="canonical" href="https://yourlivesound.com/price">
+    <title>Pricing | Your Live Sound</title>
     <link rel="stylesheet" th:href="@{/css/styles-wrap.css}">
     <link rel="stylesheet" th:href="@{/css/menu.css}">
+    <link rel="stylesheet" th:href="@{/css/form_1.css}">
 </head>
 <body>
-<!-- Price Section -->
-<section class="contact-section fade-in" id="contact">
-    <h2>Price</h2>
-    <!-- form_1 -->
-    <div class="menu-wrapper">
+<main class="page-shell">
+    <section class="panel contact-section" id="contact">
+        <p class="eyebrow">Your Live Sound</p>
+        <h1>Pricing</h1>
+        <p class="page-lead">
+            Every project is quoted individually. The venue, date, audience size, available equipment,
+            crew requirements and production schedule all affect the scope. Send those details for a clear estimate.
+        </p>
         <div th:replace="~{fragments/form_1 :: form_1}"></div>
-    </div>
-</section>
-<!-- Menu -->
-<section class="services-section fade-in" id="menu">
-    <div class="menu-wrapper">
-        <div th:replace="~{fragments/menu :: menu}"></div>
-    </div>
-</section>
-<script src="/js/scripts.js"></script>
-<script src="/js/menu.js" defer></script>
+    </section>
+    <div th:replace="~{fragments/menu :: menu}"></div>
+</main>
+<footer class="site-footer">
+    <p>&copy; <span th:text="${currentYear}">2026</span> Dmitrii Postnykh. All rights reserved.</p>
+</footer>
 </body>
 </html>

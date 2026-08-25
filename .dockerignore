@@ -1,0 +1,10 @@
+.git
+.github
+.idea
+.vscode
+.DS_Store
+.env
+target
+*.log
+concert_scene.png
+output_image.png

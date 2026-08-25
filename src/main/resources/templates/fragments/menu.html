@@ -1,19 +1,13 @@
-<!-- fragments/menu.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <link rel="stylesheet" href="/css/menu.css"> <!-- Подключаем стили для кнопок -->
-</head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
-<div th:fragment="menu">
-  <div class="menu-container">
+<nav th:fragment="menu" class="site-navigation" aria-label="Primary navigation">
     <div class="menu-buttons">
-      <button th:each="button : ${buttons}"
-              class="menu-button"
-              th:text="${button.label}"
-              th:attr="onclick=|window.location.href='${button.uri}'|"></button>
+        <a th:each="button : ${buttons}"
+           class="menu-button"
+           th:href="@{${button.uri}}"
+           th:text="${button.label}">Page</a>
     </div>
-  </div>
-</div>
+</nav>
 </body>
 </html>

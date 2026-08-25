@@ -1,61 +1,89 @@
-/* Menu Section */
-#menu {
-
-    .menu-section {
-        padding: 60px;
-        background-color: #ffffff;
-        transition: background-color 0.5s;
-    }
-
-    .menu-list {
-        display: flex;
-        justify-content: space-around;
-    }
+.site-navigation {
+    width: min(980px, calc(100% - 1.5rem));
+    margin: clamp(1.5rem, 5vw, 3.5rem) auto 0;
 }
 
-
-
-.menu-container {
+.menu-buttons {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    margin-top: 30px;
-    z-index: 10;
-    opacity: 0; /* Изначально скрыто */
-    transition: opacity 3s ease;
+    gap: clamp(0.55rem, 2vw, 1rem);
 }
 
 .menu-button {
-    background-color: #007fb7; /* Цвет фона кнопки */
-    color: rgb(255, 255, 255); /* Цвет текста */
-    font-size: 2vw; /* Размер текста зависит от ширины экрана */
-    padding: 1.5vw 3vw; /* Внутренние отступы адаптируются по ширине экрана */
-    border: none; /* Убираем рамку */
-    border-radius: 0.5vw; /* Закругленные углы адаптируются */
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Анимация изменения цвета */
-    margin: 0 1.5vw; /* Отступы между кнопками теперь адаптивные */
+    min-height: 2.75rem;
+    padding: 0.7rem clamp(0.9rem, 2.8vw, 1.5rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: #007fb7;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    box-shadow: 0 0.55rem 1.2rem rgba(0, 79, 115, 0.15);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: clamp(0.88rem, 2vw, 1rem);
+    font-weight: 750;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    animation: menu-enter 420ms ease both;
+}
+
+.menu-button:nth-child(2) {
+    animation-delay: 50ms;
+}
+
+.menu-button:nth-child(3) {
+    animation-delay: 100ms;
+}
+
+.menu-button:nth-child(4) {
+    animation-delay: 150ms;
+}
+
+.menu-button:nth-child(5) {
+    animation-delay: 200ms;
 }
 
 .menu-button:hover {
-    background-color: #005f8a; /* Цвет кнопки при наведении */
+    background: #005f89;
+    box-shadow: 0 0.8rem 1.6rem rgba(0, 79, 115, 0.22);
+    transform: translateY(-2px);
 }
 
-.menu-button:active {
-    background-color: #004070; /* Цвет кнопки при нажатии */
+.menu-button:focus-visible {
+    border-color: #ffffff;
+    outline: 3px solid #004e70;
+    outline-offset: 3px;
 }
 
-@media (max-width: 768px) {
-    .menu-button {
-        font-size: 3vw; /* Увеличиваем текст на маленьких экранах */
-        padding: 2vw 4vw; /* Увеличиваем отступы на маленьких экранах */
-        margin: 0 1vw; /* Уменьшаем отступы между кнопками */
+@keyframes menu-enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.7rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
 @media (max-width: 480px) {
+    .menu-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .menu-button {
-        font-size: 3.3vw; /* Ещё больше увеличиваем текст */
-        padding: 3vw 5vw; /* Ещё больше увеличиваем отступы */
-        margin: 0 0.5vw; /* Ещё больше уменьшаем отступы */
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-button {
+        animation: none;
+        transition: none;
     }
 }
