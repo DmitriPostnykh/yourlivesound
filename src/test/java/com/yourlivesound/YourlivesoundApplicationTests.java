@@ -89,8 +89,8 @@ class YourlivesoundApplicationTests {
                 .getContentAsString();
 
         assertEquals(12, html.split("class=\"stage-light\"", -1).length - 1);
-        assertEquals(6, html.split("class=\"moving-head\"", -1).length - 1);
-        assertEquals(36, html.split("class=\"stage-strobe\"", -1).length - 1);
+        assertEquals(12, html.split("class=\"moving-head\"", -1).length - 1);
+        assertEquals(72, html.split("class=\"stage-strobe\"", -1).length - 1);
     }
 
     @Test
