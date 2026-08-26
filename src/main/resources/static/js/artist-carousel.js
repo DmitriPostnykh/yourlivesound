@@ -14,6 +14,7 @@
     const pauseIcon = carousel.querySelector("[data-carousel-pause-icon]");
     const pauseLabel = carousel.querySelector("[data-carousel-pause-label]");
     const currentCounter = carousel.querySelector("[data-carousel-current]");
+    const title = document.querySelector("#site-title");
     const dots = Array.from(carousel.querySelectorAll("[data-carousel-dot]"));
     const slides = Array.from(carousel.querySelectorAll("[data-carousel-slide]"));
 
@@ -33,7 +34,26 @@
     let pointerInside = false;
     let focusInside = false;
     let carouselVisible = true;
-    let touchStartX = null;
+    let touchStartPoint = null;
+    let titleResizeObserver = null;
+
+    const syncCarouselWidth = () => {
+        const titleWidth = title?.getBoundingClientRect().width ?? 0;
+        if (titleWidth > 0) {
+            carousel.style.setProperty("--carousel-title-width", `${titleWidth}px`);
+        }
+    };
+
+    if (title) {
+        syncCarouselWidth();
+        if ("ResizeObserver" in window) {
+            titleResizeObserver = new ResizeObserver(syncCarouselWidth);
+            titleResizeObserver.observe(title);
+        } else {
+            window.addEventListener("resize", syncCarouselWidth);
+        }
+        document.fonts?.ready.then(syncCarouselWidth);
+    }
 
     const setFocusable = (slide, enabled) => {
         slide.querySelectorAll("a, button, input, select, textarea, [tabindex]").forEach((element) => {
@@ -62,7 +82,7 @@
     const setTrackPosition = (animate = true) => {
         const shouldAnimate = animate && !reducedMotion.matches;
         track.style.transition = shouldAnimate ? "" : "none";
-        track.style.transform = `translate3d(${-trackPosition * 100}%, 0, 0)`;
+        track.style.transform = `translate3d(0, ${-trackPosition * 100}%, 0)`;
 
         if (!shouldAnimate) {
             track.getBoundingClientRect();
@@ -161,6 +181,7 @@
             setTrackPosition(false);
         }
 
+        carousel.classList.remove("is-transitioning");
         transitionInProgress = false;
         scheduleAutoplay();
     };
@@ -172,7 +193,8 @@
             return;
         }
 
-        transitionTimer = window.setTimeout(finishTransition, 900);
+        carousel.classList.add("is-transitioning");
+        transitionTimer = window.setTimeout(finishTransition, 1100);
     };
 
     function moveBy(direction, userInitiated = false) {
@@ -246,27 +268,30 @@
     });
 
     viewport.addEventListener("keydown", (event) => {
-        if (event.key === "ArrowLeft") {
+        if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
             event.preventDefault();
             moveBy(-1, true);
-        } else if (event.key === "ArrowRight") {
+        } else if (event.key === "ArrowRight" || event.key === "ArrowDown") {
             event.preventDefault();
             moveBy(1, true);
         }
     });
 
     viewport.addEventListener("touchstart", (event) => {
-        touchStartX = event.changedTouches[0]?.clientX ?? null;
+        const touch = event.changedTouches[0];
+        touchStartPoint = touch ? {x: touch.clientX, y: touch.clientY} : null;
     }, {passive: true});
 
     viewport.addEventListener("touchend", (event) => {
-        if (touchStartX === null) {
+        if (touchStartPoint === null) {
             return;
         }
 
-        const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX;
-        const distance = touchEndX - touchStartX;
-        touchStartX = null;
+        const touch = event.changedTouches[0];
+        const distanceX = (touch?.clientX ?? touchStartPoint.x) - touchStartPoint.x;
+        const distanceY = (touch?.clientY ?? touchStartPoint.y) - touchStartPoint.y;
+        const distance = Math.abs(distanceY) > Math.abs(distanceX) ? distanceY : distanceX;
+        touchStartPoint = null;
 
         if (Math.abs(distance) >= 45) {
             moveBy(distance < 0 ? 1 : -1, true);
@@ -297,6 +322,7 @@
     }
 
     carousel.classList.add("is-enhanced");
+    syncCarouselWidth();
     setTrackPosition(false);
     updateActiveSlide();
     scheduleAutoplay();
