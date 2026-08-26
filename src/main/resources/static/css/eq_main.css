@@ -586,12 +586,24 @@
     filter:
         brightness(var(--depth-brightness, 1))
         saturate(var(--depth-saturation, 1));
+    -webkit-clip-path: polygon(
+        0 0,
+        100% 0,
+        100% calc(100% - var(--bar-right-inset, 0px)),
+        0 calc(100% - var(--bar-left-inset, 0px))
+    );
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% calc(100% - var(--bar-right-inset, 0px)),
+        0 calc(100% - var(--bar-left-inset, 0px))
+    );
     transform: translateZ(0);
 }
 
 .bar {
     width: 100%;
-    min-height: 2%;
+    height: 100%;
     position: absolute;
     bottom: 0;
     background: linear-gradient(180deg, #68ddff 0%, #16a7d5 42%, #05749f 100%);
@@ -606,17 +618,18 @@
     -webkit-clip-path: polygon(
         0 var(--bar-top-left-inset, 0px),
         100% var(--bar-top-right-inset, 0px),
-        100% calc(100% - var(--bar-right-inset, 0px)),
-        0 calc(100% - var(--bar-left-inset, 0px))
+        100% 100%,
+        0 100%
     );
     clip-path: polygon(
         0 var(--bar-top-left-inset, 0px),
         100% var(--bar-top-right-inset, 0px),
-        100% calc(100% - var(--bar-right-inset, 0px)),
-        0 calc(100% - var(--bar-left-inset, 0px))
+        100% 100%,
+        0 100%
     );
-    transform: translateZ(0);
-    will-change: height;
+    transform: translateZ(0) scaleY(0.14);
+    transform-origin: 50% 100%;
+    will-change: transform;
 }
 
 .bar::before {
@@ -640,15 +653,6 @@
 .reflection-container .bar-container {
     top: var(--depth-rise, 0%);
     bottom: auto;
-}
-
-.reflection-container .bar {
-    top: 0;
-    bottom: auto;
-    background: linear-gradient(180deg, rgba(78, 211, 250, 0.48), rgba(4, 91, 125, 0));
-    box-shadow: none;
-    filter: blur(0.7px);
-    opacity: 0.7;
     -webkit-clip-path: polygon(
         0 var(--reflection-left-inset, 0px),
         100% var(--reflection-right-inset, 0px),
@@ -661,8 +665,20 @@
         100% 100%,
         0 100%
     );
+}
+
+.reflection-container .bar {
+    top: 0;
+    bottom: auto;
+    background: linear-gradient(180deg, rgba(78, 211, 250, 0.48), rgba(4, 91, 125, 0));
+    box-shadow: none;
+    filter: blur(0.7px);
+    opacity: 0.7;
+    -webkit-clip-path: none;
+    clip-path: none;
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.45) 38%, transparent 92%);
     mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.45) 38%, transparent 92%);
+    transform-origin: 50% 0;
 }
 
 .reflection-container .bar::before {

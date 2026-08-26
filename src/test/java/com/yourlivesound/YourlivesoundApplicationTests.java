@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -129,6 +130,35 @@ class YourlivesoundApplicationTests {
         assertEquals(12, html.split("class=\"stage-light\"", -1).length - 1);
         assertEquals(11, html.split("class=\"moving-head\"", -1).length - 1);
         assertEquals(72, html.split("class=\"stage-strobe\"", -1).length - 1);
+    }
+
+    @Test
+    void equalizerUsesTransformScalingAndKeepsIndependentMotionProfiles() throws Exception {
+        String javascript = mockMvc.perform(get("/js/eq_main.js"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String stylesheet = mockMvc.perform(get("/css/eq_main.css"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertTrue(javascript.contains("const setBarScale = (index, height) =>"));
+        assertTrue(javascript.contains("bars[index].style.transform = value"));
+        assertTrue(javascript.contains("reflections[index].style.transform = value"));
+        assertFalse(javascript.contains(".style.height ="));
+        assertTrue(javascript.contains("phase: Math.random()"));
+        assertTrue(javascript.contains("detailPhase: Math.random()"));
+        assertTrue(javascript.contains("speed: 3.2 + Math.random() * 1.6"));
+        assertTrue(javascript.contains("targetLevel > profile.level ? attackResponse : releaseResponse"));
+
+        assertTrue(stylesheet.contains("transform: translateZ(0) scaleY(0.14)"));
+        assertTrue(stylesheet.contains("transform-origin: 50% 100%"));
+        assertTrue(stylesheet.contains("transform-origin: 50% 0"));
+        assertTrue(stylesheet.contains("will-change: transform"));
+        assertFalse(stylesheet.contains("will-change: height"));
     }
 
     @Test

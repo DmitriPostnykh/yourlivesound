@@ -70,7 +70,10 @@
         // Cross-sections are flat halfway between the two arcs. Above that line the
         // top follows the ceiling arc; below it the same slope reverses toward the floor arc.
         const slopeProgress = (height - neutralTopHeight) / (maximumHeight - neutralTopHeight);
-        const currentSlope = maximumSlope * slopeProgress;
+        const scale = Math.max(0.001, height / maximumHeight);
+        // The bar now keeps its full layout height and scales visually. Compensate
+        // before the transform so the projected top edge keeps its previous slope.
+        const currentSlope = maximumSlope * slopeProgress / scale;
         bar.style.setProperty("--bar-top-left-inset", `${Math.max(0, -currentSlope).toFixed(3)}px`);
         bar.style.setProperty("--bar-top-right-inset", `${Math.max(0, currentSlope).toFixed(3)}px`);
     };
@@ -161,8 +164,6 @@
             const depthLift = ((baseline - boundingBottom) / volumeRect.height) * 100;
             const depthRise = ((reflectionTop - baseline) / volumeRect.height) * 100;
             const mainBar = holder.querySelector(".bar");
-            const reflectionBar = reflectionHolders[index].querySelector(".bar");
-
             holder.style.setProperty("--depth-height", `${holderHeight.toFixed(3)}px`);
             reflectionHolders[index].style.setProperty("--depth-height", `${holderHeight.toFixed(3)}px`);
             holder.style.setProperty("--depth-lift", `${depthLift.toFixed(3)}%`);
@@ -170,10 +171,10 @@
 
             maximumTopSlopes[index] = topRightY - topLeftY;
             applyDynamicTopSlope(index, currentHeights[index]);
-            mainBar.style.setProperty("--bar-left-inset", `${(boundingBottom - bottomLeftY).toFixed(3)}px`);
-            mainBar.style.setProperty("--bar-right-inset", `${(boundingBottom - bottomRightY).toFixed(3)}px`);
-            reflectionBar.style.setProperty("--reflection-left-inset", `${(bottomLeftY - reflectionTop).toFixed(3)}px`);
-            reflectionBar.style.setProperty("--reflection-right-inset", `${(bottomRightY - reflectionTop).toFixed(3)}px`);
+            holder.style.setProperty("--bar-left-inset", `${(boundingBottom - bottomLeftY).toFixed(3)}px`);
+            holder.style.setProperty("--bar-right-inset", `${(boundingBottom - bottomRightY).toFixed(3)}px`);
+            reflectionHolders[index].style.setProperty("--reflection-left-inset", `${(bottomLeftY - reflectionTop).toFixed(3)}px`);
+            reflectionHolders[index].style.setProperty("--reflection-right-inset", `${(bottomRightY - reflectionTop).toFixed(3)}px`);
         });
 
         const startX = ((arcStart - horizonRect.left) / horizonRect.width) * 1000;
@@ -251,11 +252,12 @@
 
     schedulePerspectiveEnvelope();
 
-    const setHeight = (index, height) => {
-        const value = `${height.toFixed(2)}%`;
+    const setBarScale = (index, height) => {
+        const scale = height / maximumHeight;
+        const value = `translateZ(0) scaleY(${scale.toFixed(4)})`;
         currentHeights[index] = height;
-        bars[index].style.height = value;
-        reflections[index].style.height = value;
+        bars[index].style.transform = value;
+        reflections[index].style.transform = value;
         applyDynamicTopSlope(index, height);
     };
 
@@ -263,12 +265,12 @@
         bars.forEach((_, index) => {
             const wave = 32 + Math.abs(Math.sin(index * 0.72)) * 38;
             motionProfiles[index].level = (wave - minimumHeight) / (maximumHeight - minimumHeight);
-            setHeight(index, wave);
+            setBarScale(index, wave);
         });
     };
 
     const setFixedHeights = () => {
-        bars.forEach((_, index) => setHeight(index, fixedEnvelopeHeight));
+        bars.forEach((_, index) => setBarScale(index, fixedEnvelopeHeight));
     };
 
     const stop = () => {
@@ -306,7 +308,7 @@
             profile.level += (targetLevel - profile.level) * blend;
 
             const height = minimumHeight + profile.level * (maximumHeight - minimumHeight);
-            setHeight(index, height);
+            setBarScale(index, height);
         });
 
         animationFrameId = window.requestAnimationFrame(renderFrame);
