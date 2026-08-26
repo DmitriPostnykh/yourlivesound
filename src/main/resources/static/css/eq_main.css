@@ -722,19 +722,21 @@
     -webkit-mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        rgba(0, 0, 0, 0.72) 4%,
-        rgba(0, 0, 0, 0.82) 10%,
-        rgba(0, 0, 0, 0.94) 20%,
-        #000 30%,
+        transparent 48%,
+        rgba(0, 0, 0, 0.08) 60%,
+        rgba(0, 0, 0, 0.24) 72%,
+        rgba(0, 0, 0, 0.48) 84%,
+        rgba(0, 0, 0, 0.78) 94%,
         #000 100%
     );
     mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        rgba(0, 0, 0, 0.72) 4%,
-        rgba(0, 0, 0, 0.82) 10%,
-        rgba(0, 0, 0, 0.94) 20%,
-        #000 30%,
+        transparent 48%,
+        rgba(0, 0, 0, 0.08) 60%,
+        rgba(0, 0, 0, 0.24) 72%,
+        rgba(0, 0, 0, 0.48) 84%,
+        rgba(0, 0, 0, 0.78) 94%,
         #000 100%
     );
     transform: translate(-50%, calc(0px - var(--title-floor-correction))) scaleY(-1);
