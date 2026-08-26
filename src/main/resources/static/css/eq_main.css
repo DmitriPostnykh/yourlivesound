@@ -229,10 +229,11 @@
     --head-sweep-duration: 10s;
     --head-live-duration: 4s;
     --head-color-duration: 13s;
+    --head-drop: clamp(30px, 3vw, 44px);
     width: clamp(3.2rem, 9vw, 8.5rem);
-    height: calc(100% - 0.2rem);
+    height: calc(100% - 0.2rem - var(--head-drop));
     position: absolute;
-    top: 0.2rem;
+    top: calc(0.2rem + var(--head-drop));
     left: var(--head-x);
     opacity: 0.08;
     transform: translateX(-50%) rotate(var(--head-angle-a));
@@ -283,7 +284,7 @@
 }
 
 .moving-head:nth-child(13) {
-    --head-x: 3%;
+    --head-x: 8.25%;
     --head-angle-a: -7deg;
     --head-angle-b: -31deg;
     --head-angle-c: -16deg;
@@ -295,7 +296,7 @@
 }
 
 .moving-head:nth-child(14) {
-    --head-x: 12%;
+    --head-x: 16.75%;
     --head-angle-a: -5deg;
     --head-angle-b: -27deg;
     --head-angle-c: -13deg;
@@ -307,7 +308,7 @@
 }
 
 .moving-head:nth-child(15) {
-    --head-x: 21%;
+    --head-x: 25.25%;
     --head-angle-a: -3deg;
     --head-angle-b: -23deg;
     --head-angle-c: -10deg;
@@ -319,7 +320,7 @@
 }
 
 .moving-head:nth-child(16) {
-    --head-x: 30%;
+    --head-x: 33.75%;
     --head-angle-a: -1deg;
     --head-angle-b: -19deg;
     --head-angle-c: -7deg;
@@ -331,7 +332,7 @@
 }
 
 .moving-head:nth-child(17) {
-    --head-x: 39%;
+    --head-x: 42.25%;
     --head-angle-a: 5deg;
     --head-angle-b: -15deg;
     --head-angle-c: -5deg;
@@ -343,7 +344,7 @@
 }
 
 .moving-head:nth-child(18) {
-    --head-x: 47%;
+    --head-x: 50%;
     --head-angle-a: 9deg;
     --head-angle-b: -11deg;
     --head-angle-c: -3deg;
@@ -355,7 +356,7 @@
 }
 
 .moving-head:nth-child(19) {
-    --head-x: 53%;
+    --head-x: 57.75%;
     --head-angle-a: -9deg;
     --head-angle-b: 11deg;
     --head-angle-c: 3deg;
@@ -367,7 +368,7 @@
 }
 
 .moving-head:nth-child(20) {
-    --head-x: 61%;
+    --head-x: 66.25%;
     --head-angle-a: -5deg;
     --head-angle-b: 15deg;
     --head-angle-c: 5deg;
@@ -379,7 +380,7 @@
 }
 
 .moving-head:nth-child(21) {
-    --head-x: 70%;
+    --head-x: 74.75%;
     --head-angle-a: 1deg;
     --head-angle-b: 19deg;
     --head-angle-c: 7deg;
@@ -391,7 +392,7 @@
 }
 
 .moving-head:nth-child(22) {
-    --head-x: 79%;
+    --head-x: 83.25%;
     --head-angle-a: 3deg;
     --head-angle-b: 23deg;
     --head-angle-c: 10deg;
@@ -403,7 +404,7 @@
 }
 
 .moving-head:nth-child(23) {
-    --head-x: 88%;
+    --head-x: 91.75%;
     --head-angle-a: 5deg;
     --head-angle-b: 27deg;
     --head-angle-c: 13deg;
@@ -412,18 +413,6 @@
     --head-live-duration: 4.2s;
     --head-color-duration: 14.3s;
     animation-delay: -7.8s, -0.9s, -11.7s;
-}
-
-.moving-head:nth-child(24) {
-    --head-x: 97%;
-    --head-angle-a: 7deg;
-    --head-angle-b: 31deg;
-    --head-angle-c: 16deg;
-    --head-angle-d: 38deg;
-    --head-sweep-duration: 12.7s;
-    --head-live-duration: 5s;
-    --head-color-duration: 11.8s;
-    animation-delay: -5.5s, -4.1s, -3.7s;
 }
 
 @keyframes stage-head-sweep {
@@ -696,14 +685,15 @@
 
 .title,
 .reflection-title {
-    width: auto;
+    width: max-content;
+    max-width: 100%;
     margin: 0;
     display: flex;
     justify-content: center;
     gap: 0.07em;
     position: absolute;
-    right: 0;
-    left: 0;
+    right: auto;
+    left: 50%;
     z-index: 3;
     color: #f4fbff;
     font-family: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -720,7 +710,7 @@
 
 .title {
     bottom: var(--mirror-floor-y);
-    transform: translateY(var(--title-floor-correction));
+    transform: translate(-50%, var(--title-floor-correction));
 }
 
 .reflection-title {
@@ -729,7 +719,21 @@
     opacity: 0.13;
     filter: blur(0.8px);
     text-shadow: none;
-    transform: translateY(calc(0px - var(--title-floor-correction))) scaleY(-1);
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.22) 34%,
+        rgba(0, 0, 0, 0.68) 68%,
+        #000 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.22) 34%,
+        rgba(0, 0, 0, 0.68) 68%,
+        #000 100%
+    );
+    transform: translate(-50%, calc(0px - var(--title-floor-correction))) scaleY(-1);
     transform-origin: 50% 100%;
 }
 
