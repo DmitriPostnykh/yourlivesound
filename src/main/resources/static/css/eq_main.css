@@ -561,6 +561,7 @@
 
 .perspective-arc path {
     fill: none;
+    stroke: none;
     stroke-width: 1.2;
     vector-effect: non-scaling-stroke;
 }
@@ -716,7 +717,7 @@
 .reflection-title {
     bottom: var(--mirror-floor-y);
     color: rgba(202, 237, 248, 0.5);
-    opacity: 0.12;
+    opacity: 0.17;
     filter: blur(0.6px);
     text-shadow: none;
     -webkit-mask-image: linear-gradient(
