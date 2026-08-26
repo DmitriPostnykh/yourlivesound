@@ -81,6 +81,27 @@ class YourlivesoundApplicationTests {
     }
 
     @Test
+    void aboutPageRendersCuratedArtistCarousel() throws Exception {
+        String html = mockMvc.perform(get("/about"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/js/artist-carousel.js?v=test-build")))
+                .andExpect(content().string(containsString("Michael Jackson")))
+                .andExpect(content().string(containsString("Sade Adu")))
+                .andExpect(content().string(containsString("Quincy Jones")))
+                .andExpect(content().string(containsString("Gary Moore")))
+                .andExpect(content().string(containsString("B.B. King")))
+                .andExpect(content().string(containsString("Al Jarreau")))
+                .andExpect(content().string(containsString("Stevie Wonder")))
+                .andExpect(content().string(containsString("Bruce Swedien")))
+                .andExpect(content().string(not(containsString("Music and rhythm find their way"))))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertEquals(8, html.split("data-carousel-slide", -1).length - 1);
+    }
+
+    @Test
     void equalizerRendersCompleteBackgroundStageRig() throws Exception {
         String html = mockMvc.perform(get("/"))
                 .andExpect(status().isOk())

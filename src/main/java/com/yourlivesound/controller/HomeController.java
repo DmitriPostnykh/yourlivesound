@@ -20,9 +20,8 @@ public class HomeController {
     }
 
     @GetMapping("/about")
-    public String getQuote(Model model) {
-        String quote = quoteService.getRandomQuote();
-        model.addAttribute("quote", quote);
+    public String about(Model model) {
+        model.addAttribute("artistQuotes", quoteService.getFeaturedQuotes());
         return "about";
     }
 

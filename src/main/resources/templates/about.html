@@ -15,7 +15,77 @@
     <div class="hero-content">
         <img th:src="@{/images/title.jpg}" alt="Dmitrii Postnykh at a live sound mixing console" class="hero-image">
         <h1>Dmitrii Postnykh</h1>
-        <p class="quote" th:text="${quote}">Music quote</p>
+
+        <section class="quote-carousel" data-quote-carousel aria-label="Voices that shaped music">
+            <p class="quote-carousel-kicker">Voices that shaped music</p>
+            <div class="quote-carousel-shell">
+                <button class="quote-carousel-button quote-carousel-previous"
+                        type="button"
+                        data-carousel-previous
+                        aria-label="Previous quote">
+                    <span aria-hidden="true">&#8592;</span>
+                </button>
+
+                <div class="quote-carousel-viewport" data-carousel-viewport tabindex="0">
+                    <div class="quote-carousel-track" data-carousel-track>
+                        <article class="artist-quote-card"
+                                 data-carousel-slide
+                                 th:each="artistQuote, quoteStat : ${artistQuotes}"
+                                 th:attr="aria-label=${quoteStat.count + ' of ' + quoteStat.size}">
+                            <img class="artist-portrait"
+                                 th:src="@{${artistQuote.portraitPath}}"
+                                 th:alt="${artistQuote.portraitAlt}"
+                                 th:attr="loading=${quoteStat.first ? 'eager' : 'lazy'}">
+                            <div class="artist-quote-copy">
+                                <h2 th:text="${artistQuote.artist}">Artist name</h2>
+                                <p class="artist-role" th:text="${artistQuote.role}">Artist role</p>
+                                <blockquote>
+                                    <p th:text="${artistQuote.quote}">Music quote</p>
+                                </blockquote>
+                                <div class="artist-quote-sources">
+                                    <a th:href="${artistQuote.quoteSourceUrl}"
+                                       th:attr="aria-label=|Quote source for ${artistQuote.artist}|"
+                                       target="_blank"
+                                       rel="noopener noreferrer">Quote source <span aria-hidden="true">&#8599;</span></a>
+                                    <a th:href="${artistQuote.photoSourceUrl}"
+                                       th:text="|Photo: ${artistQuote.photoCredit}|"
+                                       th:attr="aria-label=|Photo source and licence for ${artistQuote.artist}|"
+                                       target="_blank"
+                                       rel="noopener noreferrer">Photo credit</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <button class="quote-carousel-button quote-carousel-next"
+                        type="button"
+                        data-carousel-next
+                        aria-label="Next quote">
+                    <span aria-hidden="true">&#8594;</span>
+                </button>
+            </div>
+
+            <div class="quote-carousel-controls">
+                <button class="quote-carousel-pause" type="button" data-carousel-pause>
+                    <span class="quote-carousel-pause-icon" data-carousel-pause-icon aria-hidden="true">&#8545;</span>
+                    <span data-carousel-pause-label>Pause</span>
+                </button>
+                <div class="quote-carousel-dots" aria-label="Choose a quote">
+                    <button type="button"
+                            data-carousel-dot
+                            th:each="artistQuote, quoteStat : ${artistQuotes}"
+                            th:attr="aria-label=|Show ${artistQuote.artist} quote|">
+                    </button>
+                </div>
+                <p class="quote-carousel-counter" data-carousel-counter aria-live="off">
+                    <span data-carousel-current>1</span>
+                    <span aria-hidden="true">/</span>
+                    <span th:text="${#lists.size(artistQuotes)}">8</span>
+                    <span class="visually-hidden">quotes</span>
+                </p>
+            </div>
+        </section>
     </div>
 </header>
 
@@ -104,5 +174,6 @@
     <p>&copy; <span th:text="${currentYear}">2026</span> Dmitrii Postnykh. All rights reserved.</p>
 </footer>
 <script th:src="@{/js/reveal.js(v=${assetVersion})}" defer></script>
+<script th:src="@{/js/artist-carousel.js(v=${assetVersion})}" defer></script>
 </body>
 </html>
