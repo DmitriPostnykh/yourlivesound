@@ -15,13 +15,13 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        model.addAttribute("artistQuotes", quoteService.getFeaturedQuotes());
         return "index";
     }
 
     @GetMapping("/about")
-    public String about(Model model) {
-        model.addAttribute("artistQuotes", quoteService.getFeaturedQuotes());
+    public String about() {
         return "about";
     }
 

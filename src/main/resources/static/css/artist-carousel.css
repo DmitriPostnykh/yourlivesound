@@ -1,0 +1,373 @@
+.quote-carousel {
+    --carousel-accent: #60d7ff;
+    width: min(1040px, calc(100% - 1.5rem));
+    margin: clamp(-2.25rem, -4svh, -1.25rem) auto 0;
+    position: relative;
+    z-index: 4;
+    color: #ffffff;
+    text-align: center;
+}
+
+.quote-carousel-kicker {
+    margin: 0 0 0.7rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+}
+
+.quote-carousel-shell {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.8rem minmax(0, 1fr) 2.8rem;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.quote-carousel-viewport {
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 1.4rem;
+    box-shadow: 0 1.5rem 3.5rem rgba(0, 19, 30, 0.38);
+    outline: none;
+}
+
+.quote-carousel-viewport:focus-visible {
+    box-shadow:
+        0 0 0 0.2rem rgba(255, 255, 255, 0.9),
+        0 0 0 0.42rem rgba(96, 215, 255, 0.75),
+        0 1.5rem 3.5rem rgba(0, 19, 30, 0.38);
+}
+
+.quote-carousel-track {
+    display: flex;
+    align-items: stretch;
+    transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+}
+
+.artist-quote-card {
+    flex: 0 0 100%;
+    min-width: 0;
+    min-height: 242px;
+    padding: clamp(0.9rem, 2vw, 1.25rem);
+    display: grid;
+    grid-template-columns: clamp(9.5rem, 20vw, 12rem) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 18% 12%, rgba(101, 222, 255, 0.18), transparent 36%),
+        linear-gradient(125deg, rgba(0, 34, 53, 0.94), rgba(0, 74, 105, 0.86));
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 1.4rem;
+    text-align: left;
+}
+
+.artist-portrait {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    background: rgba(0, 25, 39, 0.7);
+    border: 0.3rem solid #ffffff;
+    border-radius: 1.05rem;
+    box-shadow: 0 0.9rem 2rem rgba(0, 15, 24, 0.38);
+}
+
+.artist-quote-copy {
+    min-width: 0;
+    padding-right: clamp(0.15rem, 1vw, 0.65rem);
+}
+
+.artist-quote-copy h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(1.65rem, 4vw, 2.55rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+}
+
+.artist-role {
+    margin: 0.35rem 0 0;
+    color: var(--carousel-accent);
+    font-size: clamp(0.7rem, 1.5vw, 0.82rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.artist-quote-copy blockquote {
+    margin: clamp(0.8rem, 2vw, 1.15rem) 0 0;
+}
+
+.artist-quote-copy blockquote p {
+    max-width: 38ch;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.96);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.08rem, 2.35vw, 1.42rem);
+    font-style: italic;
+    line-height: 1.42;
+    text-wrap: balance;
+}
+
+.artist-quote-copy blockquote p::before {
+    content: "“";
+    color: var(--carousel-accent);
+}
+
+.artist-quote-copy blockquote p::after {
+    content: "”";
+    color: var(--carousel-accent);
+}
+
+.artist-quote-sources {
+    margin-top: 0.85rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    color: rgba(255, 255, 255, 0.63);
+    font-size: 0.67rem;
+    line-height: 1.35;
+}
+
+.artist-quote-sources a {
+    color: inherit;
+    text-decoration-color: rgba(255, 255, 255, 0.32);
+    text-underline-offset: 0.18em;
+}
+
+.artist-quote-sources a:hover {
+    color: #ffffff;
+}
+
+.quote-carousel-button,
+.quote-carousel-pause,
+.quote-carousel-dots button {
+    font: inherit;
+    cursor: pointer;
+}
+
+.quote-carousel-button {
+    width: 2.8rem;
+    height: 2.8rem;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    background: rgba(0, 33, 50, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    font-size: 1.25rem;
+    transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.quote-carousel-button:hover {
+    background: rgba(0, 33, 50, 0.8);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.06);
+}
+
+.quote-carousel-button:focus-visible,
+.quote-carousel-pause:focus-visible,
+.quote-carousel-dots button:focus-visible {
+    outline: 0.16rem solid #ffffff;
+    outline-offset: 0.16rem;
+}
+
+.quote-carousel-controls {
+    min-height: 2rem;
+    margin-top: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+}
+
+.quote-carousel-pause {
+    padding: 0.28rem 0.62rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: rgba(255, 255, 255, 0.82);
+    background: rgba(0, 33, 50, 0.38);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    font-size: 0.69rem;
+}
+
+.quote-carousel-pause:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+.quote-carousel-pause-icon {
+    width: 0.85rem;
+    text-align: center;
+}
+
+.quote-carousel-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.38rem;
+}
+
+.quote-carousel-dots button {
+    width: 0.45rem;
+    height: 0.45rem;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.38);
+    border: 0;
+    border-radius: 999px;
+    transition: width 220ms ease, background-color 220ms ease;
+}
+
+.quote-carousel-dots button[aria-current="true"] {
+    width: 1.45rem;
+    background: var(--carousel-accent);
+}
+
+.quote-carousel-counter {
+    min-width: 2.2rem;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.quote-carousel:not(.is-enhanced) .quote-carousel-button,
+.quote-carousel:not(.is-enhanced) .quote-carousel-controls {
+    display: none;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    .quote-carousel-shell {
+        grid-template-columns: 2.15rem minmax(0, 1fr) 2.15rem;
+        gap: 0.35rem;
+    }
+
+    .quote-carousel-button {
+        width: 2.15rem;
+        height: 2.15rem;
+        font-size: 1rem;
+    }
+
+    .artist-quote-card {
+        min-height: 230px;
+        padding: 0.8rem;
+        grid-template-columns: clamp(5.5rem, 25vw, 8rem) minmax(0, 1fr);
+        gap: clamp(0.75rem, 2.5vw, 1.15rem);
+    }
+
+    .artist-quote-copy {
+        padding-right: 0;
+    }
+
+    .artist-quote-copy h2 {
+        font-size: clamp(1.3rem, 5.5vw, 1.9rem);
+    }
+
+    .artist-quote-copy blockquote p {
+        font-size: clamp(0.93rem, 3.5vw, 1.12rem);
+        line-height: 1.36;
+        text-wrap: pretty;
+    }
+
+    .artist-quote-sources {
+        gap: 0.25rem 0.65rem;
+        font-size: 0.61rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .quote-carousel {
+        width: calc(100% - 0.5rem);
+        margin-top: -1rem;
+    }
+
+    .quote-carousel-kicker {
+        font-size: 0.64rem;
+    }
+
+    .quote-carousel-shell {
+        grid-template-columns: 1.85rem minmax(0, 1fr) 1.85rem;
+        gap: 0.2rem;
+    }
+
+    .quote-carousel-button {
+        width: 1.85rem;
+        height: 1.85rem;
+        font-size: 0.9rem;
+    }
+
+    .artist-quote-card {
+        min-height: 246px;
+        padding: 0.68rem;
+        grid-template-columns: 4.8rem minmax(0, 1fr);
+        gap: 0.68rem;
+        border-radius: 1.05rem;
+    }
+
+    .artist-portrait {
+        border-width: 0.2rem;
+        border-radius: 0.8rem;
+    }
+
+    .artist-role {
+        font-size: 0.58rem;
+        letter-spacing: 0.08em;
+    }
+
+    .artist-quote-copy blockquote {
+        margin-top: 0.62rem;
+    }
+
+    .artist-quote-sources {
+        margin-top: 0.6rem;
+    }
+
+    .quote-carousel-controls {
+        gap: 0.5rem;
+    }
+
+    .quote-carousel-pause {
+        padding: 0.22rem 0.48rem;
+    }
+
+    .quote-carousel-dots {
+        gap: 0.27rem;
+    }
+
+    .quote-carousel-dots button {
+        width: 0.35rem;
+        height: 0.35rem;
+    }
+
+    .quote-carousel-dots button[aria-current="true"] {
+        width: 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .quote-carousel-track,
+    .quote-carousel-button,
+    .quote-carousel-dots button {
+        transition: none;
+    }
+}

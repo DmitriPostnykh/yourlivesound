@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -77,12 +78,13 @@ class YourlivesoundApplicationTests {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("/css/styles-wrap.css?v=test-build")))
+                .andExpect(content().string(containsString("/css/artist-carousel.css?v=test-build")))
                 .andExpect(content().string(containsString("/js/eq_main.js?v=test-build")));
     }
 
     @Test
-    void aboutPageRendersCuratedArtistCarousel() throws Exception {
-        String html = mockMvc.perform(get("/about"))
+    void homePageRendersCuratedArtistCarouselBetweenLogoAndNavigation() throws Exception {
+        String html = mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("/js/artist-carousel.js?v=test-build")))
                 .andExpect(content().string(containsString("Michael Jackson")))
@@ -99,6 +101,21 @@ class YourlivesoundApplicationTests {
                 .getContentAsString();
 
         assertEquals(8, html.split("data-carousel-slide", -1).length - 1);
+        int titlePosition = html.indexOf("id=\"site-title\"");
+        int carouselPosition = html.indexOf("data-quote-carousel");
+        int navigationPosition = html.indexOf("class=\"site-navigation\"");
+        assertTrue(titlePosition >= 0 && titlePosition < carouselPosition);
+        assertTrue(carouselPosition < navigationPosition);
+    }
+
+    @Test
+    void aboutPageDoesNotRenderArtistCarousel() throws Exception {
+        mockMvc.perform(get("/about"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(not(containsString("data-quote-carousel"))))
+                .andExpect(content().string(not(containsString("artist-carousel.css"))))
+                .andExpect(content().string(not(containsString("artist-carousel.js"))))
+                .andExpect(content().string(not(containsString("Michael Jackson"))));
     }
 
     @Test
