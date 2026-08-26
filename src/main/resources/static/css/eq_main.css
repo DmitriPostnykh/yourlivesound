@@ -721,7 +721,8 @@
     text-shadow: none;
     -webkit-mask-image: linear-gradient(
         to bottom,
-        rgba(0, 0, 0, 0.72) 0%,
+        transparent 0%,
+        rgba(0, 0, 0, 0.72) 4%,
         rgba(0, 0, 0, 0.82) 10%,
         rgba(0, 0, 0, 0.94) 20%,
         #000 30%,
@@ -729,7 +730,8 @@
     );
     mask-image: linear-gradient(
         to bottom,
-        rgba(0, 0, 0, 0.72) 0%,
+        transparent 0%,
+        rgba(0, 0, 0, 0.72) 4%,
         rgba(0, 0, 0, 0.82) 10%,
         rgba(0, 0, 0, 0.94) 20%,
         #000 30%,
