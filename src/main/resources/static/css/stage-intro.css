@@ -77,10 +77,11 @@
     background-image: linear-gradient(
         to bottom,
         #ffffff 0%,
-        #f8fdff 25%,
-        #edf6f9 48%,
-        #c7d6dc 72%,
-        #748b96 100%
+        #fbfeff 22%,
+        #e7f0f4 42%,
+        #96a9b1 60%,
+        #455e69 78%,
+        #142a34 100%
     );
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -93,11 +94,12 @@
     color: #ff5365;
     background-image: linear-gradient(
         to bottom,
-        #ff8591 0%,
-        #ff5d6e 28%,
-        #ff465b 50%,
-        #cf3046 74%,
-        #791625 100%
+        #ff7a89 0%,
+        #ff5365 24%,
+        #e94156 45%,
+        #b6293c 63%,
+        #741725 80%,
+        #35080f 100%
     );
 }
 

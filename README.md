@@ -5,6 +5,7 @@ Spring Boot and Thymeleaf site for [yourlivesound.com](https://yourlivesound.com
 ## Local verification
 
 ```sh
+npm test
 ./mvnw --batch-mode --no-transfer-progress verify
 ```
 

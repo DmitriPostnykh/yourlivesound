@@ -1,0 +1,7 @@
+{
+  "name": "yourlivesound-browser-tests",
+  "private": true,
+  "scripts": {
+    "test": "node --test src/test/js/*.test.mjs"
+  }
+}

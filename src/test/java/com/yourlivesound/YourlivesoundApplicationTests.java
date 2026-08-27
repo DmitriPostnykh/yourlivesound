@@ -128,8 +128,15 @@ class YourlivesoundApplicationTests {
         assertFalse(javascript.contains("rigLive: 7200"));
         assertTrue(javascript.contains("const screenSweepRatio = 0.52"));
         assertTrue(javascript.contains("const seenThreshold = 10000"));
+        assertTrue(javascript.contains("const readinessDeadline = 2500"));
         assertTrue(javascript.contains("document.fonts?.ready"));
-        assertTrue(javascript.contains("portrait.loading = \"eager\""));
+        assertFalse(javascript.contains("waitForPortraits"));
+        assertFalse(javascript.contains("portrait.loading = \"eager\""));
+        assertTrue(javascript.contains("observeReadiness(\"window-load\", waitForWindowLoad())"));
+        assertTrue(javascript.contains("observeReadiness(\"fonts\", document.fonts?.ready ?? Promise.resolve())"));
+        assertTrue(javascript.contains("() => startScene(\"deadline\")"));
+        assertTrue(javascript.contains("body.dataset.stageIntroStartReason = reason"));
+        assertTrue(javascript.contains("window.performance?.mark?.(`yls-stage-intro:${eventName}`)"));
         assertTrue(javascript.contains("if (!document.hidden)"));
         assertTrue(javascript.contains("queryMode === \"replay\""));
         assertTrue(javascript.contains("queryMode === \"skip\""));
@@ -154,7 +161,8 @@ class YourlivesoundApplicationTests {
         assertFalse(javascript.contains("equalizerApi?.revealBar"));
         assertTrue(javascript.contains("equalizerWaveStartAt + (equalizerApi?.introWaveDuration ?? 0)"));
         assertTrue(javascript.contains("addEvent(equalizerWaveStartAt, () => equalizerApi?.startIntroWave())"));
-        assertTrue(javascript.contains("addEvent(equalizerLiveAt, () => equalizerApi?.startLive())"));
+        assertTrue(javascript.contains("addEvent(equalizerLiveAt, () => {"));
+        assertTrue(javascript.contains("equalizerApi?.startLive();"));
         assertTrue(javascript.contains("const floorSpotScaleMultiplier = 2"));
         assertTrue(javascript.contains("const floorSpotOpacityMultiplier = 0.5"));
         assertTrue(javascript.contains("const floorScaleX = floorSpotScaleMultiplier * lerp("));
@@ -231,8 +239,8 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("color: #f4fbff"));
         assertTrue(stylesheet.contains("color: #ff5365"));
         assertTrue(stylesheet.contains(".home-page .title .title-character"));
-        assertTrue(stylesheet.contains("#748b96 100%"));
-        assertTrue(stylesheet.contains("#791625 100%"));
+        assertTrue(stylesheet.contains("#142a34 100%"));
+        assertTrue(stylesheet.contains("#35080f 100%"));
         assertTrue(stylesheet.contains("-webkit-background-clip: text"));
         assertTrue(stylesheet.contains("-webkit-text-fill-color: transparent"));
         assertFalse(stylesheet.contains(".stage-screen-glare"));
@@ -292,6 +300,8 @@ class YourlivesoundApplicationTests {
                 .getContentAsString();
 
         assertEquals(8, html.split("data-carousel-slide", -1).length - 1);
+        assertEquals(1, html.split("loading=\"eager\"", -1).length - 1);
+        assertEquals(7, html.split("loading=\"lazy\"", -1).length - 1);
         int titlePosition = html.indexOf("id=\"site-title\"");
         int carouselPosition = html.indexOf("data-quote-carousel");
         int navigationPosition = html.indexOf("class=\"site-navigation\"");

@@ -16,6 +16,7 @@
     const floorSpotScaleMultiplier = 2;
     const floorSpotOpacityMultiplier = 0.5;
     const seenThreshold = 10000;
+    const readinessDeadline = 2500;
     const timings = Object.freeze({
         lightStart: 1000,
         aimStart: 1000,
@@ -27,6 +28,26 @@
         carouselReady: 7580,
         sceneComplete: 10000
     });
+    const bootstrapStartedAt = window.performance?.now?.() ?? Date.now();
+
+    const diagnosticElapsed = () => Math.max(
+        0,
+        (window.performance?.now?.() ?? Date.now()) - bootstrapStartedAt
+    );
+
+    const markStageEvent = (eventName) => {
+        const eventElapsed = Math.round(diagnosticElapsed());
+        body.dataset.stageLastEvent = eventName;
+        body.dataset.stageLastEventMs = String(eventElapsed);
+        try {
+            window.performance?.mark?.(`yls-stage-intro:${eventName}`);
+        } catch (_error) {
+            // Diagnostics must never be allowed to block the scene.
+        }
+        return eventElapsed;
+    };
+
+    markStageEvent("bootstrap");
 
     const readSeenMarker = () => {
         try {
@@ -79,6 +100,7 @@
     let lightGeometries = [];
     let lightAimProgress = stageLights.map(() => 0);
     let lightMotionComplete = stageLights.map(() => false);
+    let readinessDeadlineId = null;
 
     const sourceProgressFor = (index) => {
         if (stageLights.length <= 1) {
@@ -440,6 +462,7 @@
         body.classList.add("stage-intro-complete", "stage-rig-live", "stage-backlight-live");
         body.dataset.stageScene = "complete";
         body.dataset.stageIntroMode = mode;
+        markStageEvent(`scene-final-${mode}`);
         syncStageLightTargets();
         stageLights.forEach((light, index) => {
             light.classList.remove("is-intro-lit");
@@ -485,7 +508,7 @@
     window.yourLiveSoundStageIntro = stageIntro;
 
     window.addEventListener("resize", scheduleStageLightTargetSync, {passive: true});
-    document.fonts?.ready.then(scheduleStageLightTargetSync);
+    document.fonts?.ready.then(scheduleStageLightTargetSync, () => {});
     if ("ResizeObserver" in window && stageRig && title) {
         stageTargetResizeObserver = new ResizeObserver(scheduleStageLightTargetSync);
         stageTargetResizeObserver.observe(stageRig);
@@ -546,11 +569,17 @@
         stageLights.forEach((light, index) => {
             addEvent(timings.lightStart + index * lightStagger, () => {
                 light.classList.add("is-intro-lit");
+                if (index === 0) {
+                    markStageEvent("first-light");
+                }
             });
 
             const aimAt = timings.aimStart + index * lightStagger;
             addEvent(aimAt + timings.aimTransitionDuration, () => {
                 revealTitleTarget(index);
+                if (index === 0) {
+                    markStageEvent("first-title-character");
+                }
             });
         });
 
@@ -571,18 +600,26 @@
             );
         });
         addEvent(timings.titleBacklit, () => body.classList.add("stage-title-backlit"));
-        addEvent(equalizerLiveAt, () => equalizerApi?.startLive());
+        addEvent(equalizerLiveAt, () => {
+            equalizerApi?.startLive();
+            markStageEvent("equalizer-live");
+        });
         addEvent(timings.buttonsStart, () => body.classList.add("stage-buttons-enter"));
-        addEvent(timings.buttonsReady, () => setInteractive(navigation, true));
+        addEvent(timings.buttonsReady, () => {
+            setInteractive(navigation, true);
+            markStageEvent("navigation-ready");
+        });
         addEvent(timings.carouselStart, () => {
             michaelAppeared = true;
             body.classList.add("stage-carousel-enter");
             carouselApi?.beginReveal();
+            markStageEvent("carousel-reveal");
             maybeRememberIntro();
         });
         addEvent(seenThreshold, maybeRememberIntro);
         addEvent(timings.carouselReady, () => {
             carouselApi?.finishReveal();
+            markStageEvent("carousel-ready");
             maybeRememberIntro();
         });
         addEvent(timings.sceneComplete, () => showFinalState("completed"));
@@ -611,12 +648,19 @@
         }
     };
 
-    const startScene = () => {
-        if (sceneStarted) {
+    const startScene = (reason = "ready") => {
+        if (sceneStarted || finalStateShown) {
             return;
         }
 
         sceneStarted = true;
+        if (readinessDeadlineId !== null) {
+            window.clearTimeout(readinessDeadlineId);
+            readinessDeadlineId = null;
+        }
+        body.dataset.stageIntroStartReason = reason;
+        body.dataset.stageIntroStartMs = String(Math.round(diagnosticElapsed()));
+        markStageEvent(`scene-start-${reason}`);
         syncStageLightTargets();
         buildTimeline();
         body.classList.remove("stage-intro-pending");
@@ -633,33 +677,36 @@
         window.addEventListener("load", resolve, {once: true});
     });
 
-    const waitForPortraits = async () => {
-        const portraits = Array.from(carousel?.querySelectorAll("[data-carousel-slide] img") ?? []);
-        await Promise.all(portraits.map(async (portrait) => {
-            portrait.loading = "eager";
-            if (typeof portrait.decode !== "function") {
-                return;
-            }
-            try {
-                await portrait.decode();
-            } catch (_error) {
-                // The load event is the fallback when decode is unsupported or rejects.
-            }
-        }));
-    };
-
     const waitForNextPaint = () => new Promise((resolve) => {
         window.requestAnimationFrame(() => window.requestAnimationFrame(resolve));
     });
 
+    const observeReadiness = (name, readiness) => Promise.resolve(readiness).then(
+        (value) => {
+            markStageEvent(`readiness-${name}-ready`);
+            return value;
+        },
+        (error) => {
+            markStageEvent(`readiness-${name}-error`);
+            throw error;
+        }
+    );
+
     document.addEventListener("visibilitychange", () => {
         previousTimestamp = null;
         body.classList.toggle("stage-intro-paused", document.hidden && sceneStarted && !finalStateShown);
+        markStageEvent(document.hidden ? "visibility-hidden" : "visibility-visible");
     });
 
+    readinessDeadlineId = window.setTimeout(
+        () => startScene("deadline"),
+        readinessDeadline
+    );
     Promise.allSettled([
-        waitForWindowLoad(),
-        document.fonts?.ready ?? Promise.resolve(),
-        waitForPortraits()
-    ]).then(waitForNextPaint).then(startScene);
+        observeReadiness("window-load", waitForWindowLoad()),
+        observeReadiness("fonts", document.fonts?.ready ?? Promise.resolve())
+    ]).then(() => {
+        markStageEvent("readiness-settled");
+        return waitForNextPaint();
+    }).then(() => startScene("ready"), () => startScene("readiness-error"));
 })();
