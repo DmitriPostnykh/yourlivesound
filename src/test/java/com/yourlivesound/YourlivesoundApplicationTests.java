@@ -142,8 +142,15 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("+ lightCascadeDuration"));
         assertTrue(javascript.contains("lightCascadeDuration,"));
         assertTrue(javascript.contains("const equalizerWaveStartAt = timings.lightStart;"));
-        assertTrue(javascript.contains("const movingLightsStartAt = timings.lightStart + lightCascadeDuration"));
-        assertTrue(javascript.contains("addEvent(movingLightsStartAt, () => body.classList.add(\"stage-rig-live\"))"));
+        assertTrue(javascript.contains("buttonsStart: 5200"));
+        assertTrue(javascript.contains("buttonsReady: 6250"));
+        assertTrue(javascript.contains("carouselStart: 6700"));
+        assertTrue(javascript.contains("carouselReady: 7580"));
+        assertTrue(javascript.contains("sceneComplete: 10000"));
+        assertTrue(javascript.contains("const movingHeads = Array.from(document.querySelectorAll(\".moving-head\"))"));
+        assertTrue(javascript.contains("addEvent(timings.lightStart, () => body.classList.add(\"stage-rig-live\"))"));
+        assertTrue(javascript.contains("const movingHeadProgress = (index + 0.5)"));
+        assertTrue(javascript.contains("() => head.classList.add(\"is-intro-live\")"));
         assertFalse(javascript.contains("equalizerApi?.revealBar"));
         assertTrue(javascript.contains("equalizerWaveStartAt + (equalizerApi?.introWaveDuration ?? 0)"));
         assertTrue(javascript.contains("addEvent(equalizerWaveStartAt, () => equalizerApi?.startIntroWave())"));
@@ -242,7 +249,11 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("height: var(--stage-floor-boundary-y)"));
         assertTrue(stylesheet.contains(".stage-floor-spot.is-floor-tracking"));
         assertFalse(stylesheet.contains("--floor-tracking-duration"));
-        assertTrue(stylesheet.contains("translate3d(0, 100px, 0)"));
+        assertFalse(stylesheet.contains("translate3d(0, 100px, 0)"));
+        assertTrue(stylesheet.contains("translate3d(0, 50px, 0)"));
+        assertFalse(stylesheet.contains("translate3d(0, 44px, 0)"));
+        assertTrue(stylesheet.contains("translate3d(0, 22px, 0)"));
+        assertTrue(stylesheet.contains(".moving-head:not(.is-intro-live)"));
         assertTrue(stylesheet.contains("animation-delay: 450ms"));
         assertTrue(stylesheet.contains("stage-carousel-arrival 880ms"));
 

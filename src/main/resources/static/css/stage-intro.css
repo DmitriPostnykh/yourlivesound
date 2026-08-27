@@ -239,7 +239,7 @@
 
 .home-page.stage-intro-pending .moving-head,
 .home-page.stage-intro-pending .stage-strobe,
-.home-page.stage-intro-playing:not(.stage-rig-live) .moving-head,
+.home-page.stage-intro-playing .moving-head:not(.is-intro-live),
 .home-page.stage-intro-playing:not(.stage-rig-live) .stage-strobe {
     opacity: 0 !important;
     animation: none;
@@ -248,7 +248,7 @@
 .home-page.stage-intro-pending .menu-button,
 .home-page.stage-intro-playing .menu-button {
     opacity: 0;
-    transform: translate3d(0, 100px, 0);
+    transform: translate3d(0, 50px, 0);
     pointer-events: none;
     animation: none;
     will-change: opacity, transform;
@@ -274,7 +274,7 @@
 @keyframes stage-menu-button-arrival {
     from {
         opacity: 0;
-        transform: translate3d(0, 100px, 0);
+        transform: translate3d(0, 50px, 0);
     }
 
     to {
@@ -286,7 +286,7 @@
 .home-page.stage-intro-pending .quote-carousel,
 .home-page.stage-intro-playing .quote-carousel {
     opacity: 0;
-    transform: translate3d(0, 44px, 0);
+    transform: translate3d(0, 22px, 0);
     pointer-events: none;
     animation: none;
     will-change: opacity, transform;
@@ -300,7 +300,7 @@
 @keyframes stage-carousel-arrival {
     from {
         opacity: 0;
-        transform: translate3d(0, 44px, 0);
+        transform: translate3d(0, 22px, 0);
     }
 
     to {

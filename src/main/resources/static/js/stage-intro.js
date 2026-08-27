@@ -21,11 +21,11 @@
         aimStart: 1000,
         aimTransitionDuration: 1200,
         titleBacklit: 4800,
-        buttonsStart: 7300,
-        buttonsReady: 8350,
-        carouselStart: 10300,
-        carouselReady: 11180,
-        sceneComplete: 11180
+        buttonsStart: 5200,
+        buttonsReady: 6250,
+        carouselStart: 6700,
+        carouselReady: 7580,
+        sceneComplete: 10000
     });
 
     const readSeenMarker = () => {
@@ -49,6 +49,7 @@
     const forceSkip = queryMode === "skip";
     const shouldPlay = !reducedMotion.matches && !forceSkip && (forceReplay || !hasSeenIntro);
     const stageLights = Array.from(document.querySelectorAll(".stage-light"));
+    const movingHeads = Array.from(document.querySelectorAll(".moving-head"));
     const lightCascadeDuration = Math.max(0, stageLights.length - 1) * lightStagger;
     const finalTitleRevealAt = timings.aimStart
         + lightCascadeDuration
@@ -446,6 +447,7 @@
             light.classList.add("is-aimed");
             applyStageLightMotion(index, 1);
         });
+        movingHeads.forEach((head) => head.classList.add("is-intro-live"));
         floorSpots.forEach((floorSpot) => {
             floorSpot.classList.remove("is-floor-tracking");
             floorSpot.classList.add("is-floor-settled");
@@ -553,16 +555,23 @@
         });
 
         const equalizerWaveStartAt = timings.lightStart;
-        const movingLightsStartAt = timings.lightStart + lightCascadeDuration;
         const equalizerLiveAt = Math.max(
             finalTitleRevealAt,
             equalizerWaveStartAt + (equalizerApi?.introWaveDuration ?? 0)
         );
 
         addEvent(equalizerWaveStartAt, () => equalizerApi?.startIntroWave());
+        addEvent(timings.lightStart, () => body.classList.add("stage-rig-live"));
+        movingHeads.forEach((head, index) => {
+            const movingHeadProgress = (index + 0.5)
+                / Math.max(1, stageLights.length - 1);
+            addEvent(
+                timings.lightStart + movingHeadProgress * lightCascadeDuration,
+                () => head.classList.add("is-intro-live")
+            );
+        });
         addEvent(timings.titleBacklit, () => body.classList.add("stage-title-backlit"));
         addEvent(equalizerLiveAt, () => equalizerApi?.startLive());
-        addEvent(movingLightsStartAt, () => body.classList.add("stage-rig-live"));
         addEvent(timings.buttonsStart, () => body.classList.add("stage-buttons-enter"));
         addEvent(timings.buttonsReady, () => setInteractive(navigation, true));
         addEvent(timings.carouselStart, () => {
