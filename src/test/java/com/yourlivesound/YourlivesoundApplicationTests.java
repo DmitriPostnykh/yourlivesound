@@ -132,7 +132,7 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("queryMode === \"replay\""));
         assertTrue(javascript.contains("queryMode === \"skip\""));
         assertTrue(javascript.contains("lightSweepDuration: 2100"));
-        assertTrue(javascript.contains("aimStart: 3600"));
+        assertTrue(javascript.contains("aimStart: 1000"));
         assertTrue(javascript.contains("aimTransitionDuration: 1200"));
         assertTrue(javascript.contains("equalizerLive: 7100"));
         assertTrue(javascript.contains("const sourceProgressFor = (index) =>"));
@@ -198,8 +198,8 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("color: #f4fbff"));
         assertTrue(stylesheet.contains("color: #ff5365"));
         assertFalse(stylesheet.contains(".stage-screen-glare"));
-        assertTrue(stylesheet.contains("width: clamp(2.25rem, 8.5vw, 6.5rem)"));
-        assertTrue(stylesheet.contains("height: clamp(2.25rem, 8.5vw, 6.5rem)"));
+        assertTrue(stylesheet.contains("width: clamp(1.125rem, 4.25vw, 3.25rem)"));
+        assertTrue(stylesheet.contains("height: clamp(1.125rem, 4.25vw, 3.25rem)"));
         assertTrue(stylesheet.contains("background-size: 100% 1.25rem"));
         assertTrue(stylesheet.contains("scale3d(var(--beam-length-scale), var(--beam-length-scale), 1)"));
         assertTrue(stylesheet.contains("translate3d(-200vw, -200vh, 0)"));

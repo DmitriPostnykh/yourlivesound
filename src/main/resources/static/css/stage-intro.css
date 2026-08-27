@@ -121,8 +121,8 @@
 .home-page.stage-intro-pending .stage-light::before,
 .home-page.stage-intro-playing .stage-light::before,
 .home-page.stage-intro-complete.stage-backlight-live .stage-light::before {
-    width: clamp(2.25rem, 8.5vw, 6.5rem);
-    height: clamp(2.25rem, 8.5vw, 6.5rem);
+    width: clamp(1.125rem, 4.25vw, 3.25rem);
+    height: clamp(1.125rem, 4.25vw, 3.25rem);
     top: 0;
     z-index: 1;
     opacity: var(--source-glare-opacity);

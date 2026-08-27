@@ -17,7 +17,7 @@
     const timings = Object.freeze({
         lightStart: 1000,
         lightSweepDuration: 2100,
-        aimStart: 3600,
+        aimStart: 1000,
         aimTransitionDuration: 1200,
         titleBacklit: 4800,
         equalizerLive: 7100,
