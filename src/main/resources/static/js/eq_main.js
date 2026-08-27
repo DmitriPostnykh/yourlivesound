@@ -15,6 +15,7 @@
     }
 
     const barCount = 22;
+    const stageIntro = window.yourLiveSoundStageIntro;
     const minimumHeight = 14;
     const maximumHeight = 100;
     const neutralTopHeight = 50;
@@ -28,7 +29,8 @@
     const introRestPixels = 2;
     const introPulseDuration = 520;
     const introWavePeakHeight = maximumHeight * 0.3;
-    const introWaveBarStagger = 65;
+    const introWaveSweepDuration = stageIntro?.lightCascadeDuration ?? 2100;
+    const introWaveBarStagger = introWaveSweepDuration / Math.max(1, barCount - 1);
     const introWaveRiseDuration = introWaveBarStagger * 3;
     const introWaveFallDuration = introWaveRiseDuration * 4;
     const introWaveBarDuration = introWaveRiseDuration + introWaveFallDuration;
@@ -38,7 +40,6 @@
     const arcEdgeOffset = Math.sqrt(Math.pow(arcRadiusFactor, 2) - 1);
     const arcCenterOffset = arcRadiusFactor - arcEdgeOffset;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const stageIntro = window.yourLiveSoundStageIntro;
     const equalizerMode = new URLSearchParams(window.location.search).get("equalizer");
     const requestedFixedHeight = Number.parseFloat(equalizerMode);
     const fixedEnvelopeHeight = equalizerMode === "max"

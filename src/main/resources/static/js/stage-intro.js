@@ -50,8 +50,9 @@
     const forceSkip = queryMode === "skip";
     const shouldPlay = !reducedMotion.matches && !forceSkip && (forceReplay || !hasSeenIntro);
     const stageLights = Array.from(document.querySelectorAll(".stage-light"));
+    const lightCascadeDuration = Math.max(0, stageLights.length - 1) * lightStagger;
     const finalTitleRevealAt = timings.aimStart
-        + Math.max(0, stageLights.length - 1) * lightStagger
+        + lightCascadeDuration
         + timings.aimTransitionDuration;
     const stageRig = document.querySelector(".stage-lights");
     const floorSpotLayer = document.querySelector(".stage-floor-spots");
@@ -448,6 +449,7 @@
     const stageIntro = {
         shouldPlay,
         timings,
+        lightCascadeDuration,
         registerEqualizer(api) {
             equalizerApi = api;
             if (shouldPlay && !finalStateShown) {
