@@ -195,6 +195,8 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("color: #f4fbff"));
         assertTrue(stylesheet.contains("color: #ff5365"));
         assertFalse(stylesheet.contains(".stage-screen-glare"));
+        assertTrue(stylesheet.contains("width: clamp(2.25rem, 8.5vw, 6.5rem)"));
+        assertTrue(stylesheet.contains("height: clamp(2.25rem, 8.5vw, 6.5rem)"));
         assertTrue(stylesheet.contains("background-size: 100% 1.25rem"));
         assertTrue(stylesheet.contains("scale3d(var(--beam-length-scale), var(--beam-length-scale), 1)"));
         assertTrue(stylesheet.contains("translate3d(-200vw, -200vh, 0)"));
