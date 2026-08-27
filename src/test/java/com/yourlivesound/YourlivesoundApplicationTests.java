@@ -167,6 +167,9 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("geometry.stageBoundaryY - beamPoint.y"));
         assertTrue(javascript.contains("y: stageBoundaryY"));
         assertTrue(javascript.contains("floorSpotOpacity = easeOut(floorPlaneProgress)"));
+        assertTrue(javascript.contains("const floorSpotWidth = Number.parseFloat"));
+        assertTrue(javascript.contains("const targetSpotWidth = clamp"));
+        assertTrue(javascript.contains("floorTargetScaleX"));
         assertFalse(javascript.contains("stage-screen-glare"));
         assertTrue(javascript.contains("const appliedLightAngle = lightAngle ?? lightVector.angle"));
         assertTrue(javascript.contains("screenExit"));
@@ -302,6 +305,8 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("font-size: clamp(1.85rem, 7.8vw, 6.43rem)"));
         assertTrue(stylesheet.contains(".stage-front-boundary"));
         assertTrue(stylesheet.contains("top: 64.5%"));
+        assertTrue(stylesheet.contains("visibility: hidden"));
+        assertFalse(stylesheet.contains("background: #ffd34f"));
         for (String midpoint : new String[]{
                 "7.286%", "13.857%", "20.429%", "27%", "33.571%", "40.143%", "46.714%",
                 "53.286%", "59.857%", "66.429%", "73%", "79.571%", "86.143%", "92.714%"

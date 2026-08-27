@@ -764,18 +764,14 @@
     pointer-events: none;
 }
 
-/* Temporary art-direction guide: the near edge of the mirrored stage floor. */
+/* Invisible geometry anchor for the near edge of the mirrored stage floor. */
 .stage-front-boundary {
-    width: min(84%, 1100px);
-    height: 2px;
+    width: 0;
+    height: 0;
     position: absolute;
     top: 64.5%;
     left: 50%;
-    z-index: 6;
-    background: #ffd34f;
-    box-shadow:
-        0 0 0.2rem rgba(255, 211, 79, 0.95),
-        0 0 0.8rem rgba(255, 179, 38, 0.72);
+    visibility: hidden;
     transform: translateX(-50%);
     pointer-events: none;
 }

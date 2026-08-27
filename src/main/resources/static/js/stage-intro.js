@@ -219,7 +219,7 @@
                     / geometry.floorRevealDistance
             );
             floorSpotOpacity = easeOut(floorPlaneProgress)
-                * lerp(0.78, 0.58, easedFloorProgress);
+                * lerp(0.78, 0.66, easedFloorProgress);
             floorSpotTransform = `translate3d(${beamPoint.x.toFixed(3)}px, ${beamPoint.y.toFixed(3)}px, 0) translate3d(-50%, -50%, 0) rotate(${floorRotation.toFixed(3)}deg) scale3d(${floorScaleX.toFixed(4)}, ${floorScaleY.toFixed(4)}, 1)`;
             sourceGlareOpacity = 0;
             sourceGlareScale = 0.16;
@@ -323,6 +323,17 @@
             const sourceGlareRadius = Number.isFinite(sourceGlareDiameter)
                 ? sourceGlareDiameter / 2
                 : clamp(window.innerWidth * 0.085, 36, 104);
+            const floorSpotWidth = Number.parseFloat(
+                window.getComputedStyle(floorSpots[index]).width
+            );
+            const targetSpotWidth = clamp(
+                (targetRect?.width ?? titleRect.width / stageLights.length) * 1.35,
+                18,
+                54
+            );
+            const floorTargetScaleX = Number.isFinite(floorSpotWidth)
+                ? clamp(targetSpotWidth / floorSpotWidth, 0.3, 0.68)
+                : 0.5;
 
             lightGeometries[index] = {
                 source,
@@ -336,8 +347,8 @@
                 floorRevealDistance: clamp(stageRigRect.height * 0.025, 6, 18),
                 floorStartScaleX: 2.5 + edgeInfluence * 0.55,
                 floorStartScaleY: 1.08 + edgeInfluence * 0.12,
-                floorTargetScaleX: 0.8 + (1 - sideStrength) * 0.1,
-                floorTargetScaleY: 0.64 + (1 - sideStrength) * 0.08,
+                floorTargetScaleX,
+                floorTargetScaleY: 0.58 + (1 - sideStrength) * 0.08,
                 floorStartRotation,
                 sourceGlareRadius
             };
