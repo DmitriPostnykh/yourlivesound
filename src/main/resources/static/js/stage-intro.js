@@ -10,6 +10,7 @@
     const queryMode = new URLSearchParams(window.location.search).get("intro");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const lightStagger = 150;
+    const equalizerWaveThreshold = 0.75;
     const sourceCollapseRatio = 0.3;
     const sourceTurnPathRatio = 0.18;
     const screenSweepRatio = 0.52;
@@ -541,14 +542,25 @@
 
         const equalizerBarCount = equalizerApi?.barCount ?? 22;
         const finalBarIndex = Math.max(1, equalizerBarCount - 1);
+        const equalizerWaveStartIndex = Math.max(
+            0,
+            Math.ceil(equalizerBarCount * equalizerWaveThreshold) - 1
+        );
+        const equalizerWaveStartAt = timings.lightStart
+            + (equalizerWaveStartIndex / finalBarIndex) * timings.lightSweepDuration;
+        const equalizerLiveAt = Math.max(
+            finalTitleRevealAt,
+            equalizerWaveStartAt + (equalizerApi?.introWaveDuration ?? 0)
+        );
         for (let index = 0; index < equalizerBarCount; index += 1) {
             const revealAt = timings.lightStart
                 + (index / finalBarIndex) * timings.lightSweepDuration;
             addEvent(revealAt, () => equalizerApi?.revealBar(index));
         }
 
+        addEvent(equalizerWaveStartAt, () => equalizerApi?.startIntroWave());
         addEvent(timings.titleBacklit, () => body.classList.add("stage-title-backlit"));
-        addEvent(finalTitleRevealAt, () => equalizerApi?.startLive());
+        addEvent(equalizerLiveAt, () => equalizerApi?.startLive());
         addEvent(timings.rigLive, () => body.classList.add("stage-rig-live"));
         addEvent(timings.buttonsStart, () => body.classList.add("stage-buttons-enter"));
         addEvent(timings.buttonsReady, () => setInteractive(navigation, true));

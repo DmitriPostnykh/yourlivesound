@@ -27,6 +27,10 @@
     const maximumDepthLift = 34;
     const introRestPixels = 2;
     const introPulseDuration = 520;
+    const introWavePeakHeight = maximumHeight * 0.5;
+    const introWaveBarStagger = 65;
+    const introWaveBarDuration = 260;
+    const introWaveDuration = (barCount - 1) * introWaveBarStagger + introWaveBarDuration;
     // Show the central segment of a larger circle so the projected arc stays rounded without sharp ends.
     const arcRadiusFactor = 1.35;
     const arcEdgeOffset = Math.sqrt(Math.pow(arcRadiusFactor, 2) - 1);
@@ -52,6 +56,10 @@
     let introPulseElapsed = 0;
     let introPulsePreviousTimestamp = null;
     let introPulseStrength = 0;
+    let introWaveFrameId = null;
+    let introWaveElapsed = 0;
+    let introWavePreviousTimestamp = null;
+    let introWaveRestHeights = [];
     let introMode = Boolean(stageIntro?.shouldPlay);
     let introAtRest = true;
     let liveImpulseStartedAt = null;
@@ -336,6 +344,16 @@
         introPulsePreviousTimestamp = null;
     };
 
+    const cancelIntroWave = () => {
+        if (introWaveFrameId !== null) {
+            window.cancelAnimationFrame(introWaveFrameId);
+            introWaveFrameId = null;
+        }
+        introWaveElapsed = 0;
+        introWavePreviousTimestamp = null;
+        introWaveRestHeights = [];
+    };
+
     const renderFrame = (timestamp) => {
         const time = timestamp / 1000;
         const deltaSeconds = previousFrameTimestamp === null
@@ -420,6 +438,42 @@
         introPulseFrameId = window.requestAnimationFrame(renderIntroPulse);
     };
 
+    const renderIntroWave = (timestamp) => {
+        if (!document.hidden) {
+            if (introWavePreviousTimestamp !== null) {
+                introWaveElapsed += Math.max(0, timestamp - introWavePreviousTimestamp);
+            }
+            introWavePreviousTimestamp = timestamp;
+
+            bars.forEach((_, index) => {
+                const localElapsed = introWaveElapsed - index * introWaveBarStagger;
+                if (localElapsed < 0) {
+                    return;
+                }
+
+                const progress = Math.min(1, localElapsed / introWaveBarDuration);
+                const lift = Math.sin(Math.PI * progress);
+                const restHeight = introWaveRestHeights[index] ?? currentHeights[index];
+                const height = restHeight + (introWavePeakHeight - restHeight) * lift;
+                setIntroBarScale(index, height);
+            });
+
+            if (introWaveElapsed >= introWaveDuration) {
+                introAtRest = true;
+                volumeContainer.dataset.equalizerPhase = "intro-wave-complete";
+                barHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+                reflectionHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+                setIntroRestHeights();
+                introWaveFrameId = null;
+                return;
+            }
+        } else {
+            introWavePreviousTimestamp = null;
+        }
+
+        introWaveFrameId = window.requestAnimationFrame(renderIntroWave);
+    };
+
     const revealAllBars = () => {
         barHolders.forEach((holder) => holder.style.removeProperty("--bar-visible-opacity"));
         reflectionHolders.forEach((holder) => holder.style.removeProperty("--bar-visible-opacity"));
@@ -429,7 +483,9 @@
         introMode = true;
         stop();
         cancelIntroPulse();
+        cancelIntroWave();
         introAtRest = true;
+        volumeContainer.dataset.equalizerPhase = "intro-rest";
         barHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
         reflectionHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
         barHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
@@ -444,6 +500,7 @@
 
     const pulse = (strength) => {
         cancelIntroPulse();
+        cancelIntroWave();
         introAtRest = false;
         barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
         reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
@@ -451,10 +508,28 @@
         introPulseFrameId = window.requestAnimationFrame(renderIntroPulse);
     };
 
+    const startIntroWave = () => {
+        if (!introMode || introWaveFrameId !== null) {
+            return;
+        }
+
+        cancelIntroPulse();
+        introAtRest = false;
+        volumeContainer.dataset.equalizerPhase = "intro-wave";
+        barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
+        reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
+        introWaveElapsed = 0;
+        introWavePreviousTimestamp = null;
+        introWaveRestHeights = currentHeights.slice();
+        introWaveFrameId = window.requestAnimationFrame(renderIntroWave);
+    };
+
     const startLive = (initialImpulse = 0) => {
         cancelIntroPulse();
+        cancelIntroWave();
         introMode = false;
         introAtRest = false;
+        volumeContainer.dataset.equalizerPhase = "live";
         revealAllBars();
         barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
         reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
@@ -474,6 +549,8 @@
         introMode = false;
         introAtRest = false;
         cancelIntroPulse();
+        cancelIntroWave();
+        volumeContainer.dataset.equalizerPhase = "live";
         revealAllBars();
         barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
         reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
@@ -502,6 +579,7 @@
     const handleVisibilityChange = () => {
         previousFrameTimestamp = null;
         introPulsePreviousTimestamp = null;
+        introWavePreviousTimestamp = null;
         if (!introMode) {
             syncMotion();
         }
@@ -521,9 +599,11 @@
     if (stageIntro?.registerEqualizer) {
         stageIntro.registerEqualizer({
             barCount,
+            introWaveDuration,
             prepareIntro,
             revealBar,
             pulse,
+            startIntroWave,
             startLive,
             showLive
         });
