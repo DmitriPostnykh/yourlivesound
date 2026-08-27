@@ -311,7 +311,7 @@
 }
 
 .moving-head:nth-child(16) {
-    --head-x: 8.25%;
+    --head-x: 7.286%;
     --head-angle-a: -7deg;
     --head-angle-b: -31deg;
     --head-angle-c: -16deg;
@@ -323,7 +323,7 @@
 }
 
 .moving-head:nth-child(17) {
-    --head-x: 16.75%;
+    --head-x: 13.857%;
     --head-angle-a: -5deg;
     --head-angle-b: -27deg;
     --head-angle-c: -13deg;
@@ -335,7 +335,7 @@
 }
 
 .moving-head:nth-child(18) {
-    --head-x: 25.25%;
+    --head-x: 20.429%;
     --head-angle-a: -3deg;
     --head-angle-b: -23deg;
     --head-angle-c: -10deg;
@@ -347,7 +347,7 @@
 }
 
 .moving-head:nth-child(19) {
-    --head-x: 33.75%;
+    --head-x: 27%;
     --head-angle-a: -1deg;
     --head-angle-b: -19deg;
     --head-angle-c: -7deg;
@@ -359,7 +359,7 @@
 }
 
 .moving-head:nth-child(20) {
-    --head-x: 42.25%;
+    --head-x: 33.571%;
     --head-angle-a: 5deg;
     --head-angle-b: -15deg;
     --head-angle-c: -5deg;
@@ -371,7 +371,7 @@
 }
 
 .moving-head:nth-child(21) {
-    --head-x: 50%;
+    --head-x: 40.143%;
     --head-angle-a: 9deg;
     --head-angle-b: -11deg;
     --head-angle-c: -3deg;
@@ -383,7 +383,7 @@
 }
 
 .moving-head:nth-child(22) {
-    --head-x: 57.75%;
+    --head-x: 46.714%;
     --head-angle-a: -9deg;
     --head-angle-b: 11deg;
     --head-angle-c: 3deg;
@@ -395,7 +395,7 @@
 }
 
 .moving-head:nth-child(23) {
-    --head-x: 66.25%;
+    --head-x: 53.286%;
     --head-angle-a: -5deg;
     --head-angle-b: 15deg;
     --head-angle-c: 5deg;
@@ -407,7 +407,7 @@
 }
 
 .moving-head:nth-child(24) {
-    --head-x: 74.75%;
+    --head-x: 59.857%;
     --head-angle-a: 1deg;
     --head-angle-b: 19deg;
     --head-angle-c: 7deg;
@@ -419,7 +419,7 @@
 }
 
 .moving-head:nth-child(25) {
-    --head-x: 83.25%;
+    --head-x: 66.429%;
     --head-angle-a: 3deg;
     --head-angle-b: 23deg;
     --head-angle-c: 10deg;
@@ -431,7 +431,7 @@
 }
 
 .moving-head:nth-child(26) {
-    --head-x: 91.75%;
+    --head-x: 73%;
     --head-angle-a: 5deg;
     --head-angle-b: 27deg;
     --head-angle-c: 13deg;
@@ -440,6 +440,42 @@
     --head-live-duration: 4.2s;
     --head-color-duration: 14.3s;
     animation-delay: -7.8s, -0.9s, -11.7s;
+}
+
+.moving-head:nth-child(27) {
+    --head-x: 79.571%;
+    --head-angle-a: 2deg;
+    --head-angle-b: 21deg;
+    --head-angle-c: 8deg;
+    --head-angle-d: 28deg;
+    --head-sweep-duration: 11.6s;
+    --head-live-duration: 4.6s;
+    --head-color-duration: 13.4s;
+    animation-delay: -6.3s, -2.4s, -9.1s;
+}
+
+.moving-head:nth-child(28) {
+    --head-x: 86.143%;
+    --head-angle-a: 4deg;
+    --head-angle-b: 25deg;
+    --head-angle-c: 11deg;
+    --head-angle-d: 32deg;
+    --head-sweep-duration: 10.1s;
+    --head-live-duration: 5s;
+    --head-color-duration: 15s;
+    animation-delay: -4.8s, -4s, -6.9s;
+}
+
+.moving-head:nth-child(29) {
+    --head-x: 92.714%;
+    --head-angle-a: 6deg;
+    --head-angle-b: 29deg;
+    --head-angle-c: 14deg;
+    --head-angle-d: 36deg;
+    --head-sweep-duration: 9.4s;
+    --head-live-duration: 4.5s;
+    --head-color-duration: 12.5s;
+    animation-delay: -8.9s, -1.2s, -11.2s;
 }
 
 @keyframes stage-head-sweep {

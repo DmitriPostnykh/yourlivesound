@@ -52,6 +52,12 @@
     const title = document.querySelector("#site-title");
     const titleTargets = Array.from(title?.querySelectorAll("[data-title-target]") ?? []);
     const reflectionTargets = Array.from(document.querySelectorAll("[data-reflection-target]"));
+    const visibleTitleTargetCount = titleTargets.filter(
+        (target) => !target.classList.contains("title-space")
+    ).length;
+    const titleAimStagger = stageLights.length > 1 && visibleTitleTargetCount > 1
+        ? (lightStagger * (stageLights.length - 1)) / (visibleTitleTargetCount - 1)
+        : lightStagger;
     const navigation = document.querySelector(".site-navigation");
     const carousel = document.querySelector("[data-quote-carousel]");
     let equalizerApi = null;
@@ -73,6 +79,16 @@
             return 0.5;
         }
         return 0.04 + (0.92 * index) / (stageLights.length - 1);
+    };
+
+    const aimSlotFor = (index) => {
+        if (!titleTargets[index]) {
+            return index;
+        }
+
+        return titleTargets.slice(0, index).filter(
+            (target) => !target.classList.contains("title-space")
+        ).length;
     };
 
     const syncStageLightTargets = () => {
@@ -237,7 +253,7 @@
                 light.classList.add("is-intro-lit");
             });
 
-            const aimAt = timings.aimStart + index * lightStagger;
+            const aimAt = timings.aimStart + aimSlotFor(index) * titleAimStagger;
             addEvent(aimAt, () => {
                 light.classList.add("is-aimed");
             });

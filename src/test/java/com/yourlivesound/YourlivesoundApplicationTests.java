@@ -133,6 +133,9 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("aimStart: 3600"));
         assertTrue(javascript.contains("equalizerLive: 6600"));
         assertTrue(javascript.contains("const sourceProgressFor = (index) =>"));
+        assertTrue(javascript.contains("const aimSlotFor = (index) =>"));
+        assertTrue(javascript.contains("const titleAimStagger ="));
+        assertTrue(javascript.contains("aimSlotFor(index) * titleAimStagger"));
         assertTrue(javascript.contains("const angle = -Math.atan2(deltaX, deltaY)"));
         assertTrue(javascript.contains("Math.hypot(deltaX, deltaY)"));
         assertTrue(javascript.contains("--intro-backlight-distance"));
@@ -211,7 +214,7 @@ class YourlivesoundApplicationTests {
                 .getContentAsString();
 
         assertEquals(15, html.split("class=\"stage-light\"", -1).length - 1);
-        assertEquals(11, html.split("class=\"moving-head\"", -1).length - 1);
+        assertEquals(14, html.split("class=\"moving-head\"", -1).length - 1);
         assertEquals(72, html.split("class=\"stage-strobe\"", -1).length - 1);
         assertEquals(15, html.split("data-title-target", -1).length - 1);
         assertEquals(15, html.split("data-reflection-target", -1).length - 1);
@@ -243,6 +246,12 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("height: 43%"));
         assertTrue(stylesheet.contains("top: 8.5%"));
         assertTrue(stylesheet.contains("font-size: clamp(1.85rem, 7.8vw, 6.43rem)"));
+        for (String midpoint : new String[]{
+                "7.286%", "13.857%", "20.429%", "27%", "33.571%", "40.143%", "46.714%",
+                "53.286%", "59.857%", "66.429%", "73%", "79.571%", "86.143%", "92.714%"
+        }) {
+            assertTrue(stylesheet.contains("--head-x: " + midpoint));
+        }
         assertTrue(javascript.contains("targetLevel > profile.level ? attackResponse : releaseResponse"));
         assertTrue(javascript.contains("const introRestPixels = 2"));
         assertTrue(javascript.contains("const setIntroRestScale = (index) =>"));
