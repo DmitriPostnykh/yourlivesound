@@ -315,7 +315,7 @@
             const maximumVector = [screenExit, floorStart, target]
                 .map((point) => vectorFromSource(source, point).distance)
                 .reduce((maximum, distance) => Math.max(maximum, distance), 1);
-            const maximumBeamWidth = clamp(maximumVector * 0.11, 52, 122);
+            const maximumBeamWidth = clamp(maximumVector * 0.22, 104, 244);
             const floorStartRotation = (direction < 0 ? -6 : 6) * edgeInfluence;
             const sourceGlareDiameter = Number.parseFloat(
                 window.getComputedStyle(light, "::before").width

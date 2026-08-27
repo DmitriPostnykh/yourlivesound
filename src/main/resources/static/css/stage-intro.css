@@ -92,7 +92,7 @@
 .home-page.stage-intro-playing .stage-light,
 .home-page.stage-intro-complete.stage-backlight-live .stage-light {
     --intro-beam-max-distance: clamp(18rem, 48svh, 32rem);
-    --intro-beam-max-width: clamp(3.6rem, 9vw, 8.2rem);
+    --intro-beam-max-width: clamp(7.2rem, 18vw, 16.4rem);
     --beam-length-scale: 0.025;
     --beam-opacity: 0;
     --source-glare-opacity: 0;
@@ -154,6 +154,14 @@
     left: 0;
     z-index: 0;
     opacity: var(--beam-opacity);
+    background: radial-gradient(
+        ellipse at 50% 1.5%,
+        rgba(255, 255, 255, 0.94) 0%,
+        rgba(255, 255, 255, 0.7) 10%,
+        rgba(239, 248, 251, 0.3) 28%,
+        rgba(215, 231, 237, 0.1) 58%,
+        transparent 82%
+    );
     transform: scale3d(var(--beam-length-scale), var(--beam-length-scale), 1);
     transform-origin: 50% 0;
     transition: none;

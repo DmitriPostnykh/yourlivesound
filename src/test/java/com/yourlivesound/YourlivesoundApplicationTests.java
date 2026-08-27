@@ -148,6 +148,7 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("progress >= 1 && lightMotionComplete[index]"));
         assertTrue(javascript.contains("--intro-beam-max-distance"));
         assertTrue(javascript.contains("--intro-beam-max-width"));
+        assertTrue(javascript.contains("maximumVector * 0.22, 104, 244"));
         assertTrue(javascript.contains("--beam-length-scale"));
         assertTrue(javascript.contains("--source-glare-shift-x"));
         assertTrue(javascript.contains("--source-glare-shift-y"));
@@ -200,6 +201,9 @@ class YourlivesoundApplicationTests {
         assertFalse(stylesheet.contains(".stage-screen-glare"));
         assertTrue(stylesheet.contains("width: clamp(1.125rem, 4.25vw, 3.25rem)"));
         assertTrue(stylesheet.contains("height: clamp(1.125rem, 4.25vw, 3.25rem)"));
+        assertTrue(stylesheet.contains("--intro-beam-max-width: clamp(7.2rem, 18vw, 16.4rem)"));
+        assertTrue(stylesheet.contains("rgba(255, 255, 255, 0.94) 0%"));
+        assertTrue(stylesheet.contains("rgba(255, 255, 255, 0.7) 10%"));
         assertTrue(stylesheet.contains("background-size: 100% 1.25rem"));
         assertTrue(stylesheet.contains("scale3d(var(--beam-length-scale), var(--beam-length-scale), 1)"));
         assertTrue(stylesheet.contains("translate3d(-200vw, -200vh, 0)"));
