@@ -122,7 +122,7 @@ class YourlivesoundApplicationTests {
 
         assertTrue(javascript.contains("yls.stage-intro.v3.seen"));
         assertTrue(javascript.contains("const lightStagger = 150"));
-        assertTrue(javascript.contains("const equalizerWaveThreshold = 0.75"));
+        assertFalse(javascript.contains("equalizerWaveThreshold"));
         assertTrue(javascript.contains("const sourceCollapseRatio = 0.3"));
         assertTrue(javascript.contains("const sourceTurnPathRatio = 0.18"));
         assertTrue(javascript.contains("const screenSweepRatio = 0.52"));
@@ -132,14 +132,14 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("if (!document.hidden)"));
         assertTrue(javascript.contains("queryMode === \"replay\""));
         assertTrue(javascript.contains("queryMode === \"skip\""));
-        assertTrue(javascript.contains("lightSweepDuration: 2100"));
+        assertFalse(javascript.contains("lightSweepDuration"));
         assertTrue(javascript.contains("aimStart: 1000"));
         assertTrue(javascript.contains("aimTransitionDuration: 1200"));
         assertFalse(javascript.contains("equalizerLive: 7100"));
         assertTrue(javascript.contains("const finalTitleRevealAt = timings.aimStart"));
         assertTrue(javascript.contains("Math.max(0, stageLights.length - 1) * lightStagger"));
-        assertTrue(javascript.contains("Math.ceil(equalizerBarCount * equalizerWaveThreshold) - 1"));
-        assertTrue(javascript.contains("const equalizerWaveStartAt = timings.lightStart"));
+        assertTrue(javascript.contains("const equalizerWaveStartAt = timings.lightStart;"));
+        assertFalse(javascript.contains("equalizerApi?.revealBar"));
         assertTrue(javascript.contains("equalizerWaveStartAt + (equalizerApi?.introWaveDuration ?? 0)"));
         assertTrue(javascript.contains("addEvent(equalizerWaveStartAt, () => equalizerApi?.startIntroWave())"));
         assertTrue(javascript.contains("addEvent(equalizerLiveAt, () => equalizerApi?.startLive())"));
@@ -348,12 +348,15 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("const pulse = (strength) =>"));
         assertTrue(javascript.contains("const introWavePeakHeight = maximumHeight * 0.3"));
         assertTrue(javascript.contains("const introWaveBarStagger = 65"));
-        assertTrue(javascript.contains("const introWaveRiseDuration = 130"));
+        assertTrue(javascript.contains("const introWaveRiseDuration = introWaveBarStagger * 3"));
         assertTrue(javascript.contains("const introWaveFallDuration = introWaveRiseDuration * 4"));
         assertTrue(javascript.contains("const introWaveBarDuration = introWaveRiseDuration + introWaveFallDuration"));
         assertTrue(javascript.contains("const introWaveDuration = (barCount - 1) * introWaveBarStagger"));
         assertTrue(javascript.contains("const renderIntroWave = (timestamp) =>"));
         assertTrue(javascript.contains("const localElapsed = introWaveElapsed - index * introWaveBarStagger"));
+        assertTrue(javascript.contains("const waveComplete = localElapsed >= introWaveBarDuration"));
+        assertTrue(javascript.contains("revealBar(index)"));
+        assertTrue(javascript.contains("classList.toggle(\"is-intro-rest\", waveComplete)"));
         assertTrue(javascript.contains("localElapsed <= introWaveRiseDuration"));
         assertTrue(javascript.contains("(localElapsed - introWaveRiseDuration) / introWaveFallDuration"));
         assertTrue(javascript.contains("const lift = Math.sin(Math.PI * progress)"));

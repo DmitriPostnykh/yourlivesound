@@ -29,7 +29,7 @@
     const introPulseDuration = 520;
     const introWavePeakHeight = maximumHeight * 0.3;
     const introWaveBarStagger = 65;
-    const introWaveRiseDuration = 130;
+    const introWaveRiseDuration = introWaveBarStagger * 3;
     const introWaveFallDuration = introWaveRiseDuration * 4;
     const introWaveBarDuration = introWaveRiseDuration + introWaveFallDuration;
     const introWaveDuration = (barCount - 1) * introWaveBarStagger + introWaveBarDuration;
@@ -453,6 +453,10 @@
                     return;
                 }
 
+                const waveComplete = localElapsed >= introWaveBarDuration;
+                revealBar(index);
+                barHolders[index]?.classList.toggle("is-intro-rest", waveComplete);
+                reflectionHolders[index]?.classList.toggle("is-intro-rest", waveComplete);
                 const lift = localElapsed <= introWaveRiseDuration
                     ? Math.sin(
                         (Math.PI / 2) * Math.min(1, localElapsed / introWaveRiseDuration)
@@ -526,8 +530,6 @@
         cancelIntroPulse();
         introAtRest = false;
         volumeContainer.dataset.equalizerPhase = "intro-wave";
-        barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
-        reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
         introWaveElapsed = 0;
         introWavePreviousTimestamp = null;
         introWaveRestHeights = currentHeights.slice();
