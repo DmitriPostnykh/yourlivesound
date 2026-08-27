@@ -25,11 +25,14 @@
     const minimumDepthScale = 0.5;
     const depthCurve = 1.35;
     const maximumDepthLift = 34;
+    const introRestHeight = 2;
+    const introPulseDuration = 520;
     // Show the central segment of a larger circle so the projected arc stays rounded without sharp ends.
     const arcRadiusFactor = 1.35;
     const arcEdgeOffset = Math.sqrt(Math.pow(arcRadiusFactor, 2) - 1);
     const arcCenterOffset = arcRadiusFactor - arcEdgeOffset;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const stageIntro = window.yourLiveSoundStageIntro;
     const equalizerMode = new URLSearchParams(window.location.search).get("equalizer");
     const requestedFixedHeight = Number.parseFloat(equalizerMode);
     const fixedEnvelopeHeight = equalizerMode === "max"
@@ -45,6 +48,13 @@
     let animationFrameId = null;
     let envelopeFrameId = null;
     let previousFrameTimestamp = null;
+    let introPulseFrameId = null;
+    let introPulseElapsed = 0;
+    let introPulsePreviousTimestamp = null;
+    let introPulseStrength = 0;
+    let introMode = Boolean(stageIntro?.shouldPlay);
+    let liveImpulseStartedAt = null;
+    let liveImpulseStrength = 0;
 
     const depthScaleForDistance = (distanceFromCenter) => minimumDepthScale
         + (1 - minimumDepthScale) * Math.pow(distanceFromCenter, depthCurve);
@@ -170,7 +180,9 @@
             reflectionHolders[index].style.setProperty("--depth-rise", `${depthRise.toFixed(3)}%`);
 
             maximumTopSlopes[index] = topRightY - topLeftY;
-            applyDynamicTopSlope(index, currentHeights[index]);
+            if (!introMode) {
+                applyDynamicTopSlope(index, currentHeights[index]);
+            }
             holder.style.setProperty("--bar-left-inset", `${(boundingBottom - bottomLeftY).toFixed(3)}px`);
             holder.style.setProperty("--bar-right-inset", `${(boundingBottom - bottomRightY).toFixed(3)}px`);
             reflectionHolders[index].style.setProperty("--reflection-left-inset", `${(bottomLeftY - reflectionTop).toFixed(3)}px`);
@@ -250,6 +262,9 @@
         });
     }
 
+    const barHolders = bars.map((bar) => bar.parentElement);
+    const reflectionHolders = reflections.map((bar) => bar.parentElement);
+
     schedulePerspectiveEnvelope();
 
     const setBarScale = (index, height) => {
@@ -259,6 +274,16 @@
         bars[index].style.transform = value;
         reflections[index].style.transform = value;
         applyDynamicTopSlope(index, height);
+    };
+
+    const setIntroBarScale = (index, height) => {
+        const scale = height / maximumHeight;
+        const value = `translateZ(0) scaleY(${scale.toFixed(4)})`;
+        currentHeights[index] = height;
+        bars[index].style.transform = value;
+        reflections[index].style.transform = value;
+        bars[index].style.setProperty("--bar-top-left-inset", "0px");
+        bars[index].style.setProperty("--bar-top-right-inset", "0px");
     };
 
     const setStaticHeights = () => {
@@ -281,12 +306,29 @@
         previousFrameTimestamp = null;
     };
 
+    const cancelIntroPulse = () => {
+        if (introPulseFrameId !== null) {
+            window.cancelAnimationFrame(introPulseFrameId);
+            introPulseFrameId = null;
+        }
+        introPulseElapsed = 0;
+        introPulsePreviousTimestamp = null;
+    };
+
     const renderFrame = (timestamp) => {
         const time = timestamp / 1000;
         const deltaSeconds = previousFrameTimestamp === null
             ? 1 / 60
             : Math.min(0.05, Math.max(0, (timestamp - previousFrameTimestamp) / 1000));
         previousFrameTimestamp = timestamp;
+
+        if (liveImpulseStrength > 0 && liveImpulseStartedAt === null) {
+            liveImpulseStartedAt = timestamp;
+        }
+        const liveImpulseProgress = liveImpulseStartedAt === null
+            ? 1
+            : Math.min(1, Math.max(0, (timestamp - liveImpulseStartedAt) / 620));
+        const liveImpulse = liveImpulseStrength * Math.pow(1 - liveImpulseProgress, 2.15);
 
         motionProfiles.forEach((profile, index) => {
             const primary = (Math.sin(time * profile.speed + profile.phase) + 1) / 2;
@@ -300,7 +342,10 @@
                 + pulse * 0.45;
             // Expand the musical envelope: quieter gaps sit lower while strong beats
             // can reach the ceiling arc without keeping every bar pinned there.
-            const targetLevel = Math.min(1, Math.max(0, (mixedLevel - 0.16) * 1.85));
+            const musicalTarget = Math.min(1, Math.max(0, (mixedLevel - 0.16) * 1.85));
+            const individualImpulse = liveImpulse
+                * (0.76 + 0.24 * ((Math.sin(profile.phase + index * 0.31) + 1) / 2));
+            const targetLevel = Math.max(musicalTarget, individualImpulse);
 
             // A fast attack makes each beat jump upward; a slower release lets it fall naturally.
             const response = targetLevel > profile.level ? attackResponse : releaseResponse;
@@ -311,7 +356,94 @@
             setBarScale(index, height);
         });
 
+        if (liveImpulseProgress >= 1) {
+            liveImpulseStartedAt = null;
+            liveImpulseStrength = 0;
+        }
+
         animationFrameId = window.requestAnimationFrame(renderFrame);
+    };
+
+    const renderIntroPulse = (timestamp) => {
+        if (!document.hidden) {
+            if (introPulsePreviousTimestamp !== null) {
+                introPulseElapsed += Math.max(0, timestamp - introPulsePreviousTimestamp);
+            }
+            introPulsePreviousTimestamp = timestamp;
+
+            const progress = Math.min(1, introPulseElapsed / introPulseDuration);
+            const lift = Math.sin(Math.PI * progress) * Math.pow(1 - progress, 0.58);
+            motionProfiles.forEach((profile, index) => {
+                const individualAmplitude = 0.72
+                    + 0.28 * ((Math.sin(profile.phase + index * 0.37) + 1) / 2);
+                const height = introRestHeight
+                    + (maximumHeight - introRestHeight)
+                    * introPulseStrength
+                    * individualAmplitude
+                    * lift;
+                setIntroBarScale(index, height);
+            });
+
+            if (progress >= 1) {
+                bars.forEach((_, index) => setIntroBarScale(index, introRestHeight));
+                introPulseFrameId = null;
+                return;
+            }
+        } else {
+            introPulsePreviousTimestamp = null;
+        }
+
+        introPulseFrameId = window.requestAnimationFrame(renderIntroPulse);
+    };
+
+    const revealAllBars = () => {
+        barHolders.forEach((holder) => holder.style.removeProperty("--bar-visible-opacity"));
+        reflectionHolders.forEach((holder) => holder.style.removeProperty("--bar-visible-opacity"));
+    };
+
+    const prepareIntro = () => {
+        introMode = true;
+        stop();
+        cancelIntroPulse();
+        barHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
+        reflectionHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
+        bars.forEach((_, index) => setIntroBarScale(index, introRestHeight));
+    };
+
+    const revealBar = (index) => {
+        barHolders[index]?.style.removeProperty("--bar-visible-opacity");
+        reflectionHolders[index]?.style.removeProperty("--bar-visible-opacity");
+    };
+
+    const pulse = (strength) => {
+        cancelIntroPulse();
+        introPulseStrength = Math.min(1, Math.max(0, strength));
+        introPulseFrameId = window.requestAnimationFrame(renderIntroPulse);
+    };
+
+    const startLive = (initialImpulse = 0) => {
+        cancelIntroPulse();
+        introMode = false;
+        revealAllBars();
+        motionProfiles.forEach((profile, index) => {
+            profile.level = Math.min(
+                1,
+                Math.max(0, (currentHeights[index] - minimumHeight) / (maximumHeight - minimumHeight))
+            );
+        });
+        liveImpulseStartedAt = null;
+        liveImpulseStrength = Math.min(1, Math.max(0, initialImpulse));
+        schedulePerspectiveEnvelope();
+        syncMotion();
+    };
+
+    const showLive = () => {
+        introMode = false;
+        cancelIntroPulse();
+        revealAllBars();
+        liveImpulseStartedAt = null;
+        liveImpulseStrength = 0;
+        syncMotion();
     };
 
     const syncMotion = () => {
@@ -331,10 +463,35 @@
         }
     };
 
+    const handleVisibilityChange = () => {
+        previousFrameTimestamp = null;
+        introPulsePreviousTimestamp = null;
+        if (!introMode) {
+            syncMotion();
+        }
+    };
+
+    const handleMotionPreference = () => {
+        if (!introMode) {
+            syncMotion();
+        }
+    };
+
     setStaticHeights();
-    document.addEventListener("visibilitychange", syncMotion);
-    reducedMotion.addEventListener?.("change", syncMotion);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    reducedMotion.addEventListener?.("change", handleMotionPreference);
     window.addEventListener("resize", schedulePerspectiveEnvelope, {passive: true});
     document.fonts?.ready.then(schedulePerspectiveEnvelope);
-    syncMotion();
+    if (stageIntro?.registerEqualizer) {
+        stageIntro.registerEqualizer({
+            barCount,
+            prepareIntro,
+            revealBar,
+            pulse,
+            startLive,
+            showLive
+        });
+    } else {
+        showLive();
+    }
 })();

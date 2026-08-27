@@ -10,8 +10,9 @@
     <link rel="stylesheet" th:href="@{/css/menu.css(v=${assetVersion})}">
     <link rel="stylesheet" th:href="@{/css/eq_main.css(v=${assetVersion})}">
     <link rel="stylesheet" th:href="@{/css/artist-carousel.css(v=${assetVersion})}">
+    <link rel="stylesheet" th:href="@{/css/stage-intro.css(v=${assetVersion})}">
 </head>
-<body class="home-page">
+<body class="home-page stage-intro-pending" data-stage-scene="preload">
 <main class="home-main">
     <div th:replace="~{fragments/eq_main :: eq_main}"></div>
     <div th:replace="~{fragments/artist-carousel :: artist_carousel}"></div>
@@ -20,6 +21,7 @@
 <footer class="site-footer compact-footer">
     <p>&copy; <span th:text="${currentYear}">2026</span> Dmitrii Postnykh. All rights reserved.</p>
 </footer>
+<script th:src="@{/js/stage-intro.js(v=${assetVersion})}" defer></script>
 <script th:src="@{/js/eq_main.js(v=${assetVersion})}" defer></script>
 <script th:src="@{/js/artist-carousel.js(v=${assetVersion})}" defer></script>
 </body>

@@ -1,0 +1,244 @@
+.home-page .menu-button {
+    animation: none;
+}
+
+.home-page.stage-intro-pending .title,
+.home-page.stage-intro-pending .reflection-title,
+.home-page.stage-intro-playing .title,
+.home-page.stage-intro-playing .reflection-title {
+    opacity: 0;
+}
+
+.home-page.stage-intro-pending .bar {
+    opacity: 0;
+}
+
+.home-page.stage-intro-pending .stage-light,
+.home-page.stage-intro-playing .stage-light {
+    opacity: 0;
+    transform: translateX(-50%) rotate(0deg);
+    animation: none;
+    transition: opacity 360ms ease, transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+.home-page.stage-intro-pending .stage-light::before,
+.home-page.stage-intro-playing .stage-light::before {
+    width: clamp(4.5rem, 20vw, 16rem);
+    height: clamp(4.5rem, 20vw, 16rem);
+    top: 0;
+    opacity: 0;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.98) 7%,
+        rgba(250, 253, 255, 0.78) 19%,
+        rgba(235, 246, 250, 0.42) 38%,
+        rgba(201, 230, 240, 0.14) 58%,
+        transparent 76%
+    );
+    box-shadow: none;
+    transform: translate3d(-50%, clamp(3rem, 8svh, 5rem), 0) scale(0.16);
+    transform-origin: 50% 50%;
+    transition: opacity 300ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+.home-page.stage-intro-pending .stage-light::after,
+.home-page.stage-intro-playing .stage-light::after {
+    opacity: 0;
+    transform: translateX(-50%) scaleY(0.2);
+    transform-origin: 50% 0;
+    transition: opacity 520ms ease, transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+.home-page.stage-intro-playing .stage-light.is-intro-lit {
+    opacity: 1;
+}
+
+.home-page.stage-intro-playing .stage-light.is-intro-lit::before {
+    opacity: 0.94;
+    transform: translate3d(-50%, clamp(3rem, 8svh, 5rem), 0) scale(1);
+}
+
+.home-page.stage-intro-playing .stage-light.is-aimed {
+    opacity: var(--light-opacity);
+    transform: translateX(-50%) rotate(var(--light-tilt));
+}
+
+.home-page.stage-intro-playing .stage-light.is-aimed::before {
+    opacity: 0.9;
+    transform: translate3d(-50%, 0, 0) scale(0.075);
+}
+
+.home-page.stage-intro-playing .stage-light.is-aimed::after {
+    opacity: 1;
+    transform: translateX(-50%) scaleY(1);
+}
+
+.home-page.stage-intro-pending .moving-head,
+.home-page.stage-intro-pending .stage-strobe,
+.home-page.stage-intro-playing:not(.stage-rig-live) .moving-head,
+.home-page.stage-intro-playing:not(.stage-rig-live) .stage-strobe {
+    opacity: 0 !important;
+    animation: none;
+}
+
+.home-page.stage-intro-playing.stage-title-flight .title {
+    opacity: 1;
+    animation: stage-title-arrival 1900ms linear both;
+    will-change: filter, opacity, transform;
+}
+
+.home-page.stage-intro-playing.stage-title-reflected .reflection-title {
+    animation: stage-title-reflection-arrival 1040ms ease-out both;
+    will-change: opacity, transform;
+}
+
+.home-page.stage-intro-playing.stage-title-settled .title {
+    opacity: 1;
+    filter: none;
+    transform: translate(-50%, var(--title-floor-correction));
+    animation: none;
+}
+
+.home-page.stage-intro-playing.stage-title-settled .reflection-title {
+    opacity: 0.17;
+    transform: translate(-50%, calc(0px - var(--title-floor-correction))) scaleY(-1);
+    animation: none;
+}
+
+@keyframes stage-title-arrival {
+    0% {
+        opacity: 0;
+        filter: brightness(0.32) drop-shadow(0 0 0.9rem rgba(255, 255, 255, 0.88));
+        transform: translate(-50%, calc(var(--title-floor-correction) - 8px)) scale(0.14);
+    }
+
+    16% {
+        opacity: 1;
+    }
+
+    31% {
+        filter: brightness(0.54) drop-shadow(0 0 0.75rem rgba(255, 255, 255, 0.72));
+        transform: translate(-50%, calc(var(--title-floor-correction) - 86px)) scale(0.58);
+    }
+
+    48% {
+        filter: brightness(0.78) drop-shadow(0 0 0.45rem rgba(255, 255, 255, 0.46));
+        transform: translate(-50%, var(--title-floor-correction)) scaleX(1.035) scaleY(0.965);
+    }
+
+    61% {
+        transform: translate(-50%, calc(var(--title-floor-correction) - 34px)) scale(0.985);
+    }
+
+    75% {
+        transform: translate(-50%, var(--title-floor-correction)) scaleX(1.022) scaleY(0.978);
+    }
+
+    84% {
+        transform: translate(-50%, calc(var(--title-floor-correction) - 13px)) scale(0.994);
+    }
+
+    91% {
+        transform: translate(-50%, var(--title-floor-correction)) scaleX(1.01) scaleY(0.99);
+    }
+
+    100% {
+        opacity: 1;
+        filter: none;
+        transform: translate(-50%, var(--title-floor-correction));
+    }
+}
+
+@keyframes stage-title-reflection-arrival {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, calc(0px - var(--title-floor-correction))) scaleY(-0.72);
+    }
+
+    52% {
+        opacity: 0.11;
+    }
+
+    100% {
+        opacity: 0.17;
+        transform: translate(-50%, calc(0px - var(--title-floor-correction))) scaleY(-1);
+    }
+}
+
+.home-page.stage-intro-pending .menu-button,
+.home-page.stage-intro-playing .menu-button {
+    opacity: 0;
+    transform: translate3d(0, 100px, 0);
+    pointer-events: none;
+    animation: none;
+    will-change: opacity, transform;
+}
+
+.home-page.stage-intro-playing.stage-buttons-enter .menu-button {
+    pointer-events: auto;
+    animation: stage-menu-button-arrival 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-page.stage-intro-playing.stage-buttons-enter .menu-button:nth-child(2) {
+    animation-delay: 150ms;
+}
+
+.home-page.stage-intro-playing.stage-buttons-enter .menu-button:nth-child(3) {
+    animation-delay: 300ms;
+}
+
+.home-page.stage-intro-playing.stage-buttons-enter .menu-button:nth-child(4) {
+    animation-delay: 450ms;
+}
+
+@keyframes stage-menu-button-arrival {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 100px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.home-page.stage-intro-pending .quote-carousel,
+.home-page.stage-intro-playing .quote-carousel {
+    opacity: 0;
+    transform: translate3d(0, 44px, 0);
+    pointer-events: none;
+    animation: none;
+    will-change: opacity, transform;
+}
+
+.home-page.stage-intro-playing.stage-carousel-enter .quote-carousel {
+    pointer-events: auto;
+    animation: stage-carousel-arrival 880ms ease-in-out both;
+}
+
+@keyframes stage-carousel-arrival {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 44px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.home-page.stage-intro-paused .title,
+.home-page.stage-intro-paused .reflection-title,
+.home-page.stage-intro-paused .moving-head,
+.home-page.stage-intro-paused .stage-light,
+.home-page.stage-intro-paused .stage-strobe,
+.home-page.stage-intro-paused .menu-button,
+.home-page.stage-intro-paused .quote-carousel {
+    animation-play-state: paused !important;
+}

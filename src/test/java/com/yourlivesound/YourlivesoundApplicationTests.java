@@ -80,7 +80,68 @@ class YourlivesoundApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("/css/styles-wrap.css?v=test-build")))
                 .andExpect(content().string(containsString("/css/artist-carousel.css?v=test-build")))
+                .andExpect(content().string(containsString("/css/stage-intro.css?v=test-build")))
+                .andExpect(content().string(containsString("/js/stage-intro.js?v=test-build")))
                 .andExpect(content().string(containsString("/js/eq_main.js?v=test-build")));
+    }
+
+    @Test
+    void homePageWiresStageIntroBeforeItsMotionControllers() throws Exception {
+        String html = mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertTrue(html.contains("class=\"home-page stage-intro-pending\""));
+        assertTrue(html.contains("data-stage-scene=\"preload\""));
+        int introPosition = html.indexOf("/js/stage-intro.js?v=test-build");
+        int equalizerPosition = html.indexOf("/js/eq_main.js?v=test-build");
+        int carouselPosition = html.indexOf("/js/artist-carousel.js?v=test-build");
+        assertTrue(introPosition >= 0 && introPosition < equalizerPosition);
+        assertTrue(equalizerPosition < carouselPosition);
+    }
+
+    @Test
+    void stageIntroKeepsAVisibleTimeTimelineAndVersionedSeenMarker() throws Exception {
+        String javascript = mockMvc.perform(get("/js/stage-intro.js"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String stylesheet = mockMvc.perform(get("/css/stage-intro.css"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String carouselJavascript = mockMvc.perform(get("/js/artist-carousel.js"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertTrue(javascript.contains("yls.stage-intro.v1.seen"));
+        assertTrue(javascript.contains("const lightStagger = 150"));
+        assertTrue(javascript.contains("const seenThreshold = 10000"));
+        assertTrue(javascript.contains("document.fonts?.ready"));
+        assertTrue(javascript.contains("portrait.loading = \"eager\""));
+        assertTrue(javascript.contains("if (!document.hidden)"));
+        assertTrue(javascript.contains("queryMode === \"replay\""));
+        assertTrue(javascript.contains("queryMode === \"skip\""));
+        assertTrue(javascript.contains("equalizerApi?.pulse(0.72)"));
+        assertTrue(javascript.contains("equalizerApi?.startLive(0.34)"));
+        assertTrue(javascript.contains("carouselApi?.beginReveal()"));
+        assertFalse(javascript.contains("document.cookie"));
+
+        assertTrue(stylesheet.contains("stage-title-arrival 1900ms"));
+        assertTrue(stylesheet.contains("translate3d(0, 100px, 0)"));
+        assertTrue(stylesheet.contains("animation-delay: 450ms"));
+        assertTrue(stylesheet.contains("stage-carousel-arrival 880ms"));
+
+        assertTrue(carouselJavascript.contains("let introHeld = Boolean(stageIntro?.shouldPlay)"));
+        assertTrue(carouselJavascript.contains("|| introHeld"));
+        assertTrue(carouselJavascript.contains("stageIntro.registerCarousel"));
+        assertTrue(carouselJavascript.contains("const finishReveal = () =>"));
     }
 
     @Test
@@ -153,6 +214,12 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("detailPhase: Math.random()"));
         assertTrue(javascript.contains("speed: 3.2 + Math.random() * 1.6"));
         assertTrue(javascript.contains("targetLevel > profile.level ? attackResponse : releaseResponse"));
+        assertTrue(javascript.contains("const introRestHeight = 2"));
+        assertTrue(javascript.contains("const prepareIntro = () =>"));
+        assertTrue(javascript.contains("const revealBar = (index) =>"));
+        assertTrue(javascript.contains("const pulse = (strength) =>"));
+        assertTrue(javascript.contains("const startLive = (initialImpulse = 0) =>"));
+        assertTrue(javascript.contains("stageIntro.registerEqualizer"));
 
         assertTrue(stylesheet.contains("transform: translateZ(0) scaleY(0.14)"));
         assertTrue(stylesheet.contains("transform-origin: 50% 100%"));

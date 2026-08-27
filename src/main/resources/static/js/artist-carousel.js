@@ -24,6 +24,7 @@
 
     const autoplayDelay = 7000;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const stageIntro = window.yourLiveSoundStageIntro;
     const slideCount = slides.length;
     let activeIndex = 0;
     let trackPosition = slideCount > 1 ? 1 : 0;
@@ -34,6 +35,7 @@
     let pointerInside = false;
     let focusInside = false;
     let carouselVisible = true;
+    let introHeld = Boolean(stageIntro?.shouldPlay);
     let touchStartPoint = null;
     let titleResizeObserver = null;
 
@@ -149,6 +151,7 @@
         || focusInside
         || document.hidden
         || !carouselVisible
+        || introHeld
         || reducedMotion.matches
     );
 
@@ -321,9 +324,43 @@
         observer.observe(carousel);
     }
 
+    const prepareIntro = () => {
+        introHeld = true;
+        clearAutoplay();
+        carousel.inert = true;
+        carousel.setAttribute("aria-hidden", "true");
+    };
+
+    const beginReveal = () => {
+        carousel.removeAttribute("aria-hidden");
+    };
+
+    const finishReveal = () => {
+        introHeld = false;
+        carousel.inert = false;
+        carousel.removeAttribute("aria-hidden");
+        scheduleAutoplay();
+    };
+
+    const showImmediately = () => {
+        introHeld = false;
+        carousel.inert = false;
+        carousel.removeAttribute("aria-hidden");
+        scheduleAutoplay();
+    };
+
     carousel.classList.add("is-enhanced");
     syncCarouselWidth();
     setTrackPosition(false);
     updateActiveSlide();
-    scheduleAutoplay();
+    if (stageIntro?.registerCarousel) {
+        stageIntro.registerCarousel({
+            prepareIntro,
+            beginReveal,
+            finishReveal,
+            showImmediately
+        });
+    } else {
+        showImmediately();
+    }
 })();
