@@ -3,7 +3,7 @@
     --carousel-title-width: 42rem;
     width: min(var(--carousel-title-width), calc(100% - 1.5rem));
     height: 176px;
-    margin: -176px auto 0;
+    margin: -160px auto 0;
     position: relative;
     z-index: 4;
     color: #ffffff;

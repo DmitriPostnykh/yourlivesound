@@ -195,6 +195,11 @@ class YourlivesoundApplicationTests {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
+        String stylesheet = mockMvc.perform(get("/css/artist-carousel.css"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
         assertEquals(8, html.split("data-carousel-slide", -1).length - 1);
         int titlePosition = html.indexOf("id=\"site-title\"");
@@ -202,6 +207,7 @@ class YourlivesoundApplicationTests {
         int navigationPosition = html.indexOf("class=\"site-navigation\"");
         assertTrue(titlePosition >= 0 && titlePosition < carouselPosition);
         assertTrue(carouselPosition < navigationPosition);
+        assertTrue(stylesheet.contains("margin: -160px auto 0"));
     }
 
     @Test
