@@ -11,6 +11,7 @@
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const lightStagger = 150;
     const titleRevealDuration = 260;
+    const floorContactDelay = 480;
     const seenThreshold = 10000;
     const timings = Object.freeze({
         lightStart: 1000,
@@ -49,15 +50,10 @@
     const shouldPlay = !reducedMotion.matches && !forceSkip && (forceReplay || !hasSeenIntro);
     const stageLights = Array.from(document.querySelectorAll(".stage-light"));
     const stageRig = document.querySelector(".stage-lights");
+    const floorSpots = Array.from(document.querySelectorAll(".stage-floor-spot"));
     const title = document.querySelector("#site-title");
     const titleTargets = Array.from(title?.querySelectorAll("[data-title-target]") ?? []);
     const reflectionTargets = Array.from(document.querySelectorAll("[data-reflection-target]"));
-    const visibleTitleTargetCount = titleTargets.filter(
-        (target) => !target.classList.contains("title-space")
-    ).length;
-    const titleAimStagger = stageLights.length > 1 && visibleTitleTargetCount > 1
-        ? (lightStagger * (stageLights.length - 1)) / (visibleTitleTargetCount - 1)
-        : lightStagger;
     const navigation = document.querySelector(".site-navigation");
     const carousel = document.querySelector("[data-quote-carousel]");
     let equalizerApi = null;
@@ -79,16 +75,6 @@
             return 0.5;
         }
         return 0.04 + (0.92 * index) / (stageLights.length - 1);
-    };
-
-    const aimSlotFor = (index) => {
-        if (!titleTargets[index]) {
-            return index;
-        }
-
-        return titleTargets.slice(0, index).filter(
-            (target) => !target.classList.contains("title-space")
-        ).length;
     };
 
     const syncStageLightTargets = () => {
@@ -118,10 +104,23 @@
             const deltaY = Math.max(1, targetY - sourceY);
             const angle = -Math.atan2(deltaX, deltaY) * 180 / Math.PI;
             const distance = Math.hypot(deltaX, deltaY);
+            const signedSideStrength = (sourceProgress - 0.5) / 0.46;
+            const sideStrength = Math.min(1, Math.abs(signedSideStrength));
+            const floorStartOffsetX = -signedSideStrength * stageRigRect.width * 0.34;
+            const floorStartOffsetY = stageRigRect.height * (0.035 + sideStrength * 0.045);
+            const floorSpot = floorSpots[index];
 
             light.style.setProperty("--light-x", `${(sourceProgress * 100).toFixed(3)}%`);
             light.style.setProperty("--backlight-tilt", `${angle.toFixed(3)}deg`);
             light.style.setProperty("--intro-backlight-distance", `${distance.toFixed(3)}px`);
+            floorSpot?.style.setProperty("--floor-target-x", `${(targetX - stageRigRect.left).toFixed(3)}px`);
+            floorSpot?.style.setProperty("--floor-target-y", `${(targetY - stageRigRect.top).toFixed(3)}px`);
+            floorSpot?.style.setProperty("--floor-start-offset-x", `${floorStartOffsetX.toFixed(3)}px`);
+            floorSpot?.style.setProperty("--floor-start-offset-y", `${floorStartOffsetY.toFixed(3)}px`);
+            floorSpot?.style.setProperty(
+                "--floor-tracking-duration",
+                `${timings.aimTransitionDuration - floorContactDelay}ms`
+            );
         });
     };
 
@@ -190,6 +189,10 @@
             light.classList.remove("is-intro-lit");
             light.classList.add("is-aimed");
         });
+        floorSpots.forEach((floorSpot) => {
+            floorSpot.classList.remove("is-floor-tracking");
+            floorSpot.classList.add("is-floor-settled");
+        });
         setInteractive(navigation, true);
         setInteractive(carousel, true);
         if (!sceneStarted) {
@@ -253,12 +256,19 @@
                 light.classList.add("is-intro-lit");
             });
 
-            const aimAt = timings.aimStart + aimSlotFor(index) * titleAimStagger;
+            const aimAt = timings.aimStart + index * lightStagger;
             addEvent(aimAt, () => {
                 light.classList.add("is-aimed");
             });
+            addEvent(aimAt + floorContactDelay, () => {
+                floorSpots[index]?.classList.add("is-floor-tracking");
+            });
             addEvent(aimAt + timings.aimTransitionDuration - titleRevealDuration, () => {
                 revealTitleTarget(index);
+            });
+            addEvent(aimAt + timings.aimTransitionDuration, () => {
+                floorSpots[index]?.classList.remove("is-floor-tracking");
+                floorSpots[index]?.classList.add("is-floor-settled");
             });
         });
 

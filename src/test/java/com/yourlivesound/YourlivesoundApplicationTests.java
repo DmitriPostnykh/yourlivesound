@@ -123,6 +123,7 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("yls.stage-intro.v3.seen"));
         assertTrue(javascript.contains("const lightStagger = 150"));
         assertTrue(javascript.contains("const titleRevealDuration = 260"));
+        assertTrue(javascript.contains("const floorContactDelay = 480"));
         assertTrue(javascript.contains("const seenThreshold = 10000"));
         assertTrue(javascript.contains("document.fonts?.ready"));
         assertTrue(javascript.contains("portrait.loading = \"eager\""));
@@ -133,12 +134,16 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("aimStart: 3600"));
         assertTrue(javascript.contains("equalizerLive: 6600"));
         assertTrue(javascript.contains("const sourceProgressFor = (index) =>"));
-        assertTrue(javascript.contains("const aimSlotFor = (index) =>"));
-        assertTrue(javascript.contains("const titleAimStagger ="));
-        assertTrue(javascript.contains("aimSlotFor(index) * titleAimStagger"));
+        assertTrue(javascript.contains("const aimAt = timings.aimStart + index * lightStagger"));
+        assertFalse(javascript.contains("const aimSlotFor = (index) =>"));
+        assertFalse(javascript.contains("const titleAimStagger ="));
         assertTrue(javascript.contains("const angle = -Math.atan2(deltaX, deltaY)"));
         assertTrue(javascript.contains("Math.hypot(deltaX, deltaY)"));
         assertTrue(javascript.contains("--intro-backlight-distance"));
+        assertTrue(javascript.contains("--floor-start-offset-x"));
+        assertTrue(javascript.contains("--floor-start-offset-y"));
+        assertTrue(javascript.contains("is-floor-tracking"));
+        assertTrue(javascript.contains("is-floor-settled"));
         assertTrue(javascript.contains("revealTitleTarget(index)"));
         assertTrue(javascript.contains("window.addEventListener(\"resize\", scheduleStageLightTargetSync"));
         assertTrue(javascript.contains("stageTargetResizeObserver = new ResizeObserver"));
@@ -158,7 +163,11 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains(".title-character.is-revealed"));
         assertTrue(stylesheet.contains("color: #f4fbff"));
         assertTrue(stylesheet.contains("color: #ff5365"));
-        assertTrue(stylesheet.contains("calc(var(--intro-backlight-distance) - 50%)"));
+        assertFalse(stylesheet.contains("calc(var(--intro-backlight-distance) - 50%)"));
+        assertTrue(stylesheet.contains("calc(-50% + 0.45rem)"));
+        assertTrue(stylesheet.contains(".stage-floor-spot.is-floor-tracking"));
+        assertTrue(stylesheet.contains("--floor-tracking-duration"));
+        assertTrue(stylesheet.contains("scale3d(1, 0.72, 1)"));
         assertTrue(stylesheet.contains("translate3d(0, 100px, 0)"));
         assertTrue(stylesheet.contains("animation-delay: 450ms"));
         assertTrue(stylesheet.contains("stage-carousel-arrival 880ms"));
@@ -214,6 +223,7 @@ class YourlivesoundApplicationTests {
                 .getContentAsString();
 
         assertEquals(15, html.split("class=\"stage-light\"", -1).length - 1);
+        assertEquals(15, html.split("class=\"stage-floor-spot\"", -1).length - 1);
         assertEquals(14, html.split("class=\"moving-head\"", -1).length - 1);
         assertEquals(72, html.split("class=\"stage-strobe\"", -1).length - 1);
         assertEquals(15, html.split("data-title-target", -1).length - 1);
