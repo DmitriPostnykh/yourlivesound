@@ -186,22 +186,11 @@
 .stage-floor-spots {
     --stage-floor-boundary-y: 100%;
     position: absolute;
-    inset: 0;
+    inset: 0 0 auto 0;
+    height: var(--stage-floor-boundary-y);
     z-index: 1;
     overflow: hidden;
     pointer-events: none;
-    -webkit-clip-path: polygon(
-        0 0,
-        100% 0,
-        100% var(--stage-floor-boundary-y),
-        0 var(--stage-floor-boundary-y)
-    );
-    clip-path: polygon(
-        0 0,
-        100% 0,
-        100% var(--stage-floor-boundary-y),
-        0 var(--stage-floor-boundary-y)
-    );
 }
 
 .stage-floor-spot {

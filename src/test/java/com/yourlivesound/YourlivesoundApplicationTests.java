@@ -204,7 +204,8 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("scale3d(var(--beam-length-scale), var(--beam-length-scale), 1)"));
         assertTrue(stylesheet.contains("translate3d(-200vw, -200vh, 0)"));
         assertTrue(stylesheet.contains("--stage-floor-boundary-y"));
-        assertTrue(stylesheet.contains("100% var(--stage-floor-boundary-y)"));
+        assertTrue(stylesheet.contains("inset: 0 0 auto 0"));
+        assertTrue(stylesheet.contains("height: var(--stage-floor-boundary-y)"));
         assertTrue(stylesheet.contains(".stage-floor-spot.is-floor-tracking"));
         assertFalse(stylesheet.contains("--floor-tracking-duration"));
         assertTrue(stylesheet.contains("translate3d(0, 100px, 0)"));
