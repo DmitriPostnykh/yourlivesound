@@ -27,7 +27,7 @@
     const maximumDepthLift = 34;
     const introRestPixels = 2;
     const introPulseDuration = 520;
-    const introWavePeakHeight = maximumHeight * 0.5;
+    const introWavePeakHeight = maximumHeight * 0.3;
     const introWaveBarStagger = 65;
     const introWaveBarDuration = 260;
     const introWaveDuration = (barCount - 1) * introWaveBarStagger + introWaveBarDuration;

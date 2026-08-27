@@ -346,7 +346,7 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("const prepareIntro = () =>"));
         assertTrue(javascript.contains("const revealBar = (index) =>"));
         assertTrue(javascript.contains("const pulse = (strength) =>"));
-        assertTrue(javascript.contains("const introWavePeakHeight = maximumHeight * 0.5"));
+        assertTrue(javascript.contains("const introWavePeakHeight = maximumHeight * 0.3"));
         assertTrue(javascript.contains("const introWaveBarStagger = 65"));
         assertTrue(javascript.contains("const introWaveBarDuration = 260"));
         assertTrue(javascript.contains("const introWaveDuration = (barCount - 1) * introWaveBarStagger"));
