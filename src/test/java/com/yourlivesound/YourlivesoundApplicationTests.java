@@ -122,8 +122,9 @@ class YourlivesoundApplicationTests {
 
         assertTrue(javascript.contains("yls.stage-intro.v3.seen"));
         assertTrue(javascript.contains("const lightStagger = 150"));
-        assertTrue(javascript.contains("const sourceCollapseRatio = 0.18"));
-        assertTrue(javascript.contains("const screenSweepRatio = 0.43"));
+        assertTrue(javascript.contains("const sourceCollapseRatio = 0.3"));
+        assertTrue(javascript.contains("const sourceTurnPathRatio = 0.18"));
+        assertTrue(javascript.contains("const screenSweepRatio = 0.52"));
         assertTrue(javascript.contains("const seenThreshold = 10000"));
         assertTrue(javascript.contains("document.fonts?.ready"));
         assertTrue(javascript.contains("portrait.loading = \"eager\""));
@@ -154,12 +155,18 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("const edgeExitX = source.x"));
         assertTrue(javascript.contains("x: lerp(centralPathX, edgeExitX, edgeInfluence)"));
         assertTrue(javascript.contains("let sourceGlareShiftX = 0"));
-        assertTrue(javascript.contains("sourceGlareExitX: direction * sourceGlareOffset * edgeInfluence"));
-        assertTrue(javascript.contains("sourceGlareExitY: sourceGlareOffset * (1 - edgeInfluence) * 0.55"));
+        assertTrue(javascript.contains("sourceGlareOpacity = 0.94 * (1 - collapseProgress)"));
+        assertTrue(javascript.contains("sourceGlareShiftY = geometry.sourceGlareRadius"));
+        assertTrue(javascript.contains("* sourceGlareScale"));
+        assertTrue(javascript.contains("const sourceGlareDiameter = Number.parseFloat"));
+        assertTrue(javascript.contains("window.getComputedStyle(light, \"::before\").width"));
+        assertTrue(javascript.contains("sourceGlareRadius"));
         assertTrue(javascript.contains("const beamRevealProgress = easeOut"));
-        assertTrue(javascript.contains("beamOpacity = 0.24 * beamRevealProgress"));
+        assertTrue(javascript.contains("beamOpacity = 0.26 * beamRevealProgress"));
         assertTrue(javascript.contains("const floorPlaneProgress = clamp"));
         assertTrue(javascript.contains("geometry.stageBoundaryY - beamPoint.y"));
+        assertTrue(javascript.contains("y: stageBoundaryY"));
+        assertTrue(javascript.contains("floorSpotOpacity = easeOut(floorPlaneProgress)"));
         assertFalse(javascript.contains("stage-screen-glare"));
         assertTrue(javascript.contains("const appliedLightAngle = lightAngle ?? lightVector.angle"));
         assertTrue(javascript.contains("screenExit"));
