@@ -50,7 +50,7 @@
     const shouldPlay = !reducedMotion.matches && !forceSkip && (forceReplay || !hasSeenIntro);
     const stageLights = Array.from(document.querySelectorAll(".stage-light"));
     const stageRig = document.querySelector(".stage-lights");
-    const screenGlares = Array.from(document.querySelectorAll(".stage-screen-glare"));
+    const floorSpotLayer = document.querySelector(".stage-floor-spots");
     const floorSpots = Array.from(document.querySelectorAll(".stage-floor-spot"));
     const stageBoundary = document.querySelector(".stage-front-boundary");
     const title = document.querySelector("#site-title");
@@ -122,24 +122,21 @@
         }
 
         const progress = clamp(rawProgress);
-        const screenGlare = screenGlares[index];
         const floorSpot = floorSpots[index];
         let beamPoint = {x: geometry.source.x, y: geometry.source.y + 1};
         let beamOpacity = 0;
         let beamLengthScale = 0.025;
         let sourceGlareOpacity = 0.94;
         let sourceGlareScale = 1;
-        let sourceGlareShiftX = geometry.sourceGlareStartX;
-        let sourceGlareShiftY = geometry.sourceGlareStartY;
+        let sourceGlareShiftX = 0;
+        let sourceGlareShiftY = 0;
         let lightAngle = null;
-        let screenGlareOpacity = 0;
-        let screenGlareTransform = "translate3d(-200vw, -200vh, 0) scale3d(0.2, 0.2, 1)";
         let floorSpotOpacity = 0;
         let floorSpotTransform = "translate3d(-200vw, -200vh, 0) scale3d(0.2, 0.2, 1)";
 
         if (progress > 0 && progress < sourceCollapseRatio) {
             const collapseProgress = easeInOut(progress / sourceCollapseRatio);
-            const turnProgress = collapseProgress * 0.08;
+            const turnProgress = easeOut(collapseProgress) * 0.16;
             beamPoint = quadraticPoint(
                 geometry.source,
                 geometry.screenControl,
@@ -150,51 +147,51 @@
                 geometry.source,
                 geometry.screenControl,
                 geometry.screenExit,
-                0.08
+                0.16
             );
             lightAngle = lerp(
                 0,
                 vectorFromSource(geometry.source, turnEndPoint).angle,
                 collapseProgress
             );
-            const sourceFadeProgress = clamp((collapseProgress - 0.48) / 0.52);
+            const sourceFadeProgress = clamp((collapseProgress - 0.42) / 0.58);
             sourceGlareOpacity = 0.94 * (1 - easeInOut(sourceFadeProgress));
             sourceGlareScale = lerp(1, 0.18, collapseProgress);
             sourceGlareShiftX = lerp(
-                geometry.sourceGlareStartX,
                 0,
+                geometry.sourceGlareExitX,
                 collapseProgress
             );
             sourceGlareShiftY = lerp(
-                geometry.sourceGlareStartY,
                 0,
+                geometry.sourceGlareExitY,
                 collapseProgress
             );
+            const lightVector = vectorFromSource(geometry.source, beamPoint);
+            const beamRevealProgress = easeOut(
+                clamp((collapseProgress - 0.2) / 0.55)
+            );
+            beamLengthScale = clamp(lightVector.distance / geometry.maxDistance, 0.025, 1);
+            beamOpacity = 0.24 * beamRevealProgress;
         } else if (progress >= sourceCollapseRatio && progress < screenSweepRatio) {
             const screenProgress = easeInOut(
                 (progress - sourceCollapseRatio)
                     / (screenSweepRatio - sourceCollapseRatio)
             );
-            const screenPathProgress = lerp(0.08, 1, screenProgress);
+            const screenPathProgress = lerp(0.16, 1, screenProgress);
             beamPoint = quadraticPoint(
                 geometry.source,
                 geometry.screenControl,
                 geometry.screenExit,
                 screenPathProgress
             );
-            const glarePulse = Math.pow(Math.sin(Math.PI * screenProgress), 0.82);
-            const glareScaleX = lerp(0.42, geometry.screenScaleX, screenPathProgress);
-            const glareScaleY = lerp(0.42, geometry.screenScaleY, screenPathProgress);
             const lightVector = vectorFromSource(geometry.source, beamPoint);
             beamLengthScale = clamp(lightVector.distance / geometry.maxDistance, 0.025, 1);
-            beamOpacity = easeOut(screenProgress / 0.24)
-                * lerp(0.24, 0.38, screenPathProgress);
+            beamOpacity = lerp(0.24, 0.38, easeOut(screenProgress));
             sourceGlareOpacity = 0;
             sourceGlareScale = 0.16;
             sourceGlareShiftX = 0;
             sourceGlareShiftY = 0;
-            screenGlareOpacity = 0.5 * glarePulse;
-            screenGlareTransform = `translate3d(${beamPoint.x.toFixed(3)}px, ${beamPoint.y.toFixed(3)}px, 0) translate3d(-50%, -50%, 0) rotate(${geometry.screenRotation.toFixed(3)}deg) scale3d(${glareScaleX.toFixed(4)}, ${glareScaleY.toFixed(4)}, 1)`;
         } else if (progress >= screenSweepRatio) {
             const floorProgress = clamp(
                 (progress - screenSweepRatio) / (1 - screenSweepRatio)
@@ -224,7 +221,11 @@
             const lightVector = vectorFromSource(geometry.source, beamPoint);
             beamLengthScale = clamp(lightVector.distance / geometry.maxDistance, 0.025, 1);
             beamOpacity = lerp(0.38, 0.34, easedFloorProgress);
-            floorSpotOpacity = easeOut(floorProgress / 0.12)
+            const floorPlaneProgress = clamp(
+                (geometry.stageBoundaryY - beamPoint.y)
+                    / geometry.floorRevealDistance
+            );
+            floorSpotOpacity = easeOut(floorPlaneProgress)
                 * lerp(0.58, 0.48, easedFloorProgress);
             floorSpotTransform = `translate3d(${beamPoint.x.toFixed(3)}px, ${beamPoint.y.toFixed(3)}px, 0) translate3d(-50%, -50%, 0) rotate(${floorRotation.toFixed(3)}deg) scale3d(${floorScaleX.toFixed(4)}, ${floorScaleY.toFixed(4)}, 1)`;
             sourceGlareOpacity = 0;
@@ -243,10 +244,6 @@
         light.style.setProperty("--source-glare-shift-x", `${sourceGlareShiftX.toFixed(3)}px`);
         light.style.setProperty("--source-glare-shift-y", `${sourceGlareShiftY.toFixed(3)}px`);
 
-        if (screenGlare) {
-            screenGlare.style.opacity = screenGlareOpacity.toFixed(4);
-            screenGlare.style.transform = screenGlareTransform;
-        }
         if (floorSpot) {
             floorSpot.style.opacity = floorSpotOpacity.toFixed(4);
             floorSpot.style.transform = floorSpotTransform;
@@ -273,6 +270,11 @@
                 + (equalizerRect?.height ?? stageRigRect.height) * 0.645
                 - stageRigRect.top;
 
+        floorSpotLayer?.style.setProperty(
+            "--stage-floor-boundary-y",
+            `${stageBoundaryY.toFixed(3)}px`
+        );
+
         stageLights.forEach((light, index) => {
             const sourceProgress = sourceProgressFor(index);
             const source = {
@@ -296,9 +298,8 @@
                 y: targetY - stageRigRect.top
             };
             const centralPathX = lerp(source.x, target.x, 0.18);
-            const edgeExitX = direction < 0
-                ? -stageRigRect.width * 0.08
-                : stageRigRect.width * 1.08;
+            const edgeExitX = source.x
+                + direction * stageRigRect.width * (0.88 + sideStrength * 0.04);
             const screenExit = {
                 x: lerp(centralPathX, edgeExitX, edgeInfluence),
                 y: stageBoundaryY + stageRigRect.height * sideStrength * 0.018
@@ -323,11 +324,6 @@
                 .map((point) => vectorFromSource(source, point).distance)
                 .reduce((maximum, distance) => Math.max(maximum, distance), 1);
             const maximumBeamWidth = clamp(maximumVector * 0.11, 52, 122);
-            const edgeScreenRotation = Math.atan2(
-                screenExit.y - source.y,
-                screenExit.x - source.x
-            ) * 180 / Math.PI;
-            const screenRotation = edgeScreenRotation * edgeInfluence;
             const floorStartRotation = (direction < 0 ? -6 : 6) * edgeInfluence;
             const sourceGlareOffset = clamp(
                 stageRigRect.width * (0.018 + sideStrength * 0.012),
@@ -343,16 +339,15 @@
                 floorControl,
                 target,
                 maxDistance: maximumVector,
-                screenScaleX: 3 + sideStrength * 1.2,
-                screenScaleY: 0.72 + sideStrength * 0.26,
-                screenRotation,
+                stageBoundaryY,
+                floorRevealDistance: clamp(stageRigRect.height * 0.035, 8, 24),
                 floorStartScaleX: 3.05 + edgeInfluence * 0.65,
                 floorStartScaleY: 1.12 + edgeInfluence * 0.13,
                 floorTargetScaleX: 0.72 + (1 - sideStrength) * 0.1,
                 floorTargetScaleY: 0.58 + (1 - sideStrength) * 0.08,
                 floorStartRotation,
-                sourceGlareStartX: -direction * sourceGlareOffset * edgeInfluence,
-                sourceGlareStartY: -sourceGlareOffset * (1 - edgeInfluence) * 0.55
+                sourceGlareExitX: direction * sourceGlareOffset * edgeInfluence,
+                sourceGlareExitY: sourceGlareOffset * (1 - edgeInfluence) * 0.55
             };
 
             light.style.setProperty("--light-x", `${(sourceProgress * 100).toFixed(3)}%`);

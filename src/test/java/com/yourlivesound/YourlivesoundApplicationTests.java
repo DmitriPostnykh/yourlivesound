@@ -151,9 +151,16 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("--source-glare-shift-x"));
         assertTrue(javascript.contains("--source-glare-shift-y"));
         assertTrue(javascript.contains("const edgeInfluence = easeInOut"));
+        assertTrue(javascript.contains("const edgeExitX = source.x"));
         assertTrue(javascript.contains("x: lerp(centralPathX, edgeExitX, edgeInfluence)"));
-        assertTrue(javascript.contains("sourceGlareStartX: -direction * sourceGlareOffset * edgeInfluence"));
-        assertTrue(javascript.contains("sourceGlareStartY: -sourceGlareOffset * (1 - edgeInfluence) * 0.55"));
+        assertTrue(javascript.contains("let sourceGlareShiftX = 0"));
+        assertTrue(javascript.contains("sourceGlareExitX: direction * sourceGlareOffset * edgeInfluence"));
+        assertTrue(javascript.contains("sourceGlareExitY: sourceGlareOffset * (1 - edgeInfluence) * 0.55"));
+        assertTrue(javascript.contains("const beamRevealProgress = easeOut"));
+        assertTrue(javascript.contains("beamOpacity = 0.24 * beamRevealProgress"));
+        assertTrue(javascript.contains("const floorPlaneProgress = clamp"));
+        assertTrue(javascript.contains("geometry.stageBoundaryY - beamPoint.y"));
+        assertFalse(javascript.contains("stage-screen-glare"));
         assertTrue(javascript.contains("const appliedLightAngle = lightAngle ?? lightVector.angle"));
         assertTrue(javascript.contains("screenExit"));
         assertTrue(javascript.contains("floorStart"));
@@ -180,10 +187,12 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains(".title-character.is-revealed"));
         assertTrue(stylesheet.contains("color: #f4fbff"));
         assertTrue(stylesheet.contains("color: #ff5365"));
-        assertTrue(stylesheet.contains(".stage-screen-glare"));
+        assertFalse(stylesheet.contains(".stage-screen-glare"));
         assertTrue(stylesheet.contains("background-size: 100% 1.25rem"));
         assertTrue(stylesheet.contains("scale3d(var(--beam-length-scale), var(--beam-length-scale), 1)"));
         assertTrue(stylesheet.contains("translate3d(-200vw, -200vh, 0)"));
+        assertTrue(stylesheet.contains("--stage-floor-boundary-y"));
+        assertTrue(stylesheet.contains("100% var(--stage-floor-boundary-y)"));
         assertTrue(stylesheet.contains(".stage-floor-spot.is-floor-tracking"));
         assertFalse(stylesheet.contains("--floor-tracking-duration"));
         assertTrue(stylesheet.contains("translate3d(0, 100px, 0)"));
@@ -247,7 +256,7 @@ class YourlivesoundApplicationTests {
                 .getContentAsString();
 
         assertEquals(15, html.split("class=\"stage-light\"", -1).length - 1);
-        assertEquals(15, html.split("class=\"stage-screen-glare\"", -1).length - 1);
+        assertEquals(0, html.split("class=\"stage-screen-glare\"", -1).length - 1);
         assertEquals(15, html.split("class=\"stage-floor-spot\"", -1).length - 1);
         assertEquals(14, html.split("class=\"moving-head\"", -1).length - 1);
         assertEquals(72, html.split("class=\"stage-strobe\"", -1).length - 1);

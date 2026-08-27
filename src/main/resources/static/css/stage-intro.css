@@ -183,43 +183,25 @@
     animation: none;
 }
 
-.stage-screen-projections {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    overflow: visible;
-    pointer-events: none;
-}
-
-.stage-screen-glare {
-    width: clamp(3.2rem, 11vw, 9rem);
-    height: clamp(3.2rem, 11vw, 9rem);
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 50%;
-    opacity: 0;
-    background: radial-gradient(
-        ellipse,
-        rgba(255, 255, 255, 0.92) 0%,
-        rgba(250, 253, 255, 0.68) 13%,
-        rgba(226, 242, 248, 0.28) 32%,
-        rgba(173, 215, 230, 0.08) 54%,
-        transparent 72%
-    );
-    filter: blur(clamp(1.5px, 0.34vw, 4px));
-    mix-blend-mode: screen;
-    transform: translate3d(-200vw, -200vh, 0) scale3d(0.2, 0.2, 1);
-    transform-origin: 50% 50%;
-    will-change: opacity, transform;
-}
-
 .stage-floor-spots {
+    --stage-floor-boundary-y: 100%;
     position: absolute;
     inset: 0;
     z-index: 1;
-    overflow: visible;
+    overflow: hidden;
     pointer-events: none;
+    -webkit-clip-path: polygon(
+        0 0,
+        100% 0,
+        100% var(--stage-floor-boundary-y),
+        0 var(--stage-floor-boundary-y)
+    );
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% var(--stage-floor-boundary-y),
+        0 var(--stage-floor-boundary-y)
+    );
 }
 
 .stage-floor-spot {
