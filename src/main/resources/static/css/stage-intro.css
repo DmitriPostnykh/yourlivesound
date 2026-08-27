@@ -48,9 +48,10 @@
     color: #f4fbff;
     opacity: 1;
     text-shadow:
-        0 0.08rem rgba(255, 255, 255, 0.82),
-        0 0.25rem 0.7rem rgba(0, 5, 10, 0.78),
-        0 0 1.2rem rgba(95, 215, 250, 0.18);
+        0 -0.06rem 0.12rem rgba(255, 255, 255, 0.46),
+        0 0.16rem 0.2rem rgba(0, 5, 10, 0.9),
+        0 0.42rem 0.9rem rgba(0, 5, 10, 0.72),
+        0 0 1.2rem rgba(95, 215, 250, 0.14);
 }
 
 .home-page.stage-intro-playing.stage-title-backlit .reflection-title,
@@ -77,11 +78,11 @@
     background-image: linear-gradient(
         to bottom,
         #ffffff 0%,
-        #fbfeff 22%,
-        #e7f0f4 42%,
-        #96a9b1 60%,
-        #455e69 78%,
-        #142a34 100%
+        #f6fbfd 44%,
+        #e2ebef 48%,
+        #526872 52%,
+        #2b424d 72%,
+        #102630 100%
     );
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -94,12 +95,12 @@
     color: #ff5365;
     background-image: linear-gradient(
         to bottom,
-        #ff7a89 0%,
-        #ff5365 24%,
-        #e94156 45%,
-        #b6293c 63%,
-        #741725 80%,
-        #35080f 100%
+        #ff6d7d 0%,
+        #ff5365 44%,
+        #e43c52 48%,
+        #861b2d 52%,
+        #56101c 72%,
+        #28050b 100%
     );
 }
 

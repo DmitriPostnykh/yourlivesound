@@ -239,8 +239,13 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("color: #f4fbff"));
         assertTrue(stylesheet.contains("color: #ff5365"));
         assertTrue(stylesheet.contains(".home-page .title .title-character"));
-        assertTrue(stylesheet.contains("#142a34 100%"));
-        assertTrue(stylesheet.contains("#35080f 100%"));
+        assertTrue(stylesheet.contains("#e2ebef 48%"));
+        assertTrue(stylesheet.contains("#526872 52%"));
+        assertTrue(stylesheet.contains("#102630 100%"));
+        assertTrue(stylesheet.contains("#e43c52 48%"));
+        assertTrue(stylesheet.contains("#861b2d 52%"));
+        assertTrue(stylesheet.contains("#28050b 100%"));
+        assertTrue(stylesheet.contains("0 -0.06rem 0.12rem rgba(255, 255, 255, 0.46)"));
         assertTrue(stylesheet.contains("-webkit-background-clip: text"));
         assertTrue(stylesheet.contains("-webkit-text-fill-color: transparent"));
         assertFalse(stylesheet.contains(".stage-screen-glare"));
