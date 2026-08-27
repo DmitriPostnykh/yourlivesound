@@ -348,10 +348,14 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("const pulse = (strength) =>"));
         assertTrue(javascript.contains("const introWavePeakHeight = maximumHeight * 0.3"));
         assertTrue(javascript.contains("const introWaveBarStagger = 65"));
-        assertTrue(javascript.contains("const introWaveBarDuration = 260"));
+        assertTrue(javascript.contains("const introWaveRiseDuration = 130"));
+        assertTrue(javascript.contains("const introWaveFallDuration = introWaveRiseDuration * 4"));
+        assertTrue(javascript.contains("const introWaveBarDuration = introWaveRiseDuration + introWaveFallDuration"));
         assertTrue(javascript.contains("const introWaveDuration = (barCount - 1) * introWaveBarStagger"));
         assertTrue(javascript.contains("const renderIntroWave = (timestamp) =>"));
         assertTrue(javascript.contains("const localElapsed = introWaveElapsed - index * introWaveBarStagger"));
+        assertTrue(javascript.contains("localElapsed <= introWaveRiseDuration"));
+        assertTrue(javascript.contains("(localElapsed - introWaveRiseDuration) / introWaveFallDuration"));
         assertTrue(javascript.contains("const lift = Math.sin(Math.PI * progress)"));
         assertTrue(javascript.contains("const startIntroWave = () =>"));
         assertTrue(javascript.contains("introWaveRestHeights = currentHeights.slice()"));

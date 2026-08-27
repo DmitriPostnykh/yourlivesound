@@ -29,7 +29,9 @@
     const introPulseDuration = 520;
     const introWavePeakHeight = maximumHeight * 0.3;
     const introWaveBarStagger = 65;
-    const introWaveBarDuration = 260;
+    const introWaveRiseDuration = 130;
+    const introWaveFallDuration = introWaveRiseDuration * 4;
+    const introWaveBarDuration = introWaveRiseDuration + introWaveFallDuration;
     const introWaveDuration = (barCount - 1) * introWaveBarStagger + introWaveBarDuration;
     // Show the central segment of a larger circle so the projected arc stays rounded without sharp ends.
     const arcRadiusFactor = 1.35;
@@ -451,8 +453,16 @@
                     return;
                 }
 
-                const progress = Math.min(1, localElapsed / introWaveBarDuration);
-                const lift = Math.sin(Math.PI * progress);
+                const lift = localElapsed <= introWaveRiseDuration
+                    ? Math.sin(
+                        (Math.PI / 2) * Math.min(1, localElapsed / introWaveRiseDuration)
+                    )
+                    : Math.cos(
+                        (Math.PI / 2) * Math.min(
+                            1,
+                            (localElapsed - introWaveRiseDuration) / introWaveFallDuration
+                        )
+                    );
                 const restHeight = introWaveRestHeights[index] ?? currentHeights[index];
                 const height = restHeight + (introWavePeakHeight - restHeight) * lift;
                 setIntroBarScale(index, height);
