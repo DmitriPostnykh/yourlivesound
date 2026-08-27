@@ -149,7 +149,11 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("--intro-beam-max-width"));
         assertTrue(javascript.contains("--beam-length-scale"));
         assertTrue(javascript.contains("--source-glare-shift-x"));
-        assertTrue(javascript.contains("sourceGlareStartX: -direction * sourceGlareOffset"));
+        assertTrue(javascript.contains("--source-glare-shift-y"));
+        assertTrue(javascript.contains("const edgeInfluence = easeInOut"));
+        assertTrue(javascript.contains("x: lerp(centralPathX, edgeExitX, edgeInfluence)"));
+        assertTrue(javascript.contains("sourceGlareStartX: -direction * sourceGlareOffset * edgeInfluence"));
+        assertTrue(javascript.contains("sourceGlareStartY: -sourceGlareOffset * (1 - edgeInfluence) * 0.55"));
         assertTrue(javascript.contains("const appliedLightAngle = lightAngle ?? lightVector.angle"));
         assertTrue(javascript.contains("screenExit"));
         assertTrue(javascript.contains("floorStart"));

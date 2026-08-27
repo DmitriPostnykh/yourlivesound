@@ -98,6 +98,7 @@
     --source-glare-opacity: 0;
     --source-glare-scale: 0.16;
     --source-glare-shift-x: 0px;
+    --source-glare-shift-y: 0px;
     width: var(--intro-beam-max-width);
     height: var(--intro-beam-max-distance);
     opacity: 0;
@@ -137,7 +138,7 @@
     box-shadow: none;
     transform:
         translate3d(-50%, -50%, 0)
-        translate3d(var(--source-glare-shift-x), 0, 0)
+        translate3d(var(--source-glare-shift-x), var(--source-glare-shift-y), 0)
         scale(var(--source-glare-scale));
     transform-origin: 50% 50%;
     transition: none;

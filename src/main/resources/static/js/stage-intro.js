@@ -130,6 +130,7 @@
         let sourceGlareOpacity = 0.94;
         let sourceGlareScale = 1;
         let sourceGlareShiftX = geometry.sourceGlareStartX;
+        let sourceGlareShiftY = geometry.sourceGlareStartY;
         let lightAngle = null;
         let screenGlareOpacity = 0;
         let screenGlareTransform = "translate3d(-200vw, -200vh, 0) scale3d(0.2, 0.2, 1)";
@@ -164,6 +165,11 @@
                 0,
                 collapseProgress
             );
+            sourceGlareShiftY = lerp(
+                geometry.sourceGlareStartY,
+                0,
+                collapseProgress
+            );
         } else if (progress >= sourceCollapseRatio && progress < screenSweepRatio) {
             const screenProgress = easeInOut(
                 (progress - sourceCollapseRatio)
@@ -186,6 +192,7 @@
             sourceGlareOpacity = 0;
             sourceGlareScale = 0.16;
             sourceGlareShiftX = 0;
+            sourceGlareShiftY = 0;
             screenGlareOpacity = 0.5 * glarePulse;
             screenGlareTransform = `translate3d(${beamPoint.x.toFixed(3)}px, ${beamPoint.y.toFixed(3)}px, 0) translate3d(-50%, -50%, 0) rotate(${geometry.screenRotation.toFixed(3)}deg) scale3d(${glareScaleX.toFixed(4)}, ${glareScaleY.toFixed(4)}, 1)`;
         } else if (progress >= screenSweepRatio) {
@@ -223,6 +230,7 @@
             sourceGlareOpacity = 0;
             sourceGlareScale = 0.16;
             sourceGlareShiftX = 0;
+            sourceGlareShiftY = 0;
         }
 
         const lightVector = vectorFromSource(geometry.source, beamPoint);
@@ -233,6 +241,7 @@
         light.style.setProperty("--source-glare-opacity", sourceGlareOpacity.toFixed(4));
         light.style.setProperty("--source-glare-scale", sourceGlareScale.toFixed(4));
         light.style.setProperty("--source-glare-shift-x", `${sourceGlareShiftX.toFixed(3)}px`);
+        light.style.setProperty("--source-glare-shift-y", `${sourceGlareShiftY.toFixed(3)}px`);
 
         if (screenGlare) {
             screenGlare.style.opacity = screenGlareOpacity.toFixed(4);
@@ -281,16 +290,24 @@
             const signedSideStrength = (sourceProgress - 0.5) / 0.46;
             const sideStrength = Math.min(1, Math.abs(signedSideStrength));
             const direction = index < (stageLights.length - 1) / 2 ? 1 : -1;
+            const edgeInfluence = easeInOut(clamp((sideStrength - 0.24) / 0.44));
             const target = {
                 x: targetX - stageRigRect.left,
                 y: targetY - stageRigRect.top
             };
+            const centralPathX = lerp(source.x, target.x, 0.18);
+            const edgeExitX = direction < 0
+                ? -stageRigRect.width * 0.08
+                : stageRigRect.width * 1.08;
             const screenExit = {
-                x: direction < 0 ? -stageRigRect.width * 0.08 : stageRigRect.width * 1.08,
+                x: lerp(centralPathX, edgeExitX, edgeInfluence),
                 y: stageBoundaryY + stageRigRect.height * sideStrength * 0.018
             };
+            const centralControlX = lerp(source.x, centralPathX, 0.45);
+            const edgeControlX = source.x
+                + direction * stageRigRect.width * (0.38 + sideStrength * 0.1);
             const screenControl = {
-                x: source.x + direction * stageRigRect.width * (0.38 + sideStrength * 0.1),
+                x: lerp(centralControlX, edgeControlX, edgeInfluence),
                 y: stageRigRect.height * (0.42 + (1 - sideStrength) * 0.08)
             };
             const floorStart = {
@@ -306,11 +323,12 @@
                 .map((point) => vectorFromSource(source, point).distance)
                 .reduce((maximum, distance) => Math.max(maximum, distance), 1);
             const maximumBeamWidth = clamp(maximumVector * 0.11, 52, 122);
-            const screenRotation = Math.atan2(
+            const edgeScreenRotation = Math.atan2(
                 screenExit.y - source.y,
                 screenExit.x - source.x
             ) * 180 / Math.PI;
-            const floorStartRotation = direction < 0 ? -6 : 6;
+            const screenRotation = edgeScreenRotation * edgeInfluence;
+            const floorStartRotation = (direction < 0 ? -6 : 6) * edgeInfluence;
             const sourceGlareOffset = clamp(
                 stageRigRect.width * (0.018 + sideStrength * 0.012),
                 10,
@@ -328,12 +346,13 @@
                 screenScaleX: 3 + sideStrength * 1.2,
                 screenScaleY: 0.72 + sideStrength * 0.26,
                 screenRotation,
-                floorStartScaleX: 2.6 + sideStrength * 1.1,
-                floorStartScaleY: 1.05 + sideStrength * 0.2,
+                floorStartScaleX: 3.05 + edgeInfluence * 0.65,
+                floorStartScaleY: 1.12 + edgeInfluence * 0.13,
                 floorTargetScaleX: 0.72 + (1 - sideStrength) * 0.1,
                 floorTargetScaleY: 0.58 + (1 - sideStrength) * 0.08,
                 floorStartRotation,
-                sourceGlareStartX: -direction * sourceGlareOffset
+                sourceGlareStartX: -direction * sourceGlareOffset * edgeInfluence,
+                sourceGlareStartY: -sourceGlareOffset * (1 - edgeInfluence) * 0.55
             };
 
             light.style.setProperty("--light-x", `${(sourceProgress * 100).toFixed(3)}%`);
