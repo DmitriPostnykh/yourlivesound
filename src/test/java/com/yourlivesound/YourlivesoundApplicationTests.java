@@ -103,7 +103,7 @@ class YourlivesoundApplicationTests {
     }
 
     @Test
-    void stageIntroKeepsAVisibleTimeTimelineAndVersionedSeenMarker() throws Exception {
+    void stageIntroKeepsAVisibleTimeBacklightTimelineAndVersionedSeenMarker() throws Exception {
         String javascript = mockMvc.perform(get("/js/stage-intro.js"))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -120,7 +120,7 @@ class YourlivesoundApplicationTests {
                 .getResponse()
                 .getContentAsString();
 
-        assertTrue(javascript.contains("yls.stage-intro.v1.seen"));
+        assertTrue(javascript.contains("yls.stage-intro.v2.seen"));
         assertTrue(javascript.contains("const lightStagger = 150"));
         assertTrue(javascript.contains("const seenThreshold = 10000"));
         assertTrue(javascript.contains("document.fonts?.ready"));
@@ -128,12 +128,17 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("if (!document.hidden)"));
         assertTrue(javascript.contains("queryMode === \"replay\""));
         assertTrue(javascript.contains("queryMode === \"skip\""));
-        assertTrue(javascript.contains("equalizerApi?.pulse(0.72)"));
-        assertTrue(javascript.contains("equalizerApi?.startLive(0.34)"));
+        assertTrue(javascript.contains("aimStart: 3000"));
+        assertTrue(javascript.contains("equalizerLive: 5550"));
+        assertTrue(javascript.contains("equalizerApi?.startLive()"));
+        assertFalse(javascript.contains("equalizerApi?.pulse("));
         assertTrue(javascript.contains("carouselApi?.beginReveal()"));
         assertFalse(javascript.contains("document.cookie"));
 
-        assertTrue(stylesheet.contains("stage-title-arrival 1900ms"));
+        assertFalse(stylesheet.contains("stage-title-arrival"));
+        assertTrue(stylesheet.contains("stage-title-backlit"));
+        assertTrue(stylesheet.contains("--backlight-tilt: -42deg"));
+        assertTrue(stylesheet.contains("calc(var(--intro-backlight-drop) - 50%)"));
         assertTrue(stylesheet.contains("translate3d(0, 100px, 0)"));
         assertTrue(stylesheet.contains("animation-delay: 450ms"));
         assertTrue(stylesheet.contains("stage-carousel-arrival 880ms"));
@@ -214,7 +219,10 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("detailPhase: Math.random()"));
         assertTrue(javascript.contains("speed: 3.2 + Math.random() * 1.6"));
         assertTrue(javascript.contains("targetLevel > profile.level ? attackResponse : releaseResponse"));
-        assertTrue(javascript.contains("const introRestHeight = 2"));
+        assertTrue(javascript.contains("const introRestPixels = 2"));
+        assertTrue(javascript.contains("const setIntroRestScale = (index) =>"));
+        assertTrue(javascript.contains("introRestPixels / holderHeight"));
+        assertTrue(javascript.contains("holder.classList.add(\"is-intro-rest\")"));
         assertTrue(javascript.contains("const prepareIntro = () =>"));
         assertTrue(javascript.contains("const revealBar = (index) =>"));
         assertTrue(javascript.contains("const pulse = (strength) =>"));

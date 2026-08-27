@@ -6,7 +6,7 @@
         return;
     }
 
-    const storageKey = "yls.stage-intro.v1.seen";
+    const storageKey = "yls.stage-intro.v2.seen";
     const queryMode = new URLSearchParams(window.location.search).get("intro");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const lightStagger = 150;
@@ -14,16 +14,16 @@
     const timings = Object.freeze({
         lightStart: 1000,
         lightSweepDuration: 1650,
-        titleStart: 3000,
-        firstImpact: 3912,
-        secondImpact: 4425,
-        thirdImpact: 4729,
-        titleSettled: 4900,
-        rigLive: 6285,
-        buttonsStart: 6385,
-        buttonsReady: 7435,
-        carouselStart: 9285,
-        carouselReady: 10165
+        aimStart: 3000,
+        aimTransitionDuration: 900,
+        titleBacklit: 3900,
+        equalizerLive: 5550,
+        rigLive: 5650,
+        buttonsStart: 5750,
+        buttonsReady: 6800,
+        carouselStart: 8650,
+        carouselReady: 9530,
+        sceneComplete: 10000
     });
 
     const readSeenMarker = () => {
@@ -91,17 +91,23 @@
             "stage-title-flight",
             "stage-title-reflected",
             "stage-title-settled",
+            "stage-title-backlit",
             "stage-buttons-enter",
             "stage-carousel-enter"
         );
-        body.classList.add("stage-intro-complete", "stage-rig-live");
+        body.classList.add("stage-intro-complete", "stage-rig-live", "stage-backlight-live");
         body.dataset.stageScene = "complete";
         body.dataset.stageIntroMode = mode;
-        stageLights.forEach((light) => light.classList.remove("is-intro-lit", "is-aimed"));
+        stageLights.forEach((light) => {
+            light.classList.remove("is-intro-lit");
+            light.classList.add("is-aimed");
+        });
         setInteractive(navigation, true);
         setInteractive(carousel, true);
-        equalizerApi?.showLive();
-        carouselApi?.showImmediately();
+        if (!sceneStarted) {
+            equalizerApi?.showLive();
+            carouselApi?.showImmediately();
+        }
     };
 
     const stageIntro = {
@@ -151,7 +157,7 @@
                 light.classList.add("is-intro-lit");
             });
 
-            addEvent(timings.firstImpact + index * lightStagger, () => {
+            addEvent(timings.aimStart + index * lightStagger, () => {
                 light.classList.add("is-aimed");
             });
         });
@@ -164,17 +170,8 @@
             addEvent(revealAt, () => equalizerApi?.revealBar(index));
         }
 
-        addEvent(timings.titleStart, () => body.classList.add("stage-title-flight"));
-        addEvent(timings.firstImpact, () => {
-            body.classList.add("stage-title-reflected");
-            equalizerApi?.pulse(0.72);
-        });
-        addEvent(timings.secondImpact, () => equalizerApi?.pulse(0.48));
-        addEvent(timings.thirdImpact, () => equalizerApi?.startLive(0.34));
-        addEvent(timings.titleSettled, () => {
-            body.classList.remove("stage-title-flight");
-            body.classList.add("stage-title-settled");
-        });
+        addEvent(timings.titleBacklit, () => body.classList.add("stage-title-backlit"));
+        addEvent(timings.equalizerLive, () => equalizerApi?.startLive());
         addEvent(timings.rigLive, () => body.classList.add("stage-rig-live"));
         addEvent(timings.buttonsStart, () => body.classList.add("stage-buttons-enter"));
         addEvent(timings.buttonsReady, () => setInteractive(navigation, true));
@@ -188,8 +185,8 @@
         addEvent(timings.carouselReady, () => {
             carouselApi?.finishReveal();
             maybeRememberIntro();
-            showFinalState("completed");
         });
+        addEvent(timings.sceneComplete, () => showFinalState("completed"));
 
         timeline.sort((left, right) => left.at - right.at);
     };

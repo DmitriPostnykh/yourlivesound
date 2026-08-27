@@ -25,7 +25,7 @@
     const minimumDepthScale = 0.5;
     const depthCurve = 1.35;
     const maximumDepthLift = 34;
-    const introRestHeight = 2;
+    const introRestPixels = 2;
     const introPulseDuration = 520;
     // Show the central segment of a larger circle so the projected arc stays rounded without sharp ends.
     const arcRadiusFactor = 1.35;
@@ -53,6 +53,7 @@
     let introPulsePreviousTimestamp = null;
     let introPulseStrength = 0;
     let introMode = Boolean(stageIntro?.shouldPlay);
+    let introAtRest = true;
     let liveImpulseStartedAt = null;
     let liveImpulseStrength = 0;
 
@@ -223,6 +224,9 @@
             envelopeFrameId = null;
             syncTitleFloorGap();
             buildPerspectiveEnvelope();
+            if (introMode && introAtRest) {
+                setIntroRestHeights();
+            }
         });
     };
 
@@ -284,6 +288,23 @@
         reflections[index].style.transform = value;
         bars[index].style.setProperty("--bar-top-left-inset", "0px");
         bars[index].style.setProperty("--bar-top-right-inset", "0px");
+    };
+
+    const setIntroRestScale = (index) => {
+        const holderHeight = barHolders[index]?.getBoundingClientRect().height ?? 0;
+        const scale = holderHeight > 0
+            ? Math.min(1, introRestPixels / holderHeight)
+            : introRestPixels / maximumHeight;
+        const value = `translateZ(0) scaleY(${scale.toFixed(4)})`;
+        currentHeights[index] = scale * maximumHeight;
+        bars[index].style.transform = value;
+        reflections[index].style.transform = value;
+        bars[index].style.setProperty("--bar-top-left-inset", "0px");
+        bars[index].style.setProperty("--bar-top-right-inset", "0px");
+    };
+
+    const setIntroRestHeights = () => {
+        bars.forEach((_, index) => setIntroRestScale(index));
     };
 
     const setStaticHeights = () => {
@@ -376,8 +397,8 @@
             motionProfiles.forEach((profile, index) => {
                 const individualAmplitude = 0.72
                     + 0.28 * ((Math.sin(profile.phase + index * 0.37) + 1) / 2);
-                const height = introRestHeight
-                    + (maximumHeight - introRestHeight)
+                const height = introRestPixels
+                    + (maximumHeight - introRestPixels)
                     * introPulseStrength
                     * individualAmplitude
                     * lift;
@@ -385,7 +406,10 @@
             });
 
             if (progress >= 1) {
-                bars.forEach((_, index) => setIntroBarScale(index, introRestHeight));
+                introAtRest = true;
+                barHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+                reflectionHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+                setIntroRestHeights();
                 introPulseFrameId = null;
                 return;
             }
@@ -405,9 +429,12 @@
         introMode = true;
         stop();
         cancelIntroPulse();
+        introAtRest = true;
         barHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
         reflectionHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
-        bars.forEach((_, index) => setIntroBarScale(index, introRestHeight));
+        barHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+        reflectionHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+        setIntroRestHeights();
     };
 
     const revealBar = (index) => {
@@ -417,6 +444,9 @@
 
     const pulse = (strength) => {
         cancelIntroPulse();
+        introAtRest = false;
+        barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
+        reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
         introPulseStrength = Math.min(1, Math.max(0, strength));
         introPulseFrameId = window.requestAnimationFrame(renderIntroPulse);
     };
@@ -424,7 +454,10 @@
     const startLive = (initialImpulse = 0) => {
         cancelIntroPulse();
         introMode = false;
+        introAtRest = false;
         revealAllBars();
+        barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
+        reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
         motionProfiles.forEach((profile, index) => {
             profile.level = Math.min(
                 1,
@@ -439,8 +472,11 @@
 
     const showLive = () => {
         introMode = false;
+        introAtRest = false;
         cancelIntroPulse();
         revealAllBars();
+        barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
+        reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
         liveImpulseStartedAt = null;
         liveImpulseStrength = 0;
         syncMotion();
