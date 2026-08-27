@@ -21,7 +21,6 @@
         aimStart: 1000,
         aimTransitionDuration: 1200,
         titleBacklit: 4800,
-        rigLive: 7200,
         buttonsStart: 7300,
         buttonsReady: 8350,
         carouselStart: 10300,
@@ -119,6 +118,14 @@
         };
     };
 
+    const sourceGlareScaleFor = (index) => {
+        const lightNumber = index + 1;
+        if (lightNumber < 4 || lightNumber > 12) {
+            return 1;
+        }
+        return lightNumber <= 7 ? lightNumber - 2 : 13 - lightNumber;
+    };
+
     const applyStageLightMotion = (index, rawProgress) => {
         const light = stageLights[index];
         const geometry = lightGeometries[index];
@@ -128,11 +135,12 @@
 
         const progress = clamp(rawProgress);
         const floorSpot = floorSpots[index];
+        const sourceGlareSize = sourceGlareScaleFor(index);
         let beamPoint = {x: geometry.source.x, y: geometry.source.y + 1};
         let beamOpacity = 0;
         let beamLengthScale = 0.025;
         let sourceGlareOpacity = 0.94;
-        let sourceGlareScale = 1;
+        let sourceGlareScale = sourceGlareSize;
         let sourceGlareShiftX = 0;
         let sourceGlareShiftY = 0;
         let lightAngle = null;
@@ -160,7 +168,11 @@
                 collapseProgress
             );
             sourceGlareOpacity = 0.94 * (1 - collapseProgress);
-            sourceGlareScale = lerp(1, 0.72, collapseProgress);
+            sourceGlareScale = lerp(
+                sourceGlareSize,
+                sourceGlareSize * 0.72,
+                collapseProgress
+            );
             sourceGlareShiftY = geometry.sourceGlareRadius
                 * sourceGlareScale
                 * collapseProgress;
@@ -186,7 +198,7 @@
             beamLengthScale = clamp(lightVector.distance / geometry.maxDistance, 0.025, 1);
             beamOpacity = lerp(0.52, 0.8, easeOut(screenProgress));
             sourceGlareOpacity = 0;
-            sourceGlareScale = 0.16;
+            sourceGlareScale = sourceGlareSize * 0.16;
             sourceGlareShiftX = 0;
             sourceGlareShiftY = 0;
         } else if (progress >= screenSweepRatio) {
@@ -227,7 +239,7 @@
                 * floorSpotOpacityMultiplier;
             floorSpotTransform = `translate3d(${beamPoint.x.toFixed(3)}px, ${beamPoint.y.toFixed(3)}px, 0) translate3d(-50%, -50%, 0) rotate(${floorRotation.toFixed(3)}deg) scale3d(${floorScaleX.toFixed(4)}, ${floorScaleY.toFixed(4)}, 1)`;
             sourceGlareOpacity = 0;
-            sourceGlareScale = 0.16;
+            sourceGlareScale = sourceGlareSize * 0.16;
             sourceGlareShiftX = 0;
             sourceGlareShiftY = 0;
         }
@@ -541,6 +553,7 @@
         });
 
         const equalizerWaveStartAt = timings.lightStart;
+        const movingLightsStartAt = timings.lightStart + lightCascadeDuration;
         const equalizerLiveAt = Math.max(
             finalTitleRevealAt,
             equalizerWaveStartAt + (equalizerApi?.introWaveDuration ?? 0)
@@ -549,7 +562,7 @@
         addEvent(equalizerWaveStartAt, () => equalizerApi?.startIntroWave());
         addEvent(timings.titleBacklit, () => body.classList.add("stage-title-backlit"));
         addEvent(equalizerLiveAt, () => equalizerApi?.startLive());
-        addEvent(timings.rigLive, () => body.classList.add("stage-rig-live"));
+        addEvent(movingLightsStartAt, () => body.classList.add("stage-rig-live"));
         addEvent(timings.buttonsStart, () => body.classList.add("stage-buttons-enter"));
         addEvent(timings.buttonsReady, () => setInteractive(navigation, true));
         addEvent(timings.carouselStart, () => {

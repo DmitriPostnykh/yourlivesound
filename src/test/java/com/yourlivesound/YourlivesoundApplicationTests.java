@@ -125,6 +125,7 @@ class YourlivesoundApplicationTests {
         assertFalse(javascript.contains("equalizerWaveThreshold"));
         assertTrue(javascript.contains("const sourceCollapseRatio = 0.3"));
         assertTrue(javascript.contains("const sourceTurnPathRatio = 0.18"));
+        assertFalse(javascript.contains("rigLive: 7200"));
         assertTrue(javascript.contains("const screenSweepRatio = 0.52"));
         assertTrue(javascript.contains("const seenThreshold = 10000"));
         assertTrue(javascript.contains("document.fonts?.ready"));
@@ -141,6 +142,8 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("+ lightCascadeDuration"));
         assertTrue(javascript.contains("lightCascadeDuration,"));
         assertTrue(javascript.contains("const equalizerWaveStartAt = timings.lightStart;"));
+        assertTrue(javascript.contains("const movingLightsStartAt = timings.lightStart + lightCascadeDuration"));
+        assertTrue(javascript.contains("addEvent(movingLightsStartAt, () => body.classList.add(\"stage-rig-live\"))"));
         assertFalse(javascript.contains("equalizerApi?.revealBar"));
         assertTrue(javascript.contains("equalizerWaveStartAt + (equalizerApi?.introWaveDuration ?? 0)"));
         assertTrue(javascript.contains("addEvent(equalizerWaveStartAt, () => equalizerApi?.startIntroWave())"));
@@ -174,7 +177,12 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("const edgeExitX = source.x"));
         assertTrue(javascript.contains("x: lerp(centralPathX, edgeExitX, edgeInfluence)"));
         assertTrue(javascript.contains("let sourceGlareShiftX = 0"));
+        assertTrue(javascript.contains("const sourceGlareScaleFor = (index) =>"));
+        assertTrue(javascript.contains("lightNumber < 4 || lightNumber > 12"));
+        assertTrue(javascript.contains("lightNumber <= 7 ? lightNumber - 2 : 13 - lightNumber"));
+        assertTrue(javascript.contains("const sourceGlareSize = sourceGlareScaleFor(index)"));
         assertTrue(javascript.contains("sourceGlareOpacity = 0.94 * (1 - collapseProgress)"));
+        assertTrue(javascript.contains("sourceGlareSize * 0.72"));
         assertTrue(javascript.contains("sourceGlareShiftY = geometry.sourceGlareRadius"));
         assertTrue(javascript.contains("* sourceGlareScale"));
         assertTrue(javascript.contains("const sourceGlareDiameter = Number.parseFloat"));
