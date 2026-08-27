@@ -13,17 +13,17 @@
     const seenThreshold = 10000;
     const timings = Object.freeze({
         lightStart: 1000,
-        lightSweepDuration: 1650,
-        aimStart: 3000,
+        lightSweepDuration: 2100,
+        aimStart: 3200,
         aimTransitionDuration: 900,
-        titleBacklit: 3900,
-        equalizerLive: 5550,
-        rigLive: 5650,
-        buttonsStart: 5750,
-        buttonsReady: 6800,
-        carouselStart: 8650,
-        carouselReady: 9530,
-        sceneComplete: 10000
+        titleBacklit: 4100,
+        equalizerLive: 6200,
+        rigLive: 6300,
+        buttonsStart: 6400,
+        buttonsReady: 7450,
+        carouselStart: 9300,
+        carouselReady: 10180,
+        sceneComplete: 10180
     });
 
     const readSeenMarker = () => {
@@ -47,6 +47,8 @@
     const forceSkip = queryMode === "skip";
     const shouldPlay = !reducedMotion.matches && !forceSkip && (forceReplay || !hasSeenIntro);
     const stageLights = Array.from(document.querySelectorAll(".stage-light"));
+    const stageRig = document.querySelector(".stage-lights");
+    const title = document.querySelector("#site-title");
     const navigation = document.querySelector(".site-navigation");
     const carousel = document.querySelector("[data-quote-carousel]");
     let equalizerApi = null;
@@ -58,8 +60,85 @@
     let elapsed = 0;
     let previousTimestamp = null;
     let sceneFrameId = null;
+    let targetSyncFrameId = null;
     let nextEventIndex = 0;
     let timeline = [];
+
+    const getTitleTargetCenters = () => {
+        if (!title) {
+            return [];
+        }
+
+        const words = Array.from(title.querySelectorAll(":scope > span"));
+        const targetCenters = [];
+        const range = document.createRange();
+
+        words.forEach((word, wordIndex) => {
+            const textNode = Array.from(word.childNodes).find((node) => (
+                node.nodeType === Node.TEXT_NODE && node.textContent.length > 0
+            ));
+
+            if (textNode) {
+                for (let characterIndex = 0; characterIndex < textNode.textContent.length; characterIndex += 1) {
+                    range.setStart(textNode, characterIndex);
+                    range.setEnd(textNode, characterIndex + 1);
+                    const characterRect = range.getBoundingClientRect();
+                    targetCenters.push(characterRect.left + characterRect.width / 2);
+                }
+            }
+
+            const nextWord = words[wordIndex + 1];
+            if (nextWord) {
+                const wordRect = word.getBoundingClientRect();
+                const nextWordRect = nextWord.getBoundingClientRect();
+                targetCenters.push((wordRect.right + nextWordRect.left) / 2);
+            }
+        });
+
+        range.detach?.();
+        return targetCenters;
+    };
+
+    const syncStageLightTargets = () => {
+        if (!stageRig || !title || stageLights.length === 0) {
+            return;
+        }
+
+        const stageRigRect = stageRig.getBoundingClientRect();
+        const titleRect = title.getBoundingClientRect();
+        if (stageRigRect.width === 0 || titleRect.width === 0) {
+            return;
+        }
+
+        const measuredCenters = getTitleTargetCenters();
+        const targetCenters = measuredCenters.length === stageLights.length
+            ? measuredCenters
+            : stageLights.map((_, index) => (
+                titleRect.left + titleRect.width * ((index + 0.5) / stageLights.length)
+            ));
+        const targetY = titleRect.top + titleRect.height * 0.52;
+        const backlightDrop = Math.max(0, targetY - stageRigRect.top);
+
+        stageLights.forEach((light, index) => {
+            const targetX = ((targetCenters[index] - stageRigRect.left) / stageRigRect.width) * 100;
+            light.style.setProperty("--light-x", `${Math.min(100, Math.max(0, targetX))}%`);
+            light.style.setProperty("--intro-backlight-drop", `${backlightDrop}px`);
+            light.style.setProperty("--backlight-tilt", "0deg");
+        });
+    };
+
+    const scheduleStageLightTargetSync = () => {
+        if (targetSyncFrameId !== null) {
+            window.cancelAnimationFrame(targetSyncFrameId);
+        }
+
+        targetSyncFrameId = window.requestAnimationFrame(() => {
+            targetSyncFrameId = window.requestAnimationFrame(() => {
+                targetSyncFrameId = null;
+                syncStageLightTargets();
+            });
+        });
+    };
 
     const setInteractive = (element, interactive) => {
         if (!element) {
@@ -83,6 +162,7 @@
     };
 
     const showFinalState = (mode) => {
+        syncStageLightTargets();
         finalStateShown = true;
         body.classList.remove(
             "stage-intro-pending",
@@ -217,6 +297,7 @@
         }
 
         sceneStarted = true;
+        syncStageLightTargets();
         buildTimeline();
         body.classList.remove("stage-intro-pending");
         body.classList.add("stage-intro-playing");
@@ -255,6 +336,9 @@
         previousTimestamp = null;
         body.classList.toggle("stage-intro-paused", document.hidden && sceneStarted && !finalStateShown);
     });
+
+    window.addEventListener("resize", scheduleStageLightTargetSync, {passive: true});
+    document.fonts?.ready.then(scheduleStageLightTargetSync);
 
     Promise.allSettled([
         waitForWindowLoad(),

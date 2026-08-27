@@ -283,7 +283,7 @@
     transform: translateX(-50%);
 }
 
-.moving-head:nth-child(13) {
+.moving-head:nth-child(16) {
     --head-x: 8.25%;
     --head-angle-a: -7deg;
     --head-angle-b: -31deg;
@@ -295,7 +295,7 @@
     animation-delay: -7.2s, -1.3s, -9.4s;
 }
 
-.moving-head:nth-child(14) {
+.moving-head:nth-child(17) {
     --head-x: 16.75%;
     --head-angle-a: -5deg;
     --head-angle-b: -27deg;
@@ -307,7 +307,7 @@
     animation-delay: -3.4s, -3.1s, -6.8s;
 }
 
-.moving-head:nth-child(15) {
+.moving-head:nth-child(18) {
     --head-x: 25.25%;
     --head-angle-a: -3deg;
     --head-angle-b: -23deg;
@@ -319,7 +319,7 @@
     animation-delay: -9.1s, -2.6s, -4.3s;
 }
 
-.moving-head:nth-child(16) {
+.moving-head:nth-child(19) {
     --head-x: 33.75%;
     --head-angle-a: -1deg;
     --head-angle-b: -19deg;
@@ -331,7 +331,7 @@
     animation-delay: -5.8s, -4.2s, -12.2s;
 }
 
-.moving-head:nth-child(17) {
+.moving-head:nth-child(20) {
     --head-x: 42.25%;
     --head-angle-a: 5deg;
     --head-angle-b: -15deg;
@@ -343,7 +343,7 @@
     animation-delay: -2.5s, -0.7s, -7.1s;
 }
 
-.moving-head:nth-child(18) {
+.moving-head:nth-child(21) {
     --head-x: 50%;
     --head-angle-a: 9deg;
     --head-angle-b: -11deg;
@@ -355,7 +355,7 @@
     animation-delay: -8.4s, -3.8s, -10.6s;
 }
 
-.moving-head:nth-child(19) {
+.moving-head:nth-child(22) {
     --head-x: 57.75%;
     --head-angle-a: -9deg;
     --head-angle-b: 11deg;
@@ -367,7 +367,7 @@
     animation-delay: -6.7s, -2.1s, -5.2s;
 }
 
-.moving-head:nth-child(20) {
+.moving-head:nth-child(23) {
     --head-x: 66.25%;
     --head-angle-a: -5deg;
     --head-angle-b: 15deg;
@@ -379,7 +379,7 @@
     animation-delay: -4.1s, -4.7s, -8.3s;
 }
 
-.moving-head:nth-child(21) {
+.moving-head:nth-child(24) {
     --head-x: 74.75%;
     --head-angle-a: 1deg;
     --head-angle-b: 19deg;
@@ -391,7 +391,7 @@
     animation-delay: -9.6s, -1.6s, -13.4s;
 }
 
-.moving-head:nth-child(22) {
+.moving-head:nth-child(25) {
     --head-x: 83.25%;
     --head-angle-a: 3deg;
     --head-angle-b: 23deg;
@@ -403,7 +403,7 @@
     animation-delay: -3.2s, -3.5s, -6.1s;
 }
 
-.moving-head:nth-child(23) {
+.moving-head:nth-child(26) {
     --head-x: 91.75%;
     --head-angle-a: 5deg;
     --head-angle-b: 27deg;

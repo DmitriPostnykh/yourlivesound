@@ -128,8 +128,17 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("if (!document.hidden)"));
         assertTrue(javascript.contains("queryMode === \"replay\""));
         assertTrue(javascript.contains("queryMode === \"skip\""));
-        assertTrue(javascript.contains("aimStart: 3000"));
-        assertTrue(javascript.contains("equalizerLive: 5550"));
+        assertTrue(javascript.contains("lightSweepDuration: 2100"));
+        assertTrue(javascript.contains("aimStart: 3200"));
+        assertTrue(javascript.contains("equalizerLive: 6200"));
+        assertTrue(javascript.contains("const getTitleTargetCenters = () =>"));
+        assertTrue(javascript.contains("range.setStart(textNode, characterIndex)"));
+        assertTrue(javascript.contains("measuredCenters.length === stageLights.length"));
+        assertTrue(javascript.contains("light.style.setProperty(\"--light-x\""));
+        assertTrue(javascript.contains("light.style.setProperty(\"--intro-backlight-drop\""));
+        assertTrue(javascript.contains("light.style.setProperty(\"--backlight-tilt\", \"0deg\")"));
+        assertTrue(javascript.contains("const scheduleStageLightTargetSync = () =>"));
+        assertTrue(javascript.contains("window.addEventListener(\"resize\", scheduleStageLightTargetSync"));
         assertTrue(javascript.contains("equalizerApi?.startLive()"));
         assertFalse(javascript.contains("equalizerApi?.pulse("));
         assertTrue(javascript.contains("carouselApi?.beginReveal()"));
@@ -137,7 +146,8 @@ class YourlivesoundApplicationTests {
 
         assertFalse(stylesheet.contains("stage-title-arrival"));
         assertTrue(stylesheet.contains("stage-title-backlit"));
-        assertTrue(stylesheet.contains("--backlight-tilt: -42deg"));
+        assertTrue(stylesheet.contains("color: #044361"));
+        assertTrue(stylesheet.contains("z-index: 2"));
         assertTrue(stylesheet.contains("calc(var(--intro-backlight-drop) - 50%)"));
         assertTrue(stylesheet.contains("translate3d(0, 100px, 0)"));
         assertTrue(stylesheet.contains("animation-delay: 450ms"));
@@ -193,7 +203,7 @@ class YourlivesoundApplicationTests {
                 .getResponse()
                 .getContentAsString();
 
-        assertEquals(12, html.split("class=\"stage-light\"", -1).length - 1);
+        assertEquals(15, html.split("class=\"stage-light\"", -1).length - 1);
         assertEquals(11, html.split("class=\"moving-head\"", -1).length - 1);
         assertEquals(72, html.split("class=\"stage-strobe\"", -1).length - 1);
     }
