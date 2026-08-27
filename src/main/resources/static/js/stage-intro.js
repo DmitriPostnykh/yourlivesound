@@ -169,7 +169,7 @@
                 clamp((collapseProgress - 0.06) / 0.82)
             );
             beamLengthScale = clamp(lightVector.distance / geometry.maxDistance, 0.025, 1);
-            beamOpacity = 0.26 * beamRevealProgress;
+            beamOpacity = 0.52 * beamRevealProgress;
         } else if (progress >= sourceCollapseRatio && progress < screenSweepRatio) {
             const screenProgress = easeInOut(
                 (progress - sourceCollapseRatio)
@@ -184,7 +184,7 @@
             );
             const lightVector = vectorFromSource(geometry.source, beamPoint);
             beamLengthScale = clamp(lightVector.distance / geometry.maxDistance, 0.025, 1);
-            beamOpacity = lerp(0.26, 0.4, easeOut(screenProgress));
+            beamOpacity = lerp(0.52, 0.8, easeOut(screenProgress));
             sourceGlareOpacity = 0;
             sourceGlareScale = 0.16;
             sourceGlareShiftX = 0;
@@ -217,7 +217,7 @@
             );
             const lightVector = vectorFromSource(geometry.source, beamPoint);
             beamLengthScale = clamp(lightVector.distance / geometry.maxDistance, 0.025, 1);
-            beamOpacity = lerp(0.4, 0.34, easedFloorProgress);
+            beamOpacity = lerp(0.8, 0.68, easedFloorProgress);
             const floorPlaneProgress = clamp(
                 (geometry.stageBoundaryY - beamPoint.y)
                     / geometry.floorRevealDistance
@@ -320,7 +320,7 @@
             const maximumVector = [screenExit, floorStart, target]
                 .map((point) => vectorFromSource(source, point).distance)
                 .reduce((maximum, distance) => Math.max(maximum, distance), 1);
-            const maximumBeamWidth = clamp(maximumVector * 0.22, 104, 244);
+            const maximumBeamWidth = clamp(maximumVector * 0.11, 52, 122);
             const floorStartRotation = (direction < 0 ? -6 : 6) * edgeInfluence;
             const sourceGlareDiameter = Number.parseFloat(
                 window.getComputedStyle(light, "::before").width
