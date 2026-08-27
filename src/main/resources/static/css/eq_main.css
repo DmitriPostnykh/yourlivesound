@@ -1,6 +1,6 @@
 .equalizer {
-    --perspective-arc-height: clamp(2.04rem, 6svh, 3.68rem);
-    --equalizer-bar-height: clamp(6rem, 18svh, 11rem);
+    --perspective-arc-height: 9.5%;
+    --equalizer-bar-height: 29%;
     --mirror-floor-y: 50%;
     --title-floor-correction: max(0px, calc(0.14em - 5px));
     width: 100%;
@@ -31,10 +31,10 @@
 }
 
 .stage-lights {
-    width: min(88vw, 1160px);
-    height: clamp(9rem, 28svh, 17rem);
+    width: min(88%, 1160px);
+    height: 43%;
     position: absolute;
-    top: calc(50% - var(--equalizer-bar-height) - clamp(3rem, 8svh, 5rem));
+    top: 8.5%;
     left: 50%;
     z-index: 0;
     overflow: visible;
@@ -109,14 +109,14 @@
 }
 
 .stage-light:nth-child(2) {
-    --light-x: 12.5%;
+    --light-x: 10.571%;
     --light-tilt: -9deg;
     --light-duration: 6.3s;
     animation-delay: -1.7s;
 }
 
 .stage-light:nth-child(3) {
-    --light-x: 21%;
+    --light-x: 17.143%;
     --light-tilt: -7deg;
     --light-opacity: 0.1;
     --light-mid-opacity: 0.16;
@@ -126,14 +126,14 @@
 }
 
 .stage-light:nth-child(4) {
-    --light-x: 29.5%;
+    --light-x: 23.714%;
     --light-tilt: -5deg;
     --light-duration: 5.9s;
     animation-delay: -2.8s;
 }
 
 .stage-light:nth-child(5) {
-    --light-x: 38%;
+    --light-x: 30.286%;
     --light-tilt: -3deg;
     --light-opacity: 0.11;
     --light-mid-opacity: 0.17;
@@ -143,7 +143,7 @@
 }
 
 .stage-light:nth-child(6) {
-    --light-x: 46.5%;
+    --light-x: 36.857%;
     --light-tilt: -1deg;
     --light-opacity: 0.12;
     --light-mid-opacity: 0.18;
@@ -153,7 +153,7 @@
 }
 
 .stage-light:nth-child(7) {
-    --light-x: 53.5%;
+    --light-x: 43.429%;
     --light-tilt: 1deg;
     --light-opacity: 0.12;
     --light-mid-opacity: 0.18;
@@ -163,7 +163,7 @@
 }
 
 .stage-light:nth-child(8) {
-    --light-x: 62%;
+    --light-x: 50%;
     --light-tilt: 3deg;
     --light-opacity: 0.11;
     --light-mid-opacity: 0.17;
@@ -173,14 +173,14 @@
 }
 
 .stage-light:nth-child(9) {
-    --light-x: 70.5%;
+    --light-x: 56.571%;
     --light-tilt: 5deg;
     --light-duration: 8.7s;
     animation-delay: -4.7s;
 }
 
 .stage-light:nth-child(10) {
-    --light-x: 79%;
+    --light-x: 63.143%;
     --light-tilt: 7deg;
     --light-opacity: 0.1;
     --light-mid-opacity: 0.16;
@@ -190,20 +190,47 @@
 }
 
 .stage-light:nth-child(11) {
-    --light-x: 87.5%;
+    --light-x: 69.714%;
     --light-tilt: 9deg;
     --light-duration: 7.1s;
     animation-delay: -6.5s;
 }
 
 .stage-light:nth-child(12) {
-    --light-x: 96%;
+    --light-x: 76.286%;
     --light-tilt: 11deg;
     --light-opacity: 0.07;
     --light-mid-opacity: 0.1;
     --light-peak-opacity: 0.15;
     --light-duration: 8.3s;
     animation-delay: -3.2s;
+}
+
+.stage-light:nth-child(13) {
+    --light-x: 82.857%;
+    --light-tilt: 7deg;
+    --light-opacity: 0.1;
+    --light-mid-opacity: 0.16;
+    --light-peak-opacity: 0.22;
+    --light-duration: 7.3s;
+    animation-delay: -5.3s;
+}
+
+.stage-light:nth-child(14) {
+    --light-x: 89.429%;
+    --light-tilt: 9deg;
+    --light-duration: 6.3s;
+    animation-delay: -1.7s;
+}
+
+.stage-light:nth-child(15) {
+    --light-x: 96%;
+    --light-tilt: 11deg;
+    --light-opacity: 0.07;
+    --light-mid-opacity: 0.1;
+    --light-peak-opacity: 0.15;
+    --light-duration: 7.9s;
+    animation-delay: -4.1s;
 }
 
 @keyframes stage-light-live {
@@ -283,7 +310,7 @@
     transform: translateX(-50%);
 }
 
-.moving-head:nth-child(13) {
+.moving-head:nth-child(16) {
     --head-x: 8.25%;
     --head-angle-a: -7deg;
     --head-angle-b: -31deg;
@@ -295,7 +322,7 @@
     animation-delay: -7.2s, -1.3s, -9.4s;
 }
 
-.moving-head:nth-child(14) {
+.moving-head:nth-child(17) {
     --head-x: 16.75%;
     --head-angle-a: -5deg;
     --head-angle-b: -27deg;
@@ -307,7 +334,7 @@
     animation-delay: -3.4s, -3.1s, -6.8s;
 }
 
-.moving-head:nth-child(15) {
+.moving-head:nth-child(18) {
     --head-x: 25.25%;
     --head-angle-a: -3deg;
     --head-angle-b: -23deg;
@@ -319,7 +346,7 @@
     animation-delay: -9.1s, -2.6s, -4.3s;
 }
 
-.moving-head:nth-child(16) {
+.moving-head:nth-child(19) {
     --head-x: 33.75%;
     --head-angle-a: -1deg;
     --head-angle-b: -19deg;
@@ -331,7 +358,7 @@
     animation-delay: -5.8s, -4.2s, -12.2s;
 }
 
-.moving-head:nth-child(17) {
+.moving-head:nth-child(20) {
     --head-x: 42.25%;
     --head-angle-a: 5deg;
     --head-angle-b: -15deg;
@@ -343,7 +370,7 @@
     animation-delay: -2.5s, -0.7s, -7.1s;
 }
 
-.moving-head:nth-child(18) {
+.moving-head:nth-child(21) {
     --head-x: 50%;
     --head-angle-a: 9deg;
     --head-angle-b: -11deg;
@@ -355,7 +382,7 @@
     animation-delay: -8.4s, -3.8s, -10.6s;
 }
 
-.moving-head:nth-child(19) {
+.moving-head:nth-child(22) {
     --head-x: 57.75%;
     --head-angle-a: -9deg;
     --head-angle-b: 11deg;
@@ -367,7 +394,7 @@
     animation-delay: -6.7s, -2.1s, -5.2s;
 }
 
-.moving-head:nth-child(20) {
+.moving-head:nth-child(23) {
     --head-x: 66.25%;
     --head-angle-a: -5deg;
     --head-angle-b: 15deg;
@@ -379,7 +406,7 @@
     animation-delay: -4.1s, -4.7s, -8.3s;
 }
 
-.moving-head:nth-child(21) {
+.moving-head:nth-child(24) {
     --head-x: 74.75%;
     --head-angle-a: 1deg;
     --head-angle-b: 19deg;
@@ -391,7 +418,7 @@
     animation-delay: -9.6s, -1.6s, -13.4s;
 }
 
-.moving-head:nth-child(22) {
+.moving-head:nth-child(25) {
     --head-x: 83.25%;
     --head-angle-a: 3deg;
     --head-angle-b: 23deg;
@@ -403,7 +430,7 @@
     animation-delay: -3.2s, -3.5s, -6.1s;
 }
 
-.moving-head:nth-child(23) {
+.moving-head:nth-child(26) {
     --head-x: 91.75%;
     --head-angle-a: 5deg;
     --head-angle-b: 27deg;
@@ -540,7 +567,7 @@
 }
 
 .perspective-arc {
-    width: min(84vw, 1100px);
+    width: min(84%, 1100px);
     height: var(--perspective-arc-height);
     position: absolute;
     left: 50%;
@@ -567,7 +594,7 @@
 }
 
 .container {
-    width: min(82vw, 1080px);
+    width: min(82%, 1080px);
     height: var(--equalizer-bar-height);
     display: flex;
     align-items: flex-end;
@@ -708,22 +735,38 @@
     margin: 0;
     display: flex;
     justify-content: center;
-    gap: 0.07em;
+    gap: 0;
     position: absolute;
     right: auto;
     left: 50%;
     z-index: 3;
     color: #f4fbff;
     font-family: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: clamp(2.65rem, 7.8vw, 6.7rem);
+    font-size: clamp(1.85rem, 7.8vw, 6.43rem);
     font-weight: 600;
     line-height: 0.95;
-    letter-spacing: -0.06em;
+    letter-spacing: 0;
     text-align: center;
     text-shadow:
         0 0.1rem 0.2rem rgba(0, 0, 0, 0.42),
         0 0 1.8rem rgba(80, 211, 251, 0.1);
     pointer-events: none;
+}
+
+.title-character {
+    display: block;
+    flex: 0 0 auto;
+    margin-inline-end: -0.06em;
+    color: inherit;
+}
+
+.title-character:last-child {
+    margin-inline-end: 0;
+}
+
+.title-space {
+    width: 0.32em;
+    margin-inline-end: 0;
 }
 
 .title {
@@ -761,35 +804,18 @@
     transform-origin: 50% 100%;
 }
 
-.title span::first-letter {
+.title .title-character.is-word-initial {
     color: #ff5365;
 }
 
-.reflection-title span::first-letter {
+.reflection-title .title-character.is-word-initial {
     color: rgba(255, 83, 101, 0.5);
 }
 
 @media (max-width: 560px) {
     .equalizer {
-        --perspective-arc-height: clamp(1.6rem, 4.7svh, 2.5rem);
-        --equalizer-bar-height: clamp(4.8rem, 14svh, 7.4rem);
         height: clamp(20rem, 55svh, 28rem);
         padding-inline: 0.5rem;
-    }
-
-    .container {
-        width: 92vw;
-    }
-
-    .title,
-    .reflection-title {
-        gap: 0.05em;
-        font-size: clamp(2.3rem, 9.8vw, 3rem);
-        letter-spacing: -0.06em;
-    }
-
-    .perspective-arc {
-        width: 94vw;
     }
 }
 

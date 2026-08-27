@@ -120,16 +120,31 @@ class YourlivesoundApplicationTests {
                 .getResponse()
                 .getContentAsString();
 
-        assertTrue(javascript.contains("yls.stage-intro.v2.seen"));
+        assertTrue(javascript.contains("yls.stage-intro.v3.seen"));
         assertTrue(javascript.contains("const lightStagger = 150"));
+        assertTrue(javascript.contains("const titleRevealDuration = 260"));
         assertTrue(javascript.contains("const seenThreshold = 10000"));
         assertTrue(javascript.contains("document.fonts?.ready"));
         assertTrue(javascript.contains("portrait.loading = \"eager\""));
         assertTrue(javascript.contains("if (!document.hidden)"));
         assertTrue(javascript.contains("queryMode === \"replay\""));
         assertTrue(javascript.contains("queryMode === \"skip\""));
-        assertTrue(javascript.contains("aimStart: 3000"));
-        assertTrue(javascript.contains("equalizerLive: 5550"));
+        assertTrue(javascript.contains("lightSweepDuration: 2100"));
+        assertTrue(javascript.contains("aimStart: 3600"));
+        assertTrue(javascript.contains("equalizerLive: 6600"));
+        assertTrue(javascript.contains("const sourceProgressFor = (index) =>"));
+        assertTrue(javascript.contains("const angle = -Math.atan2(deltaX, deltaY)"));
+        assertTrue(javascript.contains("Math.hypot(deltaX, deltaY)"));
+        assertTrue(javascript.contains("--intro-backlight-distance"));
+        assertTrue(javascript.contains("revealTitleTarget(index)"));
+        assertTrue(javascript.contains("window.addEventListener(\"resize\", scheduleStageLightTargetSync"));
+        assertTrue(javascript.contains("stageTargetResizeObserver = new ResizeObserver"));
+        assertTrue(javascript.contains("stageTargetResizeObserver.observe(stageRig)"));
+        assertTrue(javascript.contains("stageTargetResizeObserver.observe(title)"));
+        assertTrue(
+                javascript.indexOf("stageTargetResizeObserver = new ResizeObserver")
+                        < javascript.indexOf("if (!shouldPlay)"),
+                "Resize tracking must also be active for the already-seen and skip states");
         assertTrue(javascript.contains("equalizerApi?.startLive()"));
         assertFalse(javascript.contains("equalizerApi?.pulse("));
         assertTrue(javascript.contains("carouselApi?.beginReveal()"));
@@ -137,8 +152,10 @@ class YourlivesoundApplicationTests {
 
         assertFalse(stylesheet.contains("stage-title-arrival"));
         assertTrue(stylesheet.contains("stage-title-backlit"));
-        assertTrue(stylesheet.contains("--backlight-tilt: -42deg"));
-        assertTrue(stylesheet.contains("calc(var(--intro-backlight-drop) - 50%)"));
+        assertTrue(stylesheet.contains(".title-character.is-revealed"));
+        assertTrue(stylesheet.contains("color: #f4fbff"));
+        assertTrue(stylesheet.contains("color: #ff5365"));
+        assertTrue(stylesheet.contains("calc(var(--intro-backlight-distance) - 50%)"));
         assertTrue(stylesheet.contains("translate3d(0, 100px, 0)"));
         assertTrue(stylesheet.contains("animation-delay: 450ms"));
         assertTrue(stylesheet.contains("stage-carousel-arrival 880ms"));
@@ -193,9 +210,11 @@ class YourlivesoundApplicationTests {
                 .getResponse()
                 .getContentAsString();
 
-        assertEquals(12, html.split("class=\"stage-light\"", -1).length - 1);
+        assertEquals(15, html.split("class=\"stage-light\"", -1).length - 1);
         assertEquals(11, html.split("class=\"moving-head\"", -1).length - 1);
         assertEquals(72, html.split("class=\"stage-strobe\"", -1).length - 1);
+        assertEquals(15, html.split("data-title-target", -1).length - 1);
+        assertEquals(15, html.split("data-reflection-target", -1).length - 1);
     }
 
     @Test
@@ -218,6 +237,12 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("phase: Math.random()"));
         assertTrue(javascript.contains("detailPhase: Math.random()"));
         assertTrue(javascript.contains("speed: 3.2 + Math.random() * 1.6"));
+        assertTrue(stylesheet.contains("--perspective-arc-height: 9.5%"));
+        assertTrue(stylesheet.contains("--equalizer-bar-height: 29%"));
+        assertTrue(stylesheet.contains("width: min(88%, 1160px)"));
+        assertTrue(stylesheet.contains("height: 43%"));
+        assertTrue(stylesheet.contains("top: 8.5%"));
+        assertTrue(stylesheet.contains("font-size: clamp(1.85rem, 7.8vw, 6.43rem)"));
         assertTrue(javascript.contains("targetLevel > profile.level ? attackResponse : releaseResponse"));
         assertTrue(javascript.contains("const introRestPixels = 2"));
         assertTrue(javascript.contains("const setIntroRestScale = (index) =>"));

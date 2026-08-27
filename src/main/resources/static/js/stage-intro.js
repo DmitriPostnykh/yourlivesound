@@ -6,24 +6,25 @@
         return;
     }
 
-    const storageKey = "yls.stage-intro.v2.seen";
+    const storageKey = "yls.stage-intro.v3.seen";
     const queryMode = new URLSearchParams(window.location.search).get("intro");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const lightStagger = 150;
+    const titleRevealDuration = 260;
     const seenThreshold = 10000;
     const timings = Object.freeze({
         lightStart: 1000,
-        lightSweepDuration: 1650,
-        aimStart: 3000,
+        lightSweepDuration: 2100,
+        aimStart: 3600,
         aimTransitionDuration: 900,
-        titleBacklit: 3900,
-        equalizerLive: 5550,
-        rigLive: 5650,
-        buttonsStart: 5750,
-        buttonsReady: 6800,
-        carouselStart: 8650,
-        carouselReady: 9530,
-        sceneComplete: 10000
+        titleBacklit: 4240,
+        equalizerLive: 6600,
+        rigLive: 6700,
+        buttonsStart: 6800,
+        buttonsReady: 7850,
+        carouselStart: 9700,
+        carouselReady: 10580,
+        sceneComplete: 10580
     });
 
     const readSeenMarker = () => {
@@ -47,6 +48,10 @@
     const forceSkip = queryMode === "skip";
     const shouldPlay = !reducedMotion.matches && !forceSkip && (forceReplay || !hasSeenIntro);
     const stageLights = Array.from(document.querySelectorAll(".stage-light"));
+    const stageRig = document.querySelector(".stage-lights");
+    const title = document.querySelector("#site-title");
+    const titleTargets = Array.from(title?.querySelectorAll("[data-title-target]") ?? []);
+    const reflectionTargets = Array.from(document.querySelectorAll("[data-reflection-target]"));
     const navigation = document.querySelector(".site-navigation");
     const carousel = document.querySelector("[data-quote-carousel]");
     let equalizerApi = null;
@@ -58,8 +63,73 @@
     let elapsed = 0;
     let previousTimestamp = null;
     let sceneFrameId = null;
+    let targetSyncFrameId = null;
+    let stageTargetResizeObserver = null;
     let nextEventIndex = 0;
     let timeline = [];
+
+    const sourceProgressFor = (index) => {
+        if (stageLights.length <= 1) {
+            return 0.5;
+        }
+        return 0.04 + (0.92 * index) / (stageLights.length - 1);
+    };
+
+    const syncStageLightTargets = () => {
+        if (!stageRig || !title || stageLights.length === 0) {
+            return;
+        }
+
+        const stageRigRect = stageRig.getBoundingClientRect();
+        const titleRect = title.getBoundingClientRect();
+        if (stageRigRect.width === 0 || titleRect.width === 0) {
+            return;
+        }
+
+        stageLights.forEach((light, index) => {
+            const sourceProgress = sourceProgressFor(index);
+            const sourceX = stageRigRect.left + stageRigRect.width * sourceProgress;
+            const sourceY = stageRigRect.top;
+            const targetRect = titleTargets[index]?.getBoundingClientRect();
+            const fallbackProgress = (index + 0.5) / stageLights.length;
+            const targetX = targetRect
+                ? targetRect.left + targetRect.width / 2
+                : titleRect.left + titleRect.width * fallbackProgress;
+            const targetY = targetRect
+                ? targetRect.top + targetRect.height * 0.55
+                : titleRect.top + titleRect.height * 0.55;
+            const deltaX = targetX - sourceX;
+            const deltaY = Math.max(1, targetY - sourceY);
+            const angle = -Math.atan2(deltaX, deltaY) * 180 / Math.PI;
+            const distance = Math.hypot(deltaX, deltaY);
+
+            light.style.setProperty("--light-x", `${(sourceProgress * 100).toFixed(3)}%`);
+            light.style.setProperty("--backlight-tilt", `${angle.toFixed(3)}deg`);
+            light.style.setProperty("--intro-backlight-distance", `${distance.toFixed(3)}px`);
+        });
+    };
+
+    const scheduleStageLightTargetSync = () => {
+        if (targetSyncFrameId !== null) {
+            window.cancelAnimationFrame(targetSyncFrameId);
+        }
+
+        targetSyncFrameId = window.requestAnimationFrame(() => {
+            targetSyncFrameId = window.requestAnimationFrame(() => {
+                targetSyncFrameId = null;
+                syncStageLightTargets();
+            });
+        });
+    };
+
+    const revealTitleTarget = (index) => {
+        titleTargets[index]?.classList.add("is-revealed");
+        reflectionTargets[index]?.classList.add("is-revealed");
+    };
+
+    const revealAllTitleTargets = () => {
+        titleTargets.forEach((_, index) => revealTitleTarget(index));
+    };
 
     const setInteractive = (element, interactive) => {
         if (!element) {
@@ -83,6 +153,8 @@
     };
 
     const showFinalState = (mode) => {
+        syncStageLightTargets();
+        revealAllTitleTargets();
         finalStateShown = true;
         body.classList.remove(
             "stage-intro-pending",
@@ -133,6 +205,14 @@
 
     window.yourLiveSoundStageIntro = stageIntro;
 
+    window.addEventListener("resize", scheduleStageLightTargetSync, {passive: true});
+    document.fonts?.ready.then(scheduleStageLightTargetSync);
+    if ("ResizeObserver" in window && stageRig && title) {
+        stageTargetResizeObserver = new ResizeObserver(scheduleStageLightTargetSync);
+        stageTargetResizeObserver.observe(stageRig);
+        stageTargetResizeObserver.observe(title);
+    }
+
     if (!shouldPlay) {
         const mode = reducedMotion.matches
             ? "reduced-motion"
@@ -157,8 +237,12 @@
                 light.classList.add("is-intro-lit");
             });
 
-            addEvent(timings.aimStart + index * lightStagger, () => {
+            const aimAt = timings.aimStart + index * lightStagger;
+            addEvent(aimAt, () => {
                 light.classList.add("is-aimed");
+            });
+            addEvent(aimAt + timings.aimTransitionDuration - titleRevealDuration, () => {
+                revealTitleTarget(index);
             });
         });
 
@@ -217,6 +301,7 @@
         }
 
         sceneStarted = true;
+        syncStageLightTargets();
         buildTimeline();
         body.classList.remove("stage-intro-pending");
         body.classList.add("stage-intro-playing");
