@@ -228,6 +228,7 @@ class YourlivesoundApplicationTests {
         assertEquals(72, html.split("class=\"stage-strobe\"", -1).length - 1);
         assertEquals(15, html.split("data-title-target", -1).length - 1);
         assertEquals(15, html.split("data-reflection-target", -1).length - 1);
+        assertEquals(1, html.split("class=\"stage-front-boundary\"", -1).length - 1);
     }
 
     @Test
@@ -256,6 +257,8 @@ class YourlivesoundApplicationTests {
         assertTrue(stylesheet.contains("height: 43%"));
         assertTrue(stylesheet.contains("top: 8.5%"));
         assertTrue(stylesheet.contains("font-size: clamp(1.85rem, 7.8vw, 6.43rem)"));
+        assertTrue(stylesheet.contains(".stage-front-boundary"));
+        assertTrue(stylesheet.contains("top: 64.5%"));
         for (String midpoint : new String[]{
                 "7.286%", "13.857%", "20.429%", "27%", "33.571%", "40.143%", "46.714%",
                 "53.286%", "59.857%", "66.429%", "73%", "79.571%", "86.143%", "92.714%"

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Раскадровка границы сцены</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: "Avenir Next", "Segoe UI", sans-serif;
+            background: #020c14;
+            color: #f4fbff;
+        }
+
+        body {
+            margin: 0;
+            padding: 32px;
+        }
+
+        header {
+            max-width: 1100px;
+            margin: 0 auto 28px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(24px, 3vw, 42px);
+        }
+
+        p {
+            margin: 0;
+            color: #b9dbe8;
+            line-height: 1.5;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+            max-width: 1546px;
+            margin: 0 auto;
+        }
+
+        figure {
+            margin: 0;
+            overflow: hidden;
+            border: 1px solid rgba(126, 220, 248, 0.28);
+            border-radius: 14px;
+            background: #07344a;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        figcaption {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            padding: 12px 14px 14px;
+        }
+
+        time {
+            flex: 0 0 auto;
+            color: #ffd34f;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        span {
+            color: #c8e4ee;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 18px;
+            }
+
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Граница сцены — раскадровка</h1>
+    <p>Один непрерывный локальный прогон. Жёлтая линия — предлагаемая ближняя к зрителю кромка зеркального пола.</p>
+</header>
+<main>
+    <figure><img src="frame-00-0s.png" alt="Сцена в момент 0 секунд"><figcaption><time>0 с</time><span>Пустая сцена</span></figcaption></figure>
+    <figure><img src="frame-01-1s.png" alt="Сцена в момент 1 секунда"><figcaption><time>1 с</time><span>Начало каскада софитов</span></figcaption></figure>
+    <figure><img src="frame-02-2s.png" alt="Сцена в момент 2 секунды"><figcaption><time>2 с</time><span>Каскад идёт слева направо</span></figcaption></figure>
+    <figure><img src="frame-03-3s.png" alt="Сцена в момент 3 секунды"><figcaption><time>3 с</time><span>Все софиты светят в глаза</span></figcaption></figure>
+    <figure><img src="frame-04-4s.png" alt="Сцена в момент 4 секунды"><figcaption><time>4 с</time><span>Первые лучи опускаются</span></figcaption></figure>
+    <figure><img src="frame-05-5s.png" alt="Сцена в момент 5 секунд"><figcaption><time>5 с</time><span>Проявляется середина названия</span></figcaption></figure>
+    <figure><img src="frame-06-6s.png" alt="Сцена в момент 6 секунд"><figcaption><time>6 с</time><span>Название собрано</span></figcaption></figure>
+    <figure><img src="frame-07-7s.png" alt="Сцена в момент 7 секунд"><figcaption><time>7 с</time><span>Старт эквалайзера и сценического света</span></figcaption></figure>
+</main>
+</body>
+</html>
