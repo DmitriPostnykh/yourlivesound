@@ -13,6 +13,8 @@
     const sourceCollapseRatio = 0.3;
     const sourceTurnPathRatio = 0.18;
     const screenSweepRatio = 0.52;
+    const floorSpotScaleMultiplier = 2;
+    const floorSpotOpacityMultiplier = 0.5;
     const seenThreshold = 10000;
     const timings = Object.freeze({
         lightStart: 1000,
@@ -20,7 +22,6 @@
         aimStart: 1000,
         aimTransitionDuration: 1200,
         titleBacklit: 4800,
-        equalizerLive: 7100,
         rigLive: 7200,
         buttonsStart: 7300,
         buttonsReady: 8350,
@@ -50,6 +51,9 @@
     const forceSkip = queryMode === "skip";
     const shouldPlay = !reducedMotion.matches && !forceSkip && (forceReplay || !hasSeenIntro);
     const stageLights = Array.from(document.querySelectorAll(".stage-light"));
+    const finalTitleRevealAt = timings.aimStart
+        + Math.max(0, stageLights.length - 1) * lightStagger
+        + timings.aimTransitionDuration;
     const stageRig = document.querySelector(".stage-lights");
     const floorSpotLayer = document.querySelector(".stage-floor-spots");
     const floorSpots = Array.from(document.querySelectorAll(".stage-floor-spot"));
@@ -196,12 +200,12 @@
                 geometry.target,
                 easedFloorProgress
             );
-            const floorScaleX = lerp(
+            const floorScaleX = floorSpotScaleMultiplier * lerp(
                 geometry.floorStartScaleX,
                 geometry.floorTargetScaleX,
                 easedFloorProgress
             );
-            const floorScaleY = lerp(
+            const floorScaleY = floorSpotScaleMultiplier * lerp(
                 geometry.floorStartScaleY,
                 geometry.floorTargetScaleY,
                 easedFloorProgress
@@ -219,7 +223,8 @@
                     / geometry.floorRevealDistance
             );
             floorSpotOpacity = easeOut(floorPlaneProgress)
-                * lerp(0.78, 0.66, easedFloorProgress);
+                * lerp(0.78, 0.66, easedFloorProgress)
+                * floorSpotOpacityMultiplier;
             floorSpotTransform = `translate3d(${beamPoint.x.toFixed(3)}px, ${beamPoint.y.toFixed(3)}px, 0) translate3d(-50%, -50%, 0) rotate(${floorRotation.toFixed(3)}deg) scale3d(${floorScaleX.toFixed(4)}, ${floorScaleY.toFixed(4)}, 1)`;
             sourceGlareOpacity = 0;
             sourceGlareScale = 0.16;
@@ -543,7 +548,7 @@
         }
 
         addEvent(timings.titleBacklit, () => body.classList.add("stage-title-backlit"));
-        addEvent(timings.equalizerLive, () => equalizerApi?.startLive());
+        addEvent(finalTitleRevealAt, () => equalizerApi?.startLive());
         addEvent(timings.rigLive, () => body.classList.add("stage-rig-live"));
         addEvent(timings.buttonsStart, () => body.classList.add("stage-buttons-enter"));
         addEvent(timings.buttonsReady, () => setInteractive(navigation, true));
