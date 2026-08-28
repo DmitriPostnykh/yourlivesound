@@ -119,6 +119,8 @@ const createHarness = ({
     const marks = [];
     const animationFrames = new Map();
     const timers = new Map();
+    let storageReads = 0;
+    let storageWrites = 0;
     let clock = 0;
     let nextAnimationFrameId = 1;
     let nextTimerId = 1;
@@ -158,9 +160,12 @@ const createHarness = ({
         innerWidth: 390,
         localStorage: {
             getItem() {
+                storageReads += 1;
                 return seen ? "1" : null;
             },
-            setItem() {}
+            setItem() {
+                storageWrites += 1;
+            }
         },
         location: {search},
         matchMedia() {
@@ -216,6 +221,8 @@ const createHarness = ({
         document,
         marks,
         portraitQueries: () => portraitQueryCount,
+        storageReads: () => storageReads,
+        storageWrites: () => storageWrites,
         runDeadline() {
             const deadline = Array.from(timers.entries())
                 .find(([, timer]) => timer.delay === 2500);
@@ -278,6 +285,20 @@ test("a stalled load or font promise cannot leave the page pending", async () =>
         1,
         "late readiness completion must not start a second scene"
     );
+});
+
+test("a prior seen marker cannot suppress a normal reload", async () => {
+    const harness = createHarness({search: "", seen: true});
+
+    await flushMicrotasks();
+    await harness.runNextAnimationFrame();
+    await harness.runNextAnimationFrame();
+
+    assert.equal(harness.body.dataset.stageIntroMode, "standard");
+    assert.equal(harness.body.dataset.stageScene, "intro");
+    assert.equal(harness.body.classList.contains("stage-intro-playing"), true);
+    assert.equal(harness.storageReads(), 0);
+    assert.equal(harness.storageWrites(), 0);
 });
 
 test("skip mode becomes interactive without waiting for readiness", () => {

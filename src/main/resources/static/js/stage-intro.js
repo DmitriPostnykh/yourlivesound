@@ -6,7 +6,6 @@
         return;
     }
 
-    const storageKey = "yls.stage-intro.v3.seen";
     const queryMode = new URLSearchParams(window.location.search).get("intro");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const lightStagger = 150;
@@ -15,7 +14,6 @@
     const screenSweepRatio = 0.52;
     const floorSpotScaleMultiplier = 2;
     const floorSpotOpacityMultiplier = 0.5;
-    const seenThreshold = 10000;
     const readinessDeadline = 2500;
     const timings = Object.freeze({
         lightStart: 1000,
@@ -49,26 +47,9 @@
 
     markStageEvent("bootstrap");
 
-    const readSeenMarker = () => {
-        try {
-            return window.localStorage.getItem(storageKey) === "1";
-        } catch (_error) {
-            return false;
-        }
-    };
-
-    const writeSeenMarker = () => {
-        try {
-            window.localStorage.setItem(storageKey, "1");
-        } catch (_error) {
-            // A blocked storage API should never prevent the visual scene from completing.
-        }
-    };
-
-    const hasSeenIntro = readSeenMarker();
     const forceReplay = queryMode === "replay";
     const forceSkip = queryMode === "skip";
-    const shouldPlay = !reducedMotion.matches && !forceSkip && (forceReplay || !hasSeenIntro);
+    const shouldPlay = !reducedMotion.matches && !forceSkip;
     const stageLights = Array.from(document.querySelectorAll(".stage-light"));
     const movingHeads = Array.from(document.querySelectorAll(".moving-head"));
     const lightCascadeDuration = Math.max(0, stageLights.length - 1) * lightStagger;
@@ -88,8 +69,6 @@
     let carouselApi = null;
     let sceneStarted = false;
     let finalStateShown = false;
-    let michaelAppeared = false;
-    let markerWritten = hasSeenIntro;
     let elapsed = 0;
     let previousTimestamp = null;
     let sceneFrameId = null;
@@ -436,13 +415,6 @@
         }
     };
 
-    const maybeRememberIntro = () => {
-        if (!markerWritten && elapsed >= seenThreshold && michaelAppeared) {
-            writeSeenMarker();
-            markerWritten = true;
-        }
-    };
-
     const showFinalState = (mode) => {
         lightAimProgress = stageLights.map(() => 1);
         lightMotionComplete = stageLights.map(() => true);
@@ -518,14 +490,12 @@
     if (!shouldPlay) {
         const mode = reducedMotion.matches
             ? "reduced-motion"
-            : forceSkip
-                ? "skip"
-                : "seen";
+            : "skip";
         showFinalState(mode);
         return;
     }
 
-    body.dataset.stageIntroMode = forceReplay ? "replay" : "first-visit";
+    body.dataset.stageIntroMode = forceReplay ? "replay" : "standard";
     setInteractive(navigation, false);
     setInteractive(carousel, false);
 
@@ -610,17 +580,13 @@
             markStageEvent("navigation-ready");
         });
         addEvent(timings.carouselStart, () => {
-            michaelAppeared = true;
             body.classList.add("stage-carousel-enter");
             carouselApi?.beginReveal();
             markStageEvent("carousel-reveal");
-            maybeRememberIntro();
         });
-        addEvent(seenThreshold, maybeRememberIntro);
         addEvent(timings.carouselReady, () => {
             carouselApi?.finishReveal();
             markStageEvent("carousel-ready");
-            maybeRememberIntro();
         });
         addEvent(timings.sceneComplete, () => showFinalState("completed"));
 

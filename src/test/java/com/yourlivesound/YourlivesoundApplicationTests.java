@@ -120,14 +120,15 @@ class YourlivesoundApplicationTests {
                 .getResponse()
                 .getContentAsString();
 
-        assertTrue(javascript.contains("yls.stage-intro.v3.seen"));
+        assertFalse(javascript.contains("yls.stage-intro.v3.seen"));
+        assertFalse(javascript.contains("localStorage"));
         assertTrue(javascript.contains("const lightStagger = 150"));
         assertFalse(javascript.contains("equalizerWaveThreshold"));
         assertTrue(javascript.contains("const sourceCollapseRatio = 0.3"));
         assertTrue(javascript.contains("const sourceTurnPathRatio = 0.18"));
         assertFalse(javascript.contains("rigLive: 7200"));
         assertTrue(javascript.contains("const screenSweepRatio = 0.52"));
-        assertTrue(javascript.contains("const seenThreshold = 10000"));
+        assertFalse(javascript.contains("seenThreshold"));
         assertTrue(javascript.contains("const readinessDeadline = 2500"));
         assertTrue(javascript.contains("document.fonts?.ready"));
         assertFalse(javascript.contains("waitForPortraits"));
@@ -140,6 +141,8 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("if (!document.hidden)"));
         assertTrue(javascript.contains("queryMode === \"replay\""));
         assertTrue(javascript.contains("queryMode === \"skip\""));
+        assertTrue(javascript.contains("const shouldPlay = !reducedMotion.matches && !forceSkip"));
+        assertTrue(javascript.contains("forceReplay ? \"replay\" : \"standard\""));
         assertFalse(javascript.contains("lightSweepDuration"));
         assertTrue(javascript.contains("aimStart: 1000"));
         assertTrue(javascript.contains("aimTransitionDuration: 1200"));
