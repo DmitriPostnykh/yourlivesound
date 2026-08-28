@@ -2,6 +2,16 @@
 
 Spring Boot and Thymeleaf site for [yourlivesound.com](https://yourlivesound.com).
 
+## Учебник Harness для пользователя
+
+Браузерный адрес единого HTML-учебника Harness:
+<file:///Users/dev/.codex/deepseekhurnes/runtime/current/docs/harness-architecture.html>.
+Учебник коротко и по-русски объясняет, как работают агенты, проверки, разрешения,
+среды запуска, модели и способы подключения. Если пользователь просит «дай
+ссылку на учебник Harness», агент возвращает эту кликабельную ссылку, а не
+только пересказ. Учебник объясняет устройство, но не доказывает текущую квоту,
+авторизацию или состояние рабочей среды.
+
 ## Local verification
 
 ```sh
