@@ -85,6 +85,10 @@
     volumeContainer.dataset.equalizerTopSlope = useDynamicTopSlope
         ? "dynamic"
         : "static";
+    volumeContainer.classList.toggle(
+        "uses-mobile-projected-intro-rest",
+        useMobileFrameRate
+    );
 
     const shouldRenderFrame = (timestamp, previousRenderTimestamp) => (
         targetFrameInterval === 0
@@ -221,6 +225,14 @@
             }
             holder.style.setProperty("--bar-left-inset", `${(boundingBottom - bottomLeftY).toFixed(3)}px`);
             holder.style.setProperty("--bar-right-inset", `${(boundingBottom - bottomRightY).toFixed(3)}px`);
+            holder.style.setProperty(
+                "--intro-rest-angle",
+                `${(Math.atan2(bottomRightY - bottomLeftY, rect.width) * 180 / Math.PI).toFixed(3)}deg`
+            );
+            holder.style.setProperty(
+                "--intro-rest-bottom",
+                `${(boundingBottom - (bottomLeftY + bottomRightY) / 2).toFixed(3)}px`
+            );
             reflectionHolders[index].style.setProperty("--reflection-left-inset", `${(bottomLeftY - reflectionTop).toFixed(3)}px`);
             reflectionHolders[index].style.setProperty("--reflection-right-inset", `${(bottomRightY - reflectionTop).toFixed(3)}px`);
         });
