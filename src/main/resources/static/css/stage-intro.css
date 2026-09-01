@@ -349,3 +349,13 @@
 .home-page.stage-intro-paused .quote-carousel {
     animation-play-state: paused !important;
 }
+
+@media (any-pointer: coarse), (max-width: 820px) {
+    .stage-floor-spot,
+    .home-page.stage-intro-playing .stage-floor-spot.is-floor-tracking,
+    .home-page.stage-intro-playing .stage-floor-spot.is-floor-settled,
+    .home-page.stage-intro-complete.stage-backlight-live .stage-floor-spot {
+        -webkit-filter: none;
+        filter: none;
+    }
+}

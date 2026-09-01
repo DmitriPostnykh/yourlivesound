@@ -868,6 +868,11 @@
 }
 
 @media (any-pointer: coarse), (max-width: 820px) {
+    .stage-lights {
+        -webkit-filter: none;
+        filter: none;
+    }
+
     .stage-lights .moving-head {
         --head-color-duration: 36s;
         animation-timing-function:
@@ -875,6 +880,14 @@
             ease-in-out,
             steps(1, end);
         will-change: opacity, transform;
+    }
+
+    .stage-lights .stage-light::after,
+    .stage-lights .moving-head::after,
+    .reflection-container .bar,
+    .reflection-title {
+        -webkit-filter: none;
+        filter: none;
     }
 
     .stage-strobe-line {
