@@ -40,7 +40,16 @@
     const arcEdgeOffset = Math.sqrt(Math.pow(arcRadiusFactor, 2) - 1);
     const arcCenterOffset = arcRadiusFactor - arcEdgeOffset;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const equalizerMode = new URLSearchParams(window.location.search).get("equalizer");
+    const mobilePerformanceQuery = window.matchMedia(
+        "(any-pointer: coarse), (max-width: 820px)"
+    );
+    const queryParameters = new URLSearchParams(window.location.search);
+    const equalizerMode = queryParameters.get("equalizer");
+    const qualityMode = queryParameters.get("quality");
+    const useMobileFrameRate = qualityMode === "mobile"
+        || (qualityMode !== "full" && mobilePerformanceQuery.matches);
+    const targetFrameRate = useMobileFrameRate ? 30 : null;
+    const targetFrameInterval = targetFrameRate === null ? 0 : 1000 / targetFrameRate;
     const requestedFixedHeight = Number.parseFloat(equalizerMode);
     const fixedEnvelopeHeight = equalizerMode === "max"
         ? maximumHeight
@@ -67,6 +76,16 @@
     let introAtRest = true;
     let liveImpulseStartedAt = null;
     let liveImpulseStrength = 0;
+
+    volumeContainer.dataset.equalizerFrameRate = targetFrameRate === null
+        ? "display"
+        : String(targetFrameRate);
+
+    const shouldRenderFrame = (timestamp, previousRenderTimestamp) => (
+        targetFrameInterval === 0
+        || previousRenderTimestamp === null
+        || timestamp - previousRenderTimestamp >= targetFrameInterval - 1
+    );
 
     const depthScaleForDistance = (distanceFromCenter) => minimumDepthScale
         + (1 - minimumDepthScale) * Math.pow(distanceFromCenter, depthCurve);
@@ -358,6 +377,11 @@
     };
 
     const renderFrame = (timestamp) => {
+        if (!shouldRenderFrame(timestamp, previousFrameTimestamp)) {
+            animationFrameId = window.requestAnimationFrame(renderFrame);
+            return;
+        }
+
         const time = timestamp / 1000;
         const deltaSeconds = previousFrameTimestamp === null
             ? 1 / 60
@@ -407,7 +431,9 @@
     };
 
     const renderIntroPulse = (timestamp) => {
-        if (!document.hidden) {
+        if (document.hidden) {
+            introPulsePreviousTimestamp = null;
+        } else if (shouldRenderFrame(timestamp, introPulsePreviousTimestamp)) {
             if (introPulsePreviousTimestamp !== null) {
                 introPulseElapsed += Math.max(0, timestamp - introPulsePreviousTimestamp);
             }
@@ -434,15 +460,15 @@
                 introPulseFrameId = null;
                 return;
             }
-        } else {
-            introPulsePreviousTimestamp = null;
         }
 
         introPulseFrameId = window.requestAnimationFrame(renderIntroPulse);
     };
 
     const renderIntroWave = (timestamp) => {
-        if (!document.hidden) {
+        if (document.hidden) {
+            introWavePreviousTimestamp = null;
+        } else if (shouldRenderFrame(timestamp, introWavePreviousTimestamp)) {
             if (introWavePreviousTimestamp !== null) {
                 introWaveElapsed += Math.max(0, timestamp - introWavePreviousTimestamp);
             }
@@ -482,8 +508,6 @@
                 introWaveFrameId = null;
                 return;
             }
-        } else {
-            introWavePreviousTimestamp = null;
         }
 
         introWaveFrameId = window.requestAnimationFrame(renderIntroWave);
