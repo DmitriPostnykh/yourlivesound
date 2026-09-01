@@ -876,6 +876,15 @@
             steps(1, end);
         will-change: opacity, transform;
     }
+
+    .stage-strobe-line {
+        grid-template-columns: repeat(24, minmax(0, 1fr));
+    }
+
+    .stage-strobe:not(:nth-child(3n + 2)) {
+        display: none;
+        animation: none;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
