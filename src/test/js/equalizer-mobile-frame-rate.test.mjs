@@ -144,6 +144,7 @@ const createHarness = ({coarsePointer = false, search = ""} = {}) => {
 
     return {
         frameRate: volumeContainer.dataset.equalizerFrameRate,
+        topSlope: volumeContainer.dataset.equalizerTopSlope,
         runEqualizerFrame,
         transformWrites: () => transformWrites
     };
@@ -153,6 +154,7 @@ test("coarse-pointer devices render the equalizer at 30 fps", () => {
     const harness = createHarness({coarsePointer: true});
 
     assert.equal(harness.frameRate, "30");
+    assert.equal(harness.topSlope, "static");
     harness.runEqualizerFrame(16.7);
     assert.equal(harness.transformWrites(), 44);
     harness.runEqualizerFrame(33.4);
@@ -165,19 +167,30 @@ test("desktop keeps display-rate rendering", () => {
     const harness = createHarness();
 
     assert.equal(harness.frameRate, "display");
+    assert.equal(harness.topSlope, "dynamic");
     harness.runEqualizerFrame(16.7);
     harness.runEqualizerFrame(33.4);
     assert.equal(harness.transformWrites(), 88);
 });
 
 test("quality query overrides allow direct full/mobile comparison", () => {
-    assert.equal(
-        createHarness({coarsePointer: true, search: "?quality=full"}).frameRate,
-        "display"
+    const forcedFull = createHarness({coarsePointer: true, search: "?quality=full"});
+    const forcedMobile = createHarness({search: "?quality=mobile"});
+
+    assert.equal(forcedFull.frameRate, "display");
+    assert.equal(forcedFull.topSlope, "dynamic");
+    assert.equal(forcedMobile.frameRate, "30");
+    assert.equal(forcedMobile.topSlope, "static");
+});
+
+test("intro animation does not rewrite flat top slopes on every frame", () => {
+    assert.doesNotMatch(
+        equalizerSource.match(/const setIntroBarScale[\s\S]*?\n    };/)?.[0] ?? "",
+        /--bar-top-(?:left|right)-inset/
     );
-    assert.equal(
-        createHarness({search: "?quality=mobile"}).frameRate,
-        "30"
+    assert.doesNotMatch(
+        equalizerSource.match(/const setIntroRestScale[\s\S]*?\n    };/)?.[0] ?? "",
+        /--bar-top-(?:left|right)-inset/
     );
 });
 

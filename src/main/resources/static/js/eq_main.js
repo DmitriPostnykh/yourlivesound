@@ -50,6 +50,7 @@
         || (qualityMode !== "full" && mobilePerformanceQuery.matches);
     const targetFrameRate = useMobileFrameRate ? 30 : null;
     const targetFrameInterval = targetFrameRate === null ? 0 : 1000 / targetFrameRate;
+    const useDynamicTopSlope = !useMobileFrameRate;
     const requestedFixedHeight = Number.parseFloat(equalizerMode);
     const fixedEnvelopeHeight = equalizerMode === "max"
         ? maximumHeight
@@ -80,6 +81,9 @@
     volumeContainer.dataset.equalizerFrameRate = targetFrameRate === null
         ? "display"
         : String(targetFrameRate);
+    volumeContainer.dataset.equalizerTopSlope = useDynamicTopSlope
+        ? "dynamic"
+        : "static";
 
     const shouldRenderFrame = (timestamp, previousRenderTimestamp) => (
         targetFrameInterval === 0
@@ -211,7 +215,7 @@
             reflectionHolders[index].style.setProperty("--depth-rise", `${depthRise.toFixed(3)}%`);
 
             maximumTopSlopes[index] = topRightY - topLeftY;
-            if (!introMode) {
+            if (!introMode && useDynamicTopSlope) {
                 applyDynamicTopSlope(index, currentHeights[index]);
             }
             holder.style.setProperty("--bar-left-inset", `${(boundingBottom - bottomLeftY).toFixed(3)}px`);
@@ -307,7 +311,9 @@
         currentHeights[index] = height;
         bars[index].style.transform = value;
         reflections[index].style.transform = value;
-        applyDynamicTopSlope(index, height);
+        if (useDynamicTopSlope) {
+            applyDynamicTopSlope(index, height);
+        }
     };
 
     const setIntroBarScale = (index, height) => {
@@ -316,8 +322,6 @@
         currentHeights[index] = height;
         bars[index].style.transform = value;
         reflections[index].style.transform = value;
-        bars[index].style.setProperty("--bar-top-left-inset", "0px");
-        bars[index].style.setProperty("--bar-top-right-inset", "0px");
     };
 
     const setIntroRestScale = (index) => {
@@ -329,8 +333,13 @@
         currentHeights[index] = scale * maximumHeight;
         bars[index].style.transform = value;
         reflections[index].style.transform = value;
-        bars[index].style.setProperty("--bar-top-left-inset", "0px");
-        bars[index].style.setProperty("--bar-top-right-inset", "0px");
+    };
+
+    const setFlatTopSlopes = () => {
+        bars.forEach((bar) => {
+            bar.style.setProperty("--bar-top-left-inset", "0px");
+            bar.style.setProperty("--bar-top-right-inset", "0px");
+        });
     };
 
     const setIntroRestHeights = () => {
@@ -529,6 +538,7 @@
         reflectionHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
         barHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
         reflectionHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+        setFlatTopSlopes();
         setIntroRestHeights();
     };
 
