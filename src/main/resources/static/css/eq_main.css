@@ -867,6 +867,17 @@
     }
 }
 
+@media (any-pointer: coarse), (max-width: 820px) {
+    .stage-lights .moving-head {
+        --head-color-duration: 36s;
+        animation-timing-function:
+            cubic-bezier(0.42, 0, 0.58, 1),
+            ease-in-out,
+            steps(1, end);
+        will-change: opacity, transform;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .stage-light {
         opacity: var(--light-opacity);
