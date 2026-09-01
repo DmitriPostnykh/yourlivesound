@@ -714,6 +714,10 @@
     overflow: visible;
 }
 
+.reflection-container.is-mobile-intro-suppressed {
+    display: none;
+}
+
 .reflection-container .bar-container {
     top: var(--depth-rise, 0%);
     bottom: auto;
@@ -874,12 +878,18 @@
     }
 
     .stage-lights .moving-head {
-        --head-color-duration: 36s;
+        animation-name: stage-head-sweep, stage-head-live;
         animation-timing-function:
             cubic-bezier(0.42, 0, 0.58, 1),
-            ease-in-out,
-            steps(1, end);
+            ease-in-out;
+        -webkit-filter: none;
+        filter: none;
         will-change: opacity, transform;
+    }
+
+    .bar-container {
+        -webkit-filter: none;
+        filter: none;
     }
 
     .stage-lights .stage-light::after,

@@ -37,6 +37,10 @@ test("mobile lighting removes redundant filters from gradient-softened layers", 
     assert.match(mobileEqualizerRules, /\.reflection-title \{[\s\S]*?filter: none;/);
 });
 
+test("mobile equalizer containers use depth opacity without group filters", () => {
+    assert.match(mobileEqualizerRules, /\.bar-container \{[\s\S]*?filter: none;/);
+});
+
 test("mobile floor spots rely on their radial gradient instead of blur", () => {
     assert.notEqual(mobileIntroStart, -1);
     assert.match(mobileIntroRules, /\.stage-floor-spot,[\s\S]*?filter: none;/);
@@ -48,4 +52,8 @@ test("desktop keeps the original lighting filters", () => {
     assert.match(equalizerStylesheet, /\.moving-head::after \{[\s\S]*?filter: blur\(/);
     assert.match(equalizerStylesheet, /\.reflection-container \.bar \{[\s\S]*?filter: blur\(/);
     assert.match(equalizerStylesheet, /\.reflection-title \{[\s\S]*?filter: blur\(/);
+    assert.match(
+        equalizerStylesheet,
+        /\.bar-container \{[\s\S]*?filter:[\s\S]*?brightness\([\s\S]*?saturate\(/
+    );
 });

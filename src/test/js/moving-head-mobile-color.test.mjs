@@ -11,15 +11,17 @@ const mobileColorRule = stylesheet.match(
     /@media \(any-pointer: coarse\), \(max-width: 820px\) \{[\s\S]*?\.stage-lights \.moving-head \{[\s\S]*?\n    \}[\s\S]*?\n\}/
 )?.[0] ?? "";
 
-test("mobile moving heads use a rare discrete color cycle", () => {
+test("mobile moving heads keep their movement without the color filter", () => {
     assert.notEqual(mobileColorRule, "");
-    assert.match(mobileColorRule, /--head-color-duration: 36s/);
-    assert.match(mobileColorRule, /steps\(1, end\)/);
+    assert.match(mobileColorRule, /animation-name: stage-head-sweep, stage-head-live/);
+    assert.doesNotMatch(mobileColorRule, /stage-head-color/);
+    assert.match(mobileColorRule, /filter: none/);
 });
 
 test("mobile color optimization keeps movement layers and releases the filter layer", () => {
     assert.match(mobileColorRule, /will-change: opacity, transform/);
     assert.doesNotMatch(mobileColorRule, /will-change:[^;]*filter/);
+    assert.doesNotMatch(mobileColorRule, /steps\(1, end\)/);
 });
 
 test("desktop color animation and beam blur remain available", () => {

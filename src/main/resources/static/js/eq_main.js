@@ -75,6 +75,7 @@
     let introWaveRestHeights = [];
     let introMode = Boolean(stageIntro?.shouldPlay);
     let introAtRest = true;
+    let introReflectionsSuppressed = false;
     let liveImpulseStartedAt = null;
     let liveImpulseStrength = 0;
 
@@ -303,6 +304,30 @@
     const barHolders = bars.map((bar) => bar.parentElement);
     const reflectionHolders = reflections.map((bar) => bar.parentElement);
 
+    const setReflectionScale = (index, value) => {
+        if (!introReflectionsSuppressed) {
+            reflections[index].style.transform = value;
+        }
+    };
+
+    const setIntroReflectionSuppression = (shouldSuppress) => {
+        const nextSuppressed = useMobileFrameRate && shouldSuppress;
+        if (introReflectionsSuppressed && !nextSuppressed) {
+            reflections.forEach((reflection, index) => {
+                const scale = currentHeights[index] / maximumHeight;
+                reflection.style.transform = `translateZ(0) scaleY(${scale.toFixed(4)})`;
+            });
+        }
+        introReflectionsSuppressed = nextSuppressed;
+        reflectionContainer.classList.toggle(
+            "is-mobile-intro-suppressed",
+            introReflectionsSuppressed
+        );
+        reflectionContainer.dataset.reflectionPhase = introReflectionsSuppressed
+            ? "intro-suppressed"
+            : "live";
+    };
+
     schedulePerspectiveEnvelope();
 
     const setBarScale = (index, height) => {
@@ -310,7 +335,7 @@
         const value = `translateZ(0) scaleY(${scale.toFixed(4)})`;
         currentHeights[index] = height;
         bars[index].style.transform = value;
-        reflections[index].style.transform = value;
+        setReflectionScale(index, value);
         if (useDynamicTopSlope) {
             applyDynamicTopSlope(index, height);
         }
@@ -321,7 +346,7 @@
         const value = `translateZ(0) scaleY(${scale.toFixed(4)})`;
         currentHeights[index] = height;
         bars[index].style.transform = value;
-        reflections[index].style.transform = value;
+        setReflectionScale(index, value);
     };
 
     const setIntroRestScale = (index) => {
@@ -332,7 +357,7 @@
         const value = `translateZ(0) scaleY(${scale.toFixed(4)})`;
         currentHeights[index] = scale * maximumHeight;
         bars[index].style.transform = value;
-        reflections[index].style.transform = value;
+        setReflectionScale(index, value);
     };
 
     const setFlatTopSlopes = () => {
@@ -464,7 +489,9 @@
             if (progress >= 1) {
                 introAtRest = true;
                 barHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
-                reflectionHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+                if (!introReflectionsSuppressed) {
+                    reflectionHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+                }
                 setIntroRestHeights();
                 introPulseFrameId = null;
                 return;
@@ -492,7 +519,9 @@
                 const waveComplete = localElapsed >= introWaveBarDuration;
                 revealBar(index);
                 barHolders[index]?.classList.toggle("is-intro-rest", waveComplete);
-                reflectionHolders[index]?.classList.toggle("is-intro-rest", waveComplete);
+                if (!introReflectionsSuppressed) {
+                    reflectionHolders[index]?.classList.toggle("is-intro-rest", waveComplete);
+                }
                 const lift = localElapsed <= introWaveRiseDuration
                     ? Math.sin(
                         (Math.PI / 2) * Math.min(1, localElapsed / introWaveRiseDuration)
@@ -512,7 +541,9 @@
                 introAtRest = true;
                 volumeContainer.dataset.equalizerPhase = "intro-wave-complete";
                 barHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
-                reflectionHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+                if (!introReflectionsSuppressed) {
+                    reflectionHolders.forEach((holder) => holder.classList.add("is-intro-rest"));
+                }
                 setIntroRestHeights();
                 introWaveFrameId = null;
                 return;
@@ -533,6 +564,7 @@
         cancelIntroPulse();
         cancelIntroWave();
         introAtRest = true;
+        setIntroReflectionSuppression(true);
         volumeContainer.dataset.equalizerPhase = "intro-rest";
         barHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
         reflectionHolders.forEach((holder) => holder.style.setProperty("--bar-visible-opacity", "0"));
@@ -544,7 +576,9 @@
 
     const revealBar = (index) => {
         barHolders[index]?.style.removeProperty("--bar-visible-opacity");
-        reflectionHolders[index]?.style.removeProperty("--bar-visible-opacity");
+        if (!introReflectionsSuppressed) {
+            reflectionHolders[index]?.style.removeProperty("--bar-visible-opacity");
+        }
     };
 
     const pulse = (strength) => {
@@ -552,7 +586,9 @@
         cancelIntroWave();
         introAtRest = false;
         barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
-        reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
+        if (!introReflectionsSuppressed) {
+            reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
+        }
         introPulseStrength = Math.min(1, Math.max(0, strength));
         introPulseFrameId = window.requestAnimationFrame(renderIntroPulse);
     };
@@ -576,6 +612,7 @@
         cancelIntroWave();
         introMode = false;
         introAtRest = false;
+        setIntroReflectionSuppression(false);
         volumeContainer.dataset.equalizerPhase = "live";
         revealAllBars();
         barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
@@ -597,6 +634,7 @@
         introAtRest = false;
         cancelIntroPulse();
         cancelIntroWave();
+        setIntroReflectionSuppression(false);
         volumeContainer.dataset.equalizerPhase = "live";
         revealAllBars();
         barHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
