@@ -403,7 +403,10 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("const localElapsed = introWaveElapsed - index * introWaveBarStagger"));
         assertTrue(javascript.contains("const waveComplete = localElapsed >= introWaveBarDuration"));
         assertTrue(javascript.contains("revealBar(index)"));
-        assertTrue(javascript.contains("classList.toggle(\"is-intro-rest\", waveComplete)"));
+        assertTrue(javascript.contains("if (waveComplete)"));
+        assertTrue(javascript.contains("setIntroRestScale(index)"));
+        assertTrue(javascript.contains("barHolders[index]?.classList.remove(\"is-intro-rest\")"));
+        assertTrue(javascript.contains("applyDynamicTopSlope(index, height)"));
         assertTrue(javascript.contains("localElapsed <= introWaveRiseDuration"));
         assertTrue(javascript.contains("(localElapsed - introWaveRiseDuration) / introWaveFallDuration"));
         assertTrue(javascript.contains("const lift = Math.sin(Math.PI * progress)"));

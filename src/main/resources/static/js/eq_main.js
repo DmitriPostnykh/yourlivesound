@@ -359,6 +359,12 @@
         currentHeights[index] = height;
         bars[index].style.transform = value;
         setReflectionScale(index, value);
+        applyDynamicTopSlope(index, height);
+    };
+
+    const setFlatTopSlope = (index) => {
+        bars[index]?.style.setProperty("--bar-top-left-inset", "0px");
+        bars[index]?.style.setProperty("--bar-top-right-inset", "0px");
     };
 
     const setIntroRestScale = (index) => {
@@ -370,13 +376,11 @@
         currentHeights[index] = scale * maximumHeight;
         bars[index].style.transform = value;
         setReflectionScale(index, value);
+        setFlatTopSlope(index);
     };
 
     const setFlatTopSlopes = () => {
-        bars.forEach((bar) => {
-            bar.style.setProperty("--bar-top-left-inset", "0px");
-            bar.style.setProperty("--bar-top-right-inset", "0px");
-        });
+        bars.forEach((_, index) => setFlatTopSlope(index));
     };
 
     const setIntroRestHeights = () => {
@@ -530,9 +534,21 @@
 
                 const waveComplete = localElapsed >= introWaveBarDuration;
                 revealBar(index);
-                barHolders[index]?.classList.toggle("is-intro-rest", waveComplete);
+                if (waveComplete) {
+                    const wasMoving = !barHolders[index]?.classList.contains("is-intro-rest");
+                    barHolders[index]?.classList.add("is-intro-rest");
+                    if (!introReflectionsSuppressed) {
+                        reflectionHolders[index]?.classList.add("is-intro-rest");
+                    }
+                    if (wasMoving) {
+                        setIntroRestScale(index);
+                    }
+                    return;
+                }
+
+                barHolders[index]?.classList.remove("is-intro-rest");
                 if (!introReflectionsSuppressed) {
-                    reflectionHolders[index]?.classList.toggle("is-intro-rest", waveComplete);
+                    reflectionHolders[index]?.classList.remove("is-intro-rest");
                 }
                 const lift = localElapsed <= introWaveRiseDuration
                     ? Math.sin(

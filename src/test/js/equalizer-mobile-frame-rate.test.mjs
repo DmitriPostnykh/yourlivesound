@@ -183,15 +183,37 @@ test("quality query overrides allow direct full/mobile comparison", () => {
     assert.equal(forcedMobile.topSlope, "static");
 });
 
-test("intro animation does not rewrite flat top slopes on every frame", () => {
-    assert.doesNotMatch(
+test("intro wave uses the projected top slope and resets it only at rest", () => {
+    assert.match(
         equalizerSource.match(/const setIntroBarScale[\s\S]*?\n    };/)?.[0] ?? "",
-        /--bar-top-(?:left|right)-inset/
+        /applyDynamicTopSlope\(index, height\)/
     );
-    assert.doesNotMatch(
+    assert.match(
         equalizerSource.match(/const setIntroRestScale[\s\S]*?\n    };/)?.[0] ?? "",
-        /--bar-top-(?:left|right)-inset/
+        /setFlatTopSlope\(index\)/
     );
+});
+
+test("projected top geometry reverses around the horizontal 50 percent cross-section", () => {
+    const projectedSlope = equalizerSource.match(
+        /const applyDynamicTopSlope = \(index, height\) => \{[\s\S]*?\n    \};/
+    )?.[0] ?? "";
+
+    assert.match(
+        projectedSlope,
+        /const slopeProgress = \(height - neutralTopHeight\) \/ \(maximumHeight - neutralTopHeight\)/
+    );
+    assert.match(projectedSlope, /--bar-top-left-inset[\s\S]*Math\.max\(0, -currentSlope\)/);
+    assert.match(projectedSlope, /--bar-top-right-inset[\s\S]*Math\.max\(0, currentSlope\)/);
+});
+
+test("completed intro bars stop receiving per-frame geometry writes", () => {
+    const introWave = equalizerSource.match(
+        /const renderIntroWave = \(timestamp\) => \{[\s\S]*?\n    \};/
+    )?.[0] ?? "";
+
+    assert.match(introWave, /if \(waveComplete\) \{[\s\S]*?return;/);
+    assert.match(introWave, /if \(wasMoving\) \{\s*setIntroRestScale\(index\);/);
 });
 
 test("all JavaScript equalizer loops use the same frame limiter", () => {
