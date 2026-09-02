@@ -226,11 +226,41 @@
 
 .stage-floor-spots {
     --stage-floor-boundary-y: 100%;
+    --floor-wash-x: 50%;
+    --floor-wash-y: 50%;
+    --floor-wash-width: 60%;
+    --floor-wash-height: 4rem;
     position: absolute;
     inset: 0 0 auto 0;
     height: var(--stage-floor-boundary-y);
     z-index: 1;
     overflow: hidden;
+    pointer-events: none;
+}
+
+.stage-floor-spots::after {
+    content: "";
+    width: var(--floor-wash-width);
+    height: var(--floor-wash-height);
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    opacity: 0;
+    background: radial-gradient(
+        ellipse,
+        rgba(255, 255, 255, 0.72) 0%,
+        rgba(235, 250, 255, 0.48) 20%,
+        rgba(168, 220, 239, 0.22) 48%,
+        rgba(104, 179, 207, 0.08) 66%,
+        transparent 82%
+    );
+    mix-blend-mode: screen;
+    transform:
+        translate3d(var(--floor-wash-x), var(--floor-wash-y), 0)
+        translate3d(-50%, -50%, 0);
+    transform-origin: 50% 50%;
+    transition: opacity 260ms ease-out;
     pointer-events: none;
 }
 
@@ -265,6 +295,35 @@
 .home-page.stage-intro-playing .stage-floor-spot.is-floor-settled,
 .home-page.stage-intro-complete.stage-backlight-live .stage-floor-spot {
     filter: blur(clamp(3px, 0.62vw, 7px));
+    will-change: auto;
+}
+
+.stage-floor-spots.is-floor-consolidating::after,
+.stage-floor-spots.is-floor-consolidated::after {
+    opacity: 0.33;
+}
+
+.stage-floor-spots.is-floor-consolidating::after {
+    will-change: opacity;
+}
+
+.stage-floor-spots.is-floor-consolidating .stage-floor-spot {
+    opacity: 0 !important;
+    transition: opacity 260ms ease-out;
+    will-change: opacity;
+}
+
+.stage-floor-spots.is-floor-consolidated::after {
+    transition: none;
+    will-change: auto;
+}
+
+.stage-floor-spots.is-floor-consolidated .stage-floor-spot {
+    display: none;
+    opacity: 0 !important;
+    filter: none !important;
+    transform: none !important;
+    will-change: auto;
 }
 
 .home-page.stage-intro-pending .moving-head,

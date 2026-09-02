@@ -211,7 +211,7 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("geometry.stageBoundaryY - beamPoint.y"));
         assertTrue(javascript.contains("y: stageBoundaryY"));
         assertTrue(javascript.contains("floorSpotOpacity = easeOut(floorPlaneProgress)"));
-        assertTrue(javascript.contains("const floorSpotWidth = Number.parseFloat"));
+        assertTrue(javascript.contains("const measuredFloorSpotWidth = Number.parseFloat"));
         assertTrue(javascript.contains("const targetSpotWidth = clamp"));
         assertTrue(javascript.contains("floorTargetScaleX"));
         assertFalse(javascript.contains("stage-screen-glare"));
@@ -346,6 +346,27 @@ class YourlivesoundApplicationTests {
         assertEquals(15, html.split("data-title-target", -1).length - 1);
         assertEquals(15, html.split("data-reflection-target", -1).length - 1);
         assertEquals(1, html.split("class=\"stage-front-boundary\"", -1).length - 1);
+    }
+
+    @Test
+    void settledFloorLightingConsolidatesIntoOneStaticWash() throws Exception {
+        String javascript = mockMvc.perform(get("/js/stage-intro.js"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String stylesheet = mockMvc.perform(get("/css/stage-intro.css"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertTrue(javascript.contains("const consolidateFloorSpots = (immediate = false) =>"));
+        assertTrue(javascript.contains("addEvent(finalTitleRevealAt, () => consolidateFloorSpots())"));
+        assertTrue(javascript.contains("floorSpotLayer.dataset.floorLightMode = \"consolidated\""));
+        assertTrue(stylesheet.contains(".stage-floor-spots::after"));
+        assertTrue(stylesheet.contains(".stage-floor-spots.is-floor-consolidated .stage-floor-spot"));
+        assertTrue(stylesheet.contains("display: none"));
     }
 
     @Test

@@ -14,6 +14,7 @@
     const screenSweepRatio = 0.52;
     const floorSpotScaleMultiplier = 2;
     const floorSpotOpacityMultiplier = 0.5;
+    const floorSpotConsolidationDuration = 260;
     const readinessDeadline = 2500;
     const timings = Object.freeze({
         lightStart: 1000,
@@ -80,6 +81,11 @@
     let lightAimProgress = stageLights.map(() => 0);
     let lightMotionComplete = stageLights.map(() => false);
     let readinessDeadlineId = null;
+    let floorSpotConsolidationId = null;
+
+    if (floorSpotLayer) {
+        floorSpotLayer.dataset.floorLightMode = "individual";
+    }
 
     const sourceProgressFor = (index) => {
         if (stageLights.length <= 1) {
@@ -263,6 +269,94 @@
         lightAimProgress[index] = progress;
     };
 
+    const syncFloorWashGeometry = () => {
+        if (!floorSpotLayer) {
+            return;
+        }
+
+        const targets = lightGeometries.filter((geometry) => (
+            geometry
+            && Number.isFinite(geometry.floorSpotWidth)
+            && Number.isFinite(geometry.floorSpotHeight)
+        ));
+        if (targets.length === 0) {
+            return;
+        }
+
+        let minimumX = Number.POSITIVE_INFINITY;
+        let maximumX = Number.NEGATIVE_INFINITY;
+        let maximumSpotWidth = 0;
+        let maximumSpotHeight = 0;
+        let targetYTotal = 0;
+
+        targets.forEach((geometry) => {
+            const width = geometry.floorSpotWidth
+                * floorSpotScaleMultiplier
+                * geometry.floorTargetScaleX;
+            const height = geometry.floorSpotHeight
+                * floorSpotScaleMultiplier
+                * geometry.floorTargetScaleY;
+            minimumX = Math.min(minimumX, geometry.target.x - width / 2);
+            maximumX = Math.max(maximumX, geometry.target.x + width / 2);
+            maximumSpotWidth = Math.max(maximumSpotWidth, width);
+            maximumSpotHeight = Math.max(maximumSpotHeight, height);
+            targetYTotal += geometry.target.y;
+        });
+
+        const padding = Math.max(8, maximumSpotWidth * 0.12);
+        const washWidth = Math.max(1, maximumX - minimumX + padding * 2);
+        const washHeight = Math.max(1, maximumSpotHeight * 1.7);
+        floorSpotLayer.style.setProperty(
+            "--floor-wash-x",
+            `${((minimumX + maximumX) / 2).toFixed(3)}px`
+        );
+        floorSpotLayer.style.setProperty(
+            "--floor-wash-y",
+            `${(targetYTotal / targets.length).toFixed(3)}px`
+        );
+        floorSpotLayer.style.setProperty("--floor-wash-width", `${washWidth.toFixed(3)}px`);
+        floorSpotLayer.style.setProperty("--floor-wash-height", `${washHeight.toFixed(3)}px`);
+    };
+
+    const finishFloorSpotConsolidation = () => {
+        if (!floorSpotLayer) {
+            return;
+        }
+
+        floorSpotLayer.classList.remove("is-floor-consolidating");
+        floorSpotLayer.classList.add("is-floor-consolidated");
+        floorSpotLayer.dataset.floorLightMode = "consolidated";
+        floorSpotConsolidationId = null;
+    };
+
+    const consolidateFloorSpots = (immediate = false) => {
+        if (!floorSpotLayer) {
+            return;
+        }
+
+        if (floorSpotConsolidationId !== null) {
+            window.clearTimeout(floorSpotConsolidationId);
+            floorSpotConsolidationId = null;
+        }
+        if (immediate) {
+            finishFloorSpotConsolidation();
+            return;
+        }
+        if (
+            floorSpotLayer.classList.contains("is-floor-consolidating")
+            || floorSpotLayer.classList.contains("is-floor-consolidated")
+        ) {
+            return;
+        }
+
+        floorSpotLayer.classList.add("is-floor-consolidating");
+        floorSpotLayer.dataset.floorLightMode = "consolidating";
+        floorSpotConsolidationId = window.setTimeout(
+            finishFloorSpotConsolidation,
+            floorSpotConsolidationDuration
+        );
+    };
+
     const syncStageLightTargets = () => {
         if (!stageRig || !title || stageLights.length === 0) {
             return;
@@ -342,9 +436,18 @@
             const sourceGlareRadius = Number.isFinite(sourceGlareDiameter)
                 ? sourceGlareDiameter / 2
                 : clamp(window.innerWidth * 0.085, 36, 104);
-            const floorSpotWidth = Number.parseFloat(
-                window.getComputedStyle(floorSpots[index]).width
-            );
+            const floorSpotStyle = floorSpots[index]
+                ? window.getComputedStyle(floorSpots[index])
+                : null;
+            const previousGeometry = lightGeometries[index];
+            const measuredFloorSpotWidth = Number.parseFloat(floorSpotStyle?.width);
+            const measuredFloorSpotHeight = Number.parseFloat(floorSpotStyle?.height);
+            const floorSpotWidth = Number.isFinite(measuredFloorSpotWidth)
+                ? measuredFloorSpotWidth
+                : previousGeometry?.floorSpotWidth;
+            const floorSpotHeight = Number.isFinite(measuredFloorSpotHeight)
+                ? measuredFloorSpotHeight
+                : previousGeometry?.floorSpotHeight;
             const targetSpotWidth = clamp(
                 (targetRect?.width ?? titleRect.width / stageLights.length) * 1.35,
                 18,
@@ -368,6 +471,8 @@
                 floorStartScaleY: 1.08 + edgeInfluence * 0.12,
                 floorTargetScaleX,
                 floorTargetScaleY: 0.58 + (1 - sideStrength) * 0.08,
+                floorSpotWidth,
+                floorSpotHeight,
                 floorStartRotation,
                 sourceGlareRadius
             };
@@ -377,6 +482,7 @@
             light.style.setProperty("--intro-beam-max-width", `${maximumBeamWidth.toFixed(3)}px`);
             applyStageLightMotion(index, lightAimProgress[index] ?? 0);
         });
+        syncFloorWashGeometry();
     };
 
     const scheduleStageLightTargetSync = () => {
@@ -447,6 +553,7 @@
             floorSpot.classList.remove("is-floor-tracking");
             floorSpot.classList.add("is-floor-settled");
         });
+        consolidateFloorSpots(true);
         setInteractive(navigation, true);
         setInteractive(carousel, true);
         if (!sceneStarted) {
@@ -561,6 +668,7 @@
 
         addEvent(equalizerWaveStartAt, () => equalizerApi?.startIntroWave());
         addEvent(timings.lightStart, () => body.classList.add("stage-rig-live"));
+        addEvent(finalTitleRevealAt, () => consolidateFloorSpots());
         movingHeads.forEach((head, index) => {
             const movingHeadProgress = (index + 0.5)
                 / Math.max(1, stageLights.length - 1);
