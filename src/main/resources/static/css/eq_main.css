@@ -715,7 +715,15 @@
 }
 
 .reflection-container.is-mobile-intro-suppressed {
-    display: none;
+    /* Keep the reflection's flex slot reserved so the live handoff cannot
+       recenter the main bars. The hidden subtree is still not painted, and
+       intro JavaScript continues to skip its transform writes. */
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.reflection-container.is-mobile-intro-suppressed .bar {
+    will-change: auto;
 }
 
 .reflection-container .bar-container {

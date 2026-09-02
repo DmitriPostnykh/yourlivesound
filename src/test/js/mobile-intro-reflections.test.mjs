@@ -11,10 +11,17 @@ const equalizerStylesheet = await readFile(
     "utf8"
 );
 
-test("mobile intro suppresses reflection rendering until the live phase", () => {
+test("mobile intro suppresses reflection paint without collapsing its layout slot", () => {
+    const suppressionRule = equalizerStylesheet.match(
+        /\.reflection-container\.is-mobile-intro-suppressed \{[\s\S]*?\n\}/
+    )?.[0] ?? "";
+
+    assert.match(suppressionRule, /visibility: hidden;/);
+    assert.match(suppressionRule, /pointer-events: none;/);
+    assert.doesNotMatch(suppressionRule, /display:\s*none/);
     assert.match(
         equalizerStylesheet,
-        /\.reflection-container\.is-mobile-intro-suppressed \{\s*display: none;/
+        /\.reflection-container\.is-mobile-intro-suppressed \.bar \{\s*will-change: auto;/
     );
     assert.match(
         equalizerSource,
