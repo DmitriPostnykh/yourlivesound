@@ -383,6 +383,18 @@
         bars.forEach((_, index) => setFlatTopSlope(index));
     };
 
+    const syncLiveTopSlopes = () => {
+        if (useDynamicTopSlope) {
+            bars.forEach((_, index) => applyDynamicTopSlope(index, currentHeights[index]));
+            return;
+        }
+
+        // The mobile live cycle intentionally keeps the top edge static. Finalize
+        // every intro slope here because the stage and equalizer timelines can hand
+        // off on the same animation frame, before the last intro bar resets itself.
+        setFlatTopSlopes();
+    };
+
     const setIntroRestHeights = () => {
         bars.forEach((_, index) => setIntroRestScale(index));
     };
@@ -654,6 +666,7 @@
         liveImpulseStartedAt = null;
         liveImpulseStrength = Math.min(1, Math.max(0, initialImpulse));
         schedulePerspectiveEnvelope();
+        syncLiveTopSlopes();
         syncMotion();
     };
 
@@ -669,6 +682,7 @@
         reflectionHolders.forEach((holder) => holder.classList.remove("is-intro-rest"));
         liveImpulseStartedAt = null;
         liveImpulseStrength = 0;
+        syncLiveTopSlopes();
         syncMotion();
     };
 

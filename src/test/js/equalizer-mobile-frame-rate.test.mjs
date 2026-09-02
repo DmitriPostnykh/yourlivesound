@@ -216,6 +216,27 @@ test("completed intro bars stop receiving per-frame geometry writes", () => {
     assert.match(introWave, /if \(wasMoving\) \{\s*setIntroRestScale\(index\);/);
 });
 
+test("live handoff cannot retain the final mobile intro slope", () => {
+    const liveTopSlopeSync = equalizerSource.match(
+        /const syncLiveTopSlopes = \(\) => \{[\s\S]*?\n    \};/
+    )?.[0] ?? "";
+    const startLive = equalizerSource.match(
+        /const startLive = \(initialImpulse = 0\) => \{[\s\S]*?\n    \};/
+    )?.[0] ?? "";
+    const showLive = equalizerSource.match(
+        /const showLive = \(\) => \{[\s\S]*?\n    \};/
+    )?.[0] ?? "";
+
+    assert.match(liveTopSlopeSync, /if \(useDynamicTopSlope\)/);
+    assert.match(
+        liveTopSlopeSync,
+        /applyDynamicTopSlope\(index, currentHeights\[index\]\)/
+    );
+    assert.match(liveTopSlopeSync, /setFlatTopSlopes\(\)/);
+    assert.match(startLive, /syncLiveTopSlopes\(\);\s*syncMotion\(\);/);
+    assert.match(showLive, /syncLiveTopSlopes\(\);\s*syncMotion\(\);/);
+});
+
 test("all JavaScript equalizer loops use the same frame limiter", () => {
     assert.match(equalizerSource, /renderFrame = \(timestamp\) => \{\s+if \(!shouldRenderFrame/);
     assert.match(equalizerSource, /renderIntroPulse = \(timestamp\) => \{[\s\S]*shouldRenderFrame\(timestamp, introPulsePreviousTimestamp\)/);

@@ -415,7 +415,11 @@ class YourlivesoundApplicationTests {
         assertTrue(javascript.contains("volumeContainer.dataset.equalizerPhase = \"intro-wave\""));
         assertTrue(javascript.contains("introWaveDuration,"));
         assertTrue(javascript.contains("startIntroWave,"));
+        assertTrue(javascript.contains("const syncLiveTopSlopes = () =>"));
+        assertTrue(javascript.contains("bars.forEach((_, index) => applyDynamicTopSlope(index, currentHeights[index]))"));
+        assertTrue(javascript.contains("setFlatTopSlopes()"));
         assertTrue(javascript.contains("const startLive = (initialImpulse = 0) =>"));
+        assertTrue(javascript.contains("syncLiveTopSlopes();"));
         assertTrue(javascript.contains("stageIntro.registerEqualizer"));
 
         assertTrue(stylesheet.contains("transform: translateZ(0) scaleY(0.14)"));
