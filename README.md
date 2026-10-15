@@ -2,6 +2,22 @@
 
 Spring Boot and Thymeleaf site for [yourlivesound.com](https://yourlivesound.com).
 
+## Work workspace
+
+[w.yourlivesound.com](https://w.yourlivesound.com/) is a separate, private workspace
+on the existing Your Live Sound VPS. Its first section, `/resume/`, hosts the
+project-experience book for reading and discussion on a computer or iPad. The
+root remains available for future client and project sections.
+
+The workspace uses its own Nginx virtual host, HTTPS certificate, static releases,
+and invitation access. Opening an invitation stores a secure, HTTP-only cookie;
+ordinary visits cannot read the private materials. Invitations, cookies, private
+book contents, source inventories, and runtime configuration stay outside Git.
+
+See [workspace operations](docs/workspace.md) for DNS, deployment, verification,
+updates, and rollback. This workspace does not require rebuilding or restarting
+the Spring Boot application.
+
 ## Учебник Harness для пользователя
 
 Браузерный адрес единого HTML-учебника Harness:
@@ -36,4 +52,4 @@ YLS_IMAGE_TAG=$(git rev-parse --short=12 HEAD) docker compose build
 YLS_IMAGE_TAG=$(git rev-parse --short=12 HEAD) docker compose up -d
 ```
 
-This deployment manages only `yourlivesound-app`. It must not prune Docker globally, edit the shared Nginx configuration, or alter any neighboring VPS service.
+The application deployment manages only `yourlivesound-app`. It must not prune Docker globally, edit the shared Nginx configuration, or alter any neighboring VPS service. Workspace operations manage only the `w.yourlivesound.com` virtual host and its static releases, as described above.

@@ -38,3 +38,7 @@ build/
 # Local runtime configuration and logs
 .env
 *.log
+
+# Private workspace content, access credentials, and deployment receipts
+/workspace-private/
+__pycache__/
