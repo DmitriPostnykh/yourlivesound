@@ -9,6 +9,11 @@ on the existing Your Live Sound VPS. Its first section, `/resume/`, hosts the
 project-experience book for reading and discussion on a computer or iPad. The
 root remains available for future client and project sections.
 
+The book supports Russian and English through RU/EN buttons in its header,
+with the initial language selected from the browser preferences. Shared book
+invitations open the book directly, including when the browser does not retain
+cookies.
+
 The workspace uses its own Nginx virtual host, HTTPS certificate, static releases,
 and invitation access. Opening an invitation stores a secure, HTTP-only cookie;
 ordinary visits cannot read the private materials. Invitations, cookies, private

@@ -23,10 +23,14 @@ promise that a future renewal has succeeded.
 
 ## Private access
 
-Each invitation contains an unguessable access token. The exact invitation
-endpoint sets a host-only cookie with `Secure`, `HttpOnly`, `SameSite=Lax`, and
-a 30-day lifetime, then redirects to `/resume/`. Without the accepted cookie,
-the portal and book return HTTP 403 and a closed-access page.
+Each invitation contains an unguessable access token. A shared book invitation
+serves the self-contained book directly at its exact URL, without redirecting
+or requiring stored cookies. This also works when an embedded browser does not
+retain cookies. It additionally sets a host-only cookie with `Secure`,
+`HttpOnly`, `SameSite=Lax`, and a 30-day lifetime for ordinary workspace visits.
+The original owner invitation still sets that cookie and redirects to `/resume/`.
+Without an invitation or the accepted cookie, the portal and `/resume/` return
+HTTP 403 and a closed-access page.
 
 Invitations are bearer access: anyone holding one can use it. There are no
 individual client accounts or per-client permissions yet. Introduce those
@@ -39,6 +43,29 @@ to avoid recording invitation URLs. The workspace sends `noindex` and
 
 Do not copy invite tokens, cookies, live Nginx configuration, private books,
 inventories, personal contact records, or credentials into this repository.
+
+To create a separate invitation for sharing the book, use a stable private name
+and save its receipt outside this repository:
+
+```sh
+python3 ops/workspace/invite.py --name book-colleague \
+  --receipt /absolute/private/book-colleague-invitation.json
+```
+
+The helper preserves the original invitation and adds an exact invitation URL
+to this virtual host. It validates and reloads Nginx, then checks direct book
+access without cookie storage, ordinary access after accepting the cookie, and
+closed access without either. Reusing the same name recovers the existing URL
+and upgrades a legacy redirecting invitation to direct book delivery. The URL is in the private receipt;
+share that complete URL, including `/i/` and its token. Sharing only the domain
+or the address after redirection to `/resume/` does not grant a new visitor access.
+
+Invitation receipts and configuration backups are also kept root-only under
+`/var/www/yls-work/private/invitations/`. Additional invitations use the same
+workspace cookie and 30-day session as the owner invitation. They are separate
+entry links, not separate user accounts or independently revocable sessions.
+Content updates preserve these invitations; initial activation must not be
+rerun over the active workspace.
 
 ## Static content and updates
 
@@ -54,6 +81,21 @@ resume/index.html   self-contained private book
 The prepared book omits local workstation paths and links to raw inventory
 downloads. It preserves project chapters, source observations, and verified
 GitHub links. The original local book and inventories remain separately stored.
+
+The book's header includes RU and EN buttons. The complete reader text, project
+descriptions, search results, statuses, and observation labels are bundled in
+both languages; identifiers, filenames, and verified source links are preserved.
+Switching language keeps the current chapter. Each opening selects the first
+supported language in the browser's ordered language preferences. If none
+matches Russian or English, English is used. The RU and EN buttons change the
+current reading session without requiring cookies or browser storage.
+The private book tools and reviewed translations remain with the original book
+outside this repository.
+
+Reusable reader assets and localization assembly are versioned in
+`ops/workspace/reader/`. The private book's `tools/` directory links to those
+assets; its generator, reviewed English project descriptions, and inventory
+remain with the private book. Do not add those private inputs to this repository.
 
 Prepare the existing self-contained book with Python 3.9+ and `lxml`; keep the
 manifest outside the directory that will be served:
